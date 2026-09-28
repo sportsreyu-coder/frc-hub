@@ -1277,7 +1277,7 @@ main.site-main {
   min-width: 0;
 }
 
-.ms-label { font-weight: 600; font-size: 15px; color: var(--text); }
+.ms-label { font-weight: 600; font-size: 18px; color: var(--text); letter-spacing: -0.005em; }
 
 .team-badge {
   display: inline-flex;
@@ -1324,6 +1324,8 @@ main.site-main {
   font-size: 12px;
   color: var(--text-faint);
 }
+
+.ms-assigned { font-size: 12px; color: var(--text-faint); }
 
 .ms-expand-toggle {
   background: none;
@@ -1857,6 +1859,146 @@ main.site-main {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+/* ---------- Milestone detail side panel ---------- */
+
+.ms-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 100;
+}
+
+.ms-panel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  padding: 30px;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.25);
+  animation: ms-panel-in 0.18s ease-out;
+}
+
+@keyframes ms-panel-in {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.ms-panel-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ms-panel-close:hover { border-color: var(--accent); color: var(--accent); }
+
+.ms-panel-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+
+.ms-panel-title {
+  margin: 0 0 14px;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 24px;
+  padding-right: 30px;
+  line-height: 1.25;
+}
+
+.ms-panel-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+#ms-panel-body .ms-detail { font-size: 14px; margin: 0 0 12px; }
+#ms-panel-body .ms-expanded { margin: 0 0 4px; }
+
+.ms-panel-assign {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.ms-panel-assign .eyebrow { display: block; margin-bottom: 6px; }
+.ms-panel-assign .assign-wrap { display: block; width: 100%; }
+.ms-panel-assign .assign-select {
+  width: 100%;
+  max-width: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+}
+.ms-panel-assign .assign-popover { left: 0; right: 0; min-width: 0; }
+
+.ms-panel-subtasks-section {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.ms-panel-subtasks-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ms-panel-subtasks-toggle:hover { color: var(--accent-hover); }
+
+.ms-panel-subtasks-list.ms-subtasks {
+  margin-top: 14px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.ms-panel-actions {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.ms-panel-actions .submit-btn-sm { width: 100%; }
+
+.ms-details-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ms-details-btn:hover { color: var(--accent-hover); }
+
+.ms-subtask-count { color: var(--text-faint); font-weight: 500; }
+
+@media (max-width: 640px) {
+  .ms-panel { max-width: none; }
 }
 
 #cal-modal-gcal { display: inline-block; text-decoration: none; }

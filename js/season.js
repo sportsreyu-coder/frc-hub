@@ -186,7 +186,6 @@
     sb.auth.getSession().then(function (res) { handleSession(res.data.session); });
   }
 
-  var expandedIds = new Set();
   var viewMode = "checklist"; // or "calendar"
 
   var initialSub = "";
@@ -270,8 +269,18 @@
   function isSubtaskDone(m, idx) { return !!progress[subtaskKey(m, idx)]; }
 
   function toggleMilestone(m) {
-    if (progress[m.id]) delete progress[m.id];
-    else progress[m.id] = today.toISOString();
+    if (progress[m.id]) {
+      delete progress[m.id];
+    } else {
+      if (m.subtasks && m.subtasks.length) {
+        var allDone = m.subtasks.every(function (_, i) { return isSubtaskDone(m, i); });
+        if (!allDone && !confirm("Are you sure you want to complete this task? The subtasks are not completed.")) {
+          render(); // the checkbox's native state already flipped -- redraw it back to unchecked
+          return;
+        }
+      }
+      progress[m.id] = today.toISOString();
+    }
     saveProgress(progress);
     render();
   }
@@ -421,7 +430,7 @@
     wrap.addEventListener("click", function (e) { e.stopPropagation(); });
 
     var btn = el("button", { type: "button", class: "assign-select" }, [assignmentSummary(itemId) || "Unassigned"]);
-    var popover = el("div", { class: "assign-popover", hidden: "" });
+    var popover = el("div", { class: "assign-popover", hidden: "", "data-lenis-prevent": "" });
 
     function assignRow(token, label, checked) {
       var rowId = "assign-" + Math.random().toString(36).slice(2);
@@ -479,6 +488,7 @@
     renderGrantChecklist();
     renderCalendar();
     renderSettings();
+    if (msPanelItem) renderMsPanel();
     scheduleCloudSave();
   }
 
@@ -567,75 +577,48 @@
         checkbox.checked = status.done;
         checkbox.addEventListener("change", function () { toggleMilestone(m); });
 
-        var isOpen = expandedIds.has(m.id);
-        function toggleExpand() {
-          if (expandedIds.has(m.id)) expandedIds.delete(m.id);
-          else expandedIds.add(m.id);
-          render();
-        }
-
-        var toggleBtn = el("button", { type: "button", class: "ms-expand-toggle" }, [isOpen ? "Show less ▴" : "More detail ▾"]);
-        toggleBtn.addEventListener("click", function (e) {
-          e.stopPropagation();
-          toggleExpand();
-        });
+        function openDetails() { openMsPanel(m); }
 
         var msTeam = m.team || "cross-team";
-        var bodyChildren = [
+        var assignSummary = assignmentSummary(m.id);
+
+        var detailsLabel = "Details";
+        if (m.subtasks && m.subtasks.length) {
+          var subDoneCount = m.subtasks.filter(function (_, i) { return isSubtaskDone(m, i); }).length;
+          detailsLabel = "Details (" + subDoneCount + "/" + m.subtasks.length + ")";
+        }
+        var detailsBtn = el("button", { type: "button", class: "ms-details-btn" }, [detailsLabel]);
+        detailsBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openDetails();
+        });
+
+        var metaLeftChildren = [
+          el("span", { class: "team-badge" }, [
+            el("span", { class: "team-dot team-" + msTeam }),
+            TEAM_LABELS[msTeam] || msTeam,
+          ]),
+          el("span", { class: "ms-date" }, [formatDate(m.date)]),
+        ];
+        if (assignSummary) metaLeftChildren.push(el("span", { class: "ms-assigned" }, ["· " + assignSummary]));
+
+        var body = el("div", { class: "ms-body", tabindex: "0", role: "button" }, [
           el("div", { class: "ms-top" }, [
             el("div", { class: "ms-title-group" }, [
               el("span", { class: "ms-label" }, [m.label]),
-              el("span", { class: "team-badge" }, [
-                el("span", { class: "team-dot team-" + msTeam }),
-                TEAM_LABELS[msTeam] || msTeam,
-              ]),
             ]),
             el("span", { class: "pill " + status.cls }, [status.label]),
           ]),
-          el("p", { class: "ms-detail" }, [m.detail]),
-        ];
-
-        if (isOpen) {
-          if (m.expanded) bodyChildren.push(el("p", { class: "ms-expanded" }, [m.expanded]));
-
-          if (m.subtasks && m.subtasks.length) {
-            var subList = el("div", { class: "ms-subtasks" });
-            subList.addEventListener("click", function (e) { e.stopPropagation(); });
-
-            m.subtasks.forEach(function (sub, idx) {
-              var subDone = isSubtaskDone(m, idx);
-              var subId = "chk-" + m.id + "-sub" + idx;
-              var subTeam = sub.team || m.team || "cross-team";
-              var subChk = el("input", { type: "checkbox", id: subId });
-              subChk.checked = subDone;
-              subChk.addEventListener("change", function () { toggleSubtask(m, idx); });
-
-              subList.appendChild(el("label", { class: "ms-subtask-row", for: subId }, [
-                subChk,
-                el("span", { class: "team-dot team-" + subTeam }),
-                el("span", { class: "team-tag" }, [TEAM_LABELS[subTeam] || subTeam]),
-                el("span", { class: subDone ? "ms-subtask-text ms-subtask-done" : "ms-subtask-text" }, [sub.label]),
-                buildAssignControl(subtaskKey(m, idx)),
-              ]));
-            });
-            bodyChildren.push(subList);
-          }
-        }
-
-        bodyChildren.push(el("div", { class: "ms-meta-row" }, [
-          el("div", { class: "ms-meta-left" }, [
-            el("span", { class: "ms-date" }, ["Recommended: " + formatDate(m.date)]),
-            buildAssignControl(m.id),
+          el("div", { class: "ms-meta-row" }, [
+            el("div", { class: "ms-meta-left" }, metaLeftChildren),
+            detailsBtn,
           ]),
-          toggleBtn,
-        ]));
-
-        var body = el("div", { class: "ms-body", tabindex: "0", role: "button", "aria-expanded": isOpen ? "true" : "false" }, bodyChildren);
-        body.addEventListener("click", toggleExpand);
+        ]);
+        body.addEventListener("click", openDetails);
         body.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            toggleExpand();
+            openDetails();
           }
         });
 
@@ -1141,6 +1124,104 @@
     modalItem.toggle();
     render();
     refreshModalToggle();
+  });
+
+  // ---- Milestone detail side panel -- replaces the old inline
+  // "More detail" expansion. Sub-tasks stay collapsed behind their own
+  // toggle inside the panel, so assigning them out doesn't have to
+  // compete with the milestone's own detail text for space. ----
+  var msPanelOverlay = document.getElementById("ms-panel-overlay");
+  var msPanelItem = null;
+  var msPanelSubtasksOpen = false;
+
+  function openMsPanel(m) {
+    msPanelItem = m;
+    msPanelSubtasksOpen = false;
+    renderMsPanel();
+    msPanelOverlay.hidden = false;
+  }
+
+  function closeMsPanel() {
+    msPanelOverlay.hidden = true;
+    msPanelItem = null;
+  }
+
+  function renderMsPanel() {
+    var m = msPanelItem;
+    if (!m) return;
+    var status = statusOf(isDone(m), m.date);
+    var msTeam = m.team || "cross-team";
+
+    document.getElementById("ms-panel-date").textContent = "Recommended: " + formatDate(m.date);
+    document.getElementById("ms-panel-title").textContent = m.label;
+
+    var teamRow = document.getElementById("ms-panel-team");
+    teamRow.innerHTML = "";
+    teamRow.appendChild(el("span", { class: "team-badge" }, [
+      el("span", { class: "team-dot team-" + msTeam }),
+      TEAM_LABELS[msTeam] || msTeam,
+    ]));
+    teamRow.appendChild(el("span", { class: "pill " + status.cls }, [status.label]));
+
+    var body = document.getElementById("ms-panel-body");
+    body.innerHTML = "";
+    if (m.detail) body.appendChild(el("p", { class: "ms-detail" }, [m.detail]));
+    if (m.expanded) body.appendChild(el("p", { class: "ms-expanded" }, [m.expanded]));
+
+    var assignHost = document.getElementById("ms-panel-assign-control");
+    assignHost.innerHTML = "";
+    assignHost.appendChild(buildAssignControl(m.id));
+
+    var subSection = document.getElementById("ms-panel-subtasks-section");
+    var subToggle = document.getElementById("ms-panel-subtasks-toggle");
+    var subList = document.getElementById("ms-panel-subtasks-list");
+    if (m.subtasks && m.subtasks.length) {
+      subSection.hidden = false;
+      var doneCount = m.subtasks.filter(function (_, i) { return isSubtaskDone(m, i); }).length;
+      subToggle.textContent = (msPanelSubtasksOpen ? "Hide sub-tasks" : "See specific sub-tasks") + " (" + doneCount + "/" + m.subtasks.length + ")";
+      subList.hidden = !msPanelSubtasksOpen;
+      subList.innerHTML = "";
+      if (msPanelSubtasksOpen) {
+        m.subtasks.forEach(function (sub, idx) {
+          var subDone = isSubtaskDone(m, idx);
+          var subId = "panel-chk-" + m.id + "-sub" + idx;
+          var subTeam = sub.team || m.team || "cross-team";
+          var subChk = el("input", { type: "checkbox", id: subId });
+          subChk.checked = subDone;
+          subChk.addEventListener("change", function () { toggleSubtask(m, idx); });
+
+          subList.appendChild(el("label", { class: "ms-subtask-row", for: subId }, [
+            subChk,
+            el("span", { class: "team-dot team-" + subTeam }),
+            el("span", { class: "team-tag" }, [TEAM_LABELS[subTeam] || subTeam]),
+            el("span", { class: subDone ? "ms-subtask-text ms-subtask-done" : "ms-subtask-text" }, [sub.label]),
+            buildAssignControl(subtaskKey(m, idx)),
+          ]));
+        });
+      }
+    } else {
+      subSection.hidden = true;
+    }
+
+    var toggleBtn = document.getElementById("ms-panel-toggle");
+    toggleBtn.textContent = status.done ? "Mark not done" : "Mark done";
+    toggleBtn.className = "submit-btn-sm" + (status.done ? " submit-btn-ghost" : "");
+  }
+
+  document.getElementById("ms-panel-close").addEventListener("click", closeMsPanel);
+  msPanelOverlay.addEventListener("click", function (e) {
+    if (e.target === msPanelOverlay) closeMsPanel();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !msPanelOverlay.hidden) closeMsPanel();
+  });
+  document.getElementById("ms-panel-subtasks-toggle").addEventListener("click", function () {
+    msPanelSubtasksOpen = !msPanelSubtasksOpen;
+    renderMsPanel();
+  });
+  document.getElementById("ms-panel-toggle").addEventListener("click", function () {
+    if (!msPanelItem) return;
+    toggleMilestone(msPanelItem);
   });
 
   var ROSTER_TEAMS = ["mechanical", "electrical", "programming", "design", "business"];

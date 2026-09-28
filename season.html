@@ -163,7 +163,7 @@
 </main>
 
 <div class="cal-modal-overlay" id="cal-modal-overlay" hidden>
-  <div class="cal-modal" role="dialog" aria-modal="true" aria-labelledby="cal-modal-title">
+  <div class="cal-modal" role="dialog" aria-modal="true" aria-labelledby="cal-modal-title" data-lenis-prevent>
     <button type="button" class="cal-modal-close" id="cal-modal-close" aria-label="Close">×</button>
     <div class="cal-modal-date" id="cal-modal-date"></div>
     <h3 class="cal-modal-title" id="cal-modal-title"></h3>
@@ -176,6 +176,27 @@
     <div class="cal-modal-actions">
       <a href="#" target="_blank" rel="noopener" class="submit-btn-sm submit-btn-ghost" id="cal-modal-gcal">+ Add to Google Calendar</a>
       <button type="button" class="submit-btn-sm" id="cal-modal-toggle">Mark done</button>
+    </div>
+  </div>
+</div>
+
+<div class="ms-panel-overlay" id="ms-panel-overlay" hidden>
+  <div class="ms-panel" role="dialog" aria-modal="true" aria-labelledby="ms-panel-title" data-lenis-prevent>
+    <button type="button" class="ms-panel-close" id="ms-panel-close" aria-label="Close">×</button>
+    <div class="ms-panel-date" id="ms-panel-date"></div>
+    <h3 class="ms-panel-title" id="ms-panel-title"></h3>
+    <div class="ms-panel-team" id="ms-panel-team"></div>
+    <div id="ms-panel-body"></div>
+    <div class="ms-panel-assign">
+      <span class="eyebrow">Assigned to</span>
+      <div id="ms-panel-assign-control"></div>
+    </div>
+    <div class="ms-panel-subtasks-section" id="ms-panel-subtasks-section" hidden>
+      <button type="button" class="ms-panel-subtasks-toggle" id="ms-panel-subtasks-toggle">See specific sub-tasks</button>
+      <div class="ms-subtasks" id="ms-panel-subtasks-list" hidden></div>
+    </div>
+    <div class="ms-panel-actions">
+      <button type="button" class="submit-btn-sm" id="ms-panel-toggle">Mark done</button>
     </div>
   </div>
 </div>
