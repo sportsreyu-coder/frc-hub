@@ -13,21 +13,6 @@
     "District of Columbia",
   ];
 
-  // These aren't tied to a physical, visitable location (a gift-matching
-  // program, a platform that aggregates other restaurants, an online
-  // ordering/ship-to-you fundraiser, or a request-a-gift-card form) --
-  // a "find near you" map search wouldn't mean anything for them.
-  var NOT_LOCATABLE = {
-    "GE": true,
-    "Target": true,
-    "MLB Ticket Fundraiser": true,
-    "Groupraise": true,
-    "Butter Braid": true,
-    "Krispy Kreme": true,
-    "Double Good Popcorn": true,
-    "Barnes and Nobles": true,
-  };
-
   var state = "";
   var activeType = "";
   var items = [];
@@ -77,7 +62,7 @@
         el("a", { class: "title-link", href: item.link || "#", target: "_blank", rel: "noopener" }, [item.name]),
         item.notes ? el("p", {}, [item.notes]) : null,
       ];
-      if (state && !NOT_LOCATABLE[item.name]) {
+      if (state) {
         children.push(el("a", {
           class: "card-locate-link",
           href: mapSearchUrl(item.name, state),
