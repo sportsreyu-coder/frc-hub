@@ -31,31 +31,40 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #14130f;
-  --bg-card: #1e1c17;
-  --bg-soft: #262319;
-  --border: #35311f;
-  --border-strong: #443f28;
-  --text: #f1ece0;
-  --text-dim: #cabfa9;
-  --text-faint: #9b917c;
-  --text-faint2: #847a67;
-  --accent: #6f9cf2;
-  --accent-hover: #8fb2f5;
-  --accent-soft: #1c2740;
-  --accent-border: #2d3f66;
+  --bg: #000000;
+  --bg-card: #0a0a0a;
+  --bg-soft: #141414;
+  --border: #242424;
+  --border-strong: #333333;
+  --text: #f2f2f2;
+  --text-dim: #c8c8c8;
+  --text-faint: #9a9a9a;
+  --text-faint2: #858585;
+  --accent: #16815b;
+  --accent-hover: #1fa374;
+  --accent-soft: #07170f;
+  --accent-border: #12432f;
   --green: #34d399;
   --green-bg: rgba(52, 211, 153, 0.15);
   --amber: #fbbf24;
   --amber-bg: rgba(251, 191, 36, 0.15);
-  --gray-bg: #2c2820;
-  --gray-fg: #9b917c;
+  --gray-bg: #1a1a1a;
+  --gray-fg: #9a9a9a;
   --red-bg: rgba(220, 90, 60, 0.15);
   --red-border: #6b3226;
   --red-fg: #ff8a68;
-  --header-bg: rgba(20, 19, 15, 0.85);
-  --shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.6);
+  --header-bg: rgba(0, 0, 0, 0.85);
+  --shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.9);
 }
+
+/* Hardcoded light-mode row dividers (#ede8df) showed as beige lines in dark mode */
+:root[data-theme="dark"] .dates-row,
+:root[data-theme="dark"] .gc-bottom { border-color: var(--border); }
+:root[data-theme="dark"] .dates-table .dates-row:first-child { border-top: none; }
+
+/* Green status fills that hardcode the light-mode green */
+:root[data-theme="dark"] .pace-box.pace-ahead { border-color: rgba(52, 211, 153, 0.3); }
+:root[data-theme="dark"] .info-msg { border-color: rgba(52, 211, 153, 0.3); }
 
 * { box-sizing: border-box; }
 
@@ -112,29 +121,20 @@ input::placeholder { color: var(--text-faint2); }
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
   color: var(--text);
   flex-shrink: 0;
 }
 
-.brand-mark {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background: var(--accent);
-  color: var(--bg);
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.brand span.brand-name {
+.brand-name {
   font-family: var(--font-serif);
   font-size: 21px;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.brand-name .brand-accent {
+  color: var(--accent);
 }
 
 .main-nav {
@@ -977,7 +977,7 @@ main.site-main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-auto-rows: min-content;
-  align-items: start;
+  align-items: stretch;
   gap: 14px;
   margin-top: 28px;
 }
