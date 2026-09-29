@@ -70,6 +70,10 @@
 
 [hidden] { display: none !important; }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -79,11 +83,6 @@ html, body {
   font-size: 15px;
   line-height: 1.55;
 }
-
-html.lenis, html.lenis body { height: auto; }
-html.lenis.lenis-smooth { scroll-behavior: auto !important; }
-html.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-html.lenis.lenis-stopped { overflow: hidden; }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-hover); }
@@ -301,6 +300,34 @@ main.site-main {
   height: 1px;
   background: var(--border);
   margin: 44px 0 36px;
+}
+
+.scroll-down-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 28px auto 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  animation: scroll-down-bounce 2s ease-in-out infinite;
+}
+
+.scroll-down-btn svg { width: 18px; height: 18px; }
+
+.scroll-down-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  animation-play-state: paused;
+}
+
+@keyframes scroll-down-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
 }
 
 /* ---------- Dashboard ---------- */
@@ -604,6 +631,7 @@ main.site-main {
   justify-content: space-between;
   gap: 32px;
   flex-wrap: wrap;
+  scroll-margin-top: 90px;
 }
 
 .category-bar h2, .page-head h1 {

@@ -11,8 +11,10 @@
     if (!btn) return;
     var sun = btn.querySelector(".icon-sun");
     var moon = btn.querySelector(".icon-moon");
-    if (sun) sun.hidden = theme === "dark";
-    if (moon) moon.hidden = theme !== "dark";
+    // Plain `.hidden = ...` doesn't reliably reflect to the attribute on
+    // SVGElement in every browser, so set/remove the attribute directly.
+    if (sun) { if (theme === "dark") sun.setAttribute("hidden", ""); else sun.removeAttribute("hidden"); }
+    if (moon) { if (theme !== "dark") moon.setAttribute("hidden", ""); else moon.removeAttribute("hidden"); }
     btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
   }
 

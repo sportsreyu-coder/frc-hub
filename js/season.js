@@ -430,7 +430,7 @@
     wrap.addEventListener("click", function (e) { e.stopPropagation(); });
 
     var btn = el("button", { type: "button", class: "assign-select" }, [assignmentSummary(itemId) || "Unassigned"]);
-    var popover = el("div", { class: "assign-popover", hidden: "", "data-lenis-prevent": "" });
+    var popover = el("div", { class: "assign-popover", hidden: "" });
 
     function assignRow(token, label, checked) {
       var rowId = "assign-" + Math.random().toString(36).slice(2);
