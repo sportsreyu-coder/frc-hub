@@ -774,6 +774,7 @@ main.site-main {
 .grant-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-auto-rows: min-content;
   align-items: start;
   gap: 14px;
 }
@@ -975,6 +976,8 @@ main.site-main {
 .simple-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-auto-rows: min-content;
+  align-items: start;
   gap: 14px;
   margin-top: 28px;
 }
