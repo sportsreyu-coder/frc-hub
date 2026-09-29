@@ -1136,7 +1136,7 @@
 
   function openMsPanel(m) {
     msPanelItem = m;
-    msPanelSubtasksOpen = false;
+    msPanelSubtasksOpen = true;
     renderMsPanel();
     msPanelOverlay.hidden = false;
   }
