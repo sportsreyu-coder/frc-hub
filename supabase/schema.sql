@@ -1,5 +1,8 @@
 -- FRC Hub — database schema
--- Run this once in the Supabase SQL editor (Project -> SQL Editor -> New query).
+-- Run in the Supabase SQL editor (Project -> SQL Editor -> New query).
+-- Safe to re-run in full after a migration (e.g. new columns below) --
+-- every `create policy` is preceded by a matching `drop policy if
+-- exists` so re-running never fails on "policy already exists".
 --
 -- Written for a project with "Automatically expose new tables" turned OFF
 -- (Settings -> API -> the Data API security toggles) -- so the table gets
@@ -26,14 +29,17 @@ create table if not exists public.season_data (
 
 alter table public.season_data enable row level security;
 
+drop policy if exists "Users can view their own season data" on public.season_data;
 create policy "Users can view their own season data"
   on public.season_data for select
   using (auth.uid() = user_id);
 
+drop policy if exists "Users can insert their own season data" on public.season_data;
 create policy "Users can insert their own season data"
   on public.season_data for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "Users can update their own season data" on public.season_data;
 create policy "Users can update their own season data"
   on public.season_data for update
   using (auth.uid() = user_id);
@@ -68,14 +74,17 @@ alter table public.profiles add column if not exists signature text;
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "Profiles are publicly readable" on public.profiles;
 create policy "Profiles are publicly readable"
   on public.profiles for select
   using (true);
 
+drop policy if exists "Users can insert their own profile" on public.profiles;
 create policy "Users can insert their own profile"
   on public.profiles for insert
   with check (auth.uid() = id);
 
+drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile"
   on public.profiles for update
   using (auth.uid() = id);
@@ -108,18 +117,22 @@ create table if not exists public.forum_posts (
 
 alter table public.forum_posts enable row level security;
 
+drop policy if exists "Forum posts are publicly readable" on public.forum_posts;
 create policy "Forum posts are publicly readable"
   on public.forum_posts for select
   using (true);
 
+drop policy if exists "Users can create their own forum posts" on public.forum_posts;
 create policy "Users can create their own forum posts"
   on public.forum_posts for insert
   with check (auth.uid() = author_id);
 
+drop policy if exists "Users can update their own forum posts" on public.forum_posts;
 create policy "Users can update their own forum posts"
   on public.forum_posts for update
   using (auth.uid() = author_id);
 
+drop policy if exists "Users can delete their own forum posts" on public.forum_posts;
 create policy "Users can delete their own forum posts"
   on public.forum_posts for delete
   using (auth.uid() = author_id);
@@ -141,14 +154,17 @@ create table if not exists public.forum_replies (
 
 alter table public.forum_replies enable row level security;
 
+drop policy if exists "Forum replies are publicly readable" on public.forum_replies;
 create policy "Forum replies are publicly readable"
   on public.forum_replies for select
   using (true);
 
+drop policy if exists "Users can create their own forum replies" on public.forum_replies;
 create policy "Users can create their own forum replies"
   on public.forum_replies for insert
   with check (auth.uid() = author_id);
 
+drop policy if exists "Users can delete their own forum replies" on public.forum_replies;
 create policy "Users can delete their own forum replies"
   on public.forum_replies for delete
   using (auth.uid() = author_id);
