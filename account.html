@@ -91,6 +91,27 @@
           <button type="submit" class="submit-btn">Save profile</button>
         </form>
       </div>
+
+      <div class="account-card">
+        <h2>Profile customization</h2>
+        <p class="small">Personalize how you show up around FRC Hub — your avatar color follows you everywhere, and your signature appears under anything you post in the <a href="forum.html">Forum</a>.</p>
+        <div class="info-msg" id="customize-info"></div>
+        <form id="customize-form">
+          <div class="field">
+            <label for="customize-display-name">Display name (optional)</label>
+            <input type="text" id="customize-display-name" placeholder="Shown instead of your Google name">
+          </div>
+          <div class="field">
+            <label>Avatar color</label>
+            <div class="color-swatch-row" id="color-swatch-row"></div>
+          </div>
+          <div class="field">
+            <label for="customize-signature">Signature (optional)</label>
+            <input type="text" id="customize-signature" maxlength="120" placeholder="A short line shown under your forum posts">
+          </div>
+          <button type="submit" class="submit-btn">Save</button>
+        </form>
+      </div>
     </section>
   </div>
 </main>
@@ -104,6 +125,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
+<script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
 <script src="js/forum-data.js"></script>
 <script src="js/theme.js"></script>

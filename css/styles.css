@@ -209,6 +209,12 @@ input::placeholder { color: var(--text-faint2); }
   z-index: 50;
 }
 
+.account-dropdown-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
 .account-dropdown-email {
   font-size: 12.5px;
   color: var(--text-faint);
@@ -218,8 +224,10 @@ input::placeholder { color: var(--text-faint2); }
   border-bottom: 1px solid var(--border);
 }
 
-.account-dropdown-signout {
+.account-dropdown-action {
+  display: block;
   width: 100%;
+  box-sizing: border-box;
   background: none;
   border: 1px solid var(--border-strong);
   border-radius: 8px;
@@ -228,9 +236,12 @@ input::placeholder { color: var(--text-faint2); }
   font-weight: 600;
   color: var(--text-dim);
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
 }
 
-.account-dropdown-signout:hover { border-color: var(--accent); color: var(--accent); }
+.account-dropdown-action + .account-dropdown-action { margin-top: 8px; }
+.account-dropdown-action:hover { border-color: var(--accent); color: var(--accent); }
 
 .theme-toggle {
   display: inline-flex;
@@ -2286,6 +2297,39 @@ main.site-main {
 }
 
 .submit-btn:hover { background: var(--accent-hover); }
+
+.color-swatch-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.color-swatch.is-empty { background: transparent; border-style: dashed; border-color: var(--border-strong); box-shadow: none; }
+.color-swatch.selected { border-color: var(--text); }
+
+.author-color-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.post-signature {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--text-faint);
+}
 
 .signout-row { text-align: right; margin-bottom: 10px; }
 .signout-row button { background: none; border: none; color: var(--text-faint); font-size: 0.8rem; cursor: pointer; text-decoration: underline; }

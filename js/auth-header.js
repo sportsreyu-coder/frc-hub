@@ -39,29 +39,46 @@
 
     var meta = user.user_metadata || {};
     var avatarUrl = meta.avatar_url || meta.picture;
-    var name = meta.full_name || meta.name || user.email || "";
+    var googleName = meta.full_name || meta.name || user.email || "";
 
-    var btn = el("button", { type: "button", class: "account-avatar-btn", "aria-label": "Account menu" },
-      avatarUrl ? [el("img", { src: avatarUrl, alt: "", referrerpolicy: "no-referrer" })] : [initialFor(name)]
-    );
+    function build(profile) {
+      profile = profile || {};
+      var name = profile.display_name || googleName;
+      var hex = profile.avatar_color && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[profile.avatar_color];
 
-    var dropdown = el("div", { class: "account-dropdown", hidden: "" }, [
-      el("div", { class: "account-dropdown-email" }, [user.email || ""]),
-      el("button", { type: "button", class: "account-dropdown-signout" }, ["Sign out"]),
-    ]);
-    dropdown.querySelector(".account-dropdown-signout").addEventListener("click", function () {
-      sb.auth.signOut();
-    });
+      var btn = el("button", { type: "button", class: "account-avatar-btn", "aria-label": "Account menu" },
+        avatarUrl ? [el("img", { src: avatarUrl, alt: "", referrerpolicy: "no-referrer" })] : [initialFor(name)]
+      );
+      if (hex) {
+        if (!avatarUrl) btn.style.background = hex;
+        btn.style.boxShadow = "0 0 0 2px " + hex;
+      }
 
-    btn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      dropdown.hidden = !dropdown.hidden;
-    });
-    document.addEventListener("click", function () { dropdown.hidden = true; });
-    dropdown.addEventListener("click", function (e) { e.stopPropagation(); });
+      var dropdownChildren = [];
+      if (profile.display_name) dropdownChildren.push(el("div", { class: "account-dropdown-name" }, [profile.display_name]));
+      dropdownChildren.push(el("div", { class: "account-dropdown-email" }, [user.email || ""]));
+      dropdownChildren.push(el("a", { class: "account-dropdown-action", href: "account.html" }, ["Profile settings"]));
+      dropdownChildren.push(el("button", { type: "button", class: "account-dropdown-action account-dropdown-signout" }, ["Sign out"]));
 
-    slot.innerHTML = "";
-    slot.appendChild(el("div", { class: "account-avatar-wrap" }, [btn, dropdown]));
+      var dropdown = el("div", { class: "account-dropdown", hidden: "" }, dropdownChildren);
+      dropdown.querySelector(".account-dropdown-signout").addEventListener("click", function () {
+        sb.auth.signOut();
+      });
+
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.hidden = !dropdown.hidden;
+      });
+      document.addEventListener("click", function () { dropdown.hidden = true; });
+      dropdown.addEventListener("click", function (e) { e.stopPropagation(); });
+
+      slot.innerHTML = "";
+      slot.appendChild(el("div", { class: "account-avatar-wrap" }, [btn, dropdown]));
+    }
+
+    sb.from("profiles").select("display_name, avatar_color").eq("id", user.id).maybeSingle().then(function (res) {
+      build(res && res.data);
+    }, function () { build(null); });
   }
 
   function renderSignedOut() {

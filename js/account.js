@@ -38,24 +38,63 @@
     districtSelect.appendChild(opt);
   });
 
+  var selectedAvatarColor = "";
+  var swatchRow = document.getElementById("color-swatch-row");
+
+  function renderSwatches() {
+    swatchRow.innerHTML = "";
+    var options = [{ value: "", hex: null }].concat(window.FRC_AVATAR_COLORS || []);
+    options.forEach(function (opt) {
+      var sw = document.createElement("button");
+      sw.type = "button";
+      sw.className = "color-swatch" + (opt.hex ? "" : " is-empty") + (opt.value === selectedAvatarColor ? " selected" : "");
+      if (opt.hex) sw.style.background = opt.hex;
+      sw.setAttribute("aria-label", opt.value || "Default");
+      sw.addEventListener("click", function () {
+        selectedAvatarColor = opt.value;
+        renderSwatches();
+      });
+      swatchRow.appendChild(sw);
+    });
+  }
+  renderSwatches();
+
+  // Both forms below write to the same `profiles` row, so each submit
+  // sends the full set of fields (read live from both forms' inputs)
+  // rather than a partial upsert -- otherwise saving one form's fields
+  // could look fine while silently depending on the other form having
+  // already run once to populate the row.
+  function buildProfilePayload() {
+    return {
+      id: currentUser.id,
+      team_number: document.getElementById("profile-team-number").value.trim(),
+      team_name: document.getElementById("profile-team-name").value.trim() || null,
+      district: districtSelect.value || null,
+      display_name: document.getElementById("customize-display-name").value.trim() || null,
+      avatar_color: selectedAvatarColor || null,
+      signature: document.getElementById("customize-signature").value.trim() || null,
+      updated_at: new Date().toISOString(),
+    };
+  }
+
   document.getElementById("profile-form").addEventListener("submit", async function (e) {
     e.preventDefault();
     var profileInfo = document.getElementById("profile-info");
     showError(profileInfo, "");
-    var teamNumber = document.getElementById("profile-team-number").value.trim();
-    var teamName = document.getElementById("profile-team-name").value.trim();
-    var district = districtSelect.value;
-
-    var { error } = await sb.from("profiles").upsert({
-      id: currentUser.id,
-      team_number: teamNumber,
-      team_name: teamName || null,
-      district: district || null,
-      updated_at: new Date().toISOString(),
-    });
+    var { error } = await sb.from("profiles").upsert(buildProfilePayload());
     if (error) return showError(profileInfo, error.message);
     profileInfo.textContent = "Saved.";
     profileInfo.style.display = "block";
+  });
+
+  document.getElementById("customize-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var customizeInfo = document.getElementById("customize-info");
+    showError(customizeInfo, "");
+    var { error } = await sb.from("profiles").upsert(buildProfilePayload());
+    if (error) return showError(customizeInfo, error.message);
+    customizeInfo.textContent = "Saved.";
+    customizeInfo.style.display = "block";
   });
 
   async function loadProfile() {
@@ -64,6 +103,10 @@
       document.getElementById("profile-team-number").value = profile.team_number || "";
       document.getElementById("profile-team-name").value = profile.team_name || "";
       districtSelect.value = profile.district || "";
+      document.getElementById("customize-display-name").value = profile.display_name || "";
+      document.getElementById("customize-signature").value = profile.signature || "";
+      selectedAvatarColor = profile.avatar_color || "";
+      renderSwatches();
     }
   }
 

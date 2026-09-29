@@ -35,6 +35,16 @@
     return "Team " + profile.team_number + (profile.team_name ? " — " + profile.team_name : "");
   }
 
+  function authorColorDot(profile) {
+    var hex = profile && profile.avatar_color && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[profile.avatar_color];
+    return hex ? el("span", { class: "author-color-dot", style: "background:" + hex }) : null;
+  }
+
+  function signatureNode(profile) {
+    if (!profile || !profile.signature) return null;
+    return el("div", { class: "post-signature" }, [profile.signature]);
+  }
+
   function showView(id) {
     ["forum-directory", "forum-thread-list", "forum-thread-detail"].forEach(function (vid) {
       document.getElementById(vid).hidden = vid !== id;
@@ -124,7 +134,7 @@
     listEl.appendChild(el("p", { class: "finder-hint" }, ["Loading threads…"]));
 
     sb.from("forum_posts")
-      .select("*, profiles(team_number, team_name), forum_replies(count)")
+      .select("*, profiles(team_number, team_name, avatar_color), forum_replies(count)")
       .eq("board", board)
       .order("created_at", { ascending: false })
       .then(function (res) {
@@ -146,7 +156,7 @@
           }, [
             el("div", { class: "thread-row-main" }, [
               el("span", { class: "thread-title" }, [p.title]),
-              el("span", { class: "thread-meta" }, [authorLabel(p.profiles) + " · " + fmtDate(p.created_at)]),
+              el("span", { class: "thread-meta" }, [authorColorDot(p.profiles), authorLabel(p.profiles) + " · " + fmtDate(p.created_at)]),
             ]),
             el("span", { class: "thread-reply-count" }, [replyCount + (replyCount === 1 ? " reply" : " replies")]),
           ]));
@@ -183,7 +193,7 @@
     renderPostGate("reply-gate", "reply-form");
     if (!sb) return;
 
-    sb.from("forum_posts").select("*, profiles(team_number, team_name)").eq("id", id).maybeSingle().then(function (res) {
+    sb.from("forum_posts").select("*, profiles(team_number, team_name, avatar_color, signature)").eq("id", id).maybeSingle().then(function (res) {
       postEl.innerHTML = "";
       if (res.error || !res.data) {
         postEl.appendChild(el("p", { class: "finder-hint" }, ["Thread not found."]));
@@ -192,9 +202,10 @@
       var p = res.data;
       var isOwner = currentUser && currentUser.id === p.author_id;
       var bodyChildren = [
-        el("div", { class: "post-meta" }, [authorLabel(p.profiles) + " · " + fmtDate(p.created_at)]),
+        el("div", { class: "post-meta" }, [authorColorDot(p.profiles), authorLabel(p.profiles) + " · " + fmtDate(p.created_at)]),
         el("h1", { class: "post-title" }, [p.title]),
         el("p", { class: "post-body" }, [p.body]),
+        signatureNode(p.profiles),
       ];
       if (isOwner) {
         var delBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Delete thread"]);
@@ -217,7 +228,7 @@
     replyListEl.appendChild(el("p", { class: "finder-hint" }, ["Loading replies…"]));
 
     sb.from("forum_replies")
-      .select("*, profiles(team_number, team_name)")
+      .select("*, profiles(team_number, team_name, avatar_color, signature)")
       .eq("post_id", postId)
       .order("created_at", { ascending: true })
       .then(function (res) {
@@ -234,8 +245,9 @@
         replies.forEach(function (r) {
           var isOwner = currentUser && currentUser.id === r.author_id;
           var body = [
-            el("div", { class: "post-meta" }, [authorLabel(r.profiles) + " · " + fmtDate(r.created_at)]),
+            el("div", { class: "post-meta" }, [authorColorDot(r.profiles), authorLabel(r.profiles) + " · " + fmtDate(r.created_at)]),
             el("p", { class: "post-body" }, [r.body]),
+            signatureNode(r.profiles),
           ];
           if (isOwner) {
             var delBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Delete"]);

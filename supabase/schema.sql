@@ -51,9 +51,20 @@ create table if not exists public.profiles (
   team_number text not null,
   team_name text,
   district text,
+  display_name text,
+  avatar_color text,
+  signature text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Added after the initial release for personal profile customization
+-- (header display name, avatar color, forum signature). Kept as
+-- explicit alters so re-running this file against an already-
+-- provisioned database picks up the new columns without dropping data.
+alter table public.profiles add column if not exists display_name text;
+alter table public.profiles add column if not exists avatar_color text;
+alter table public.profiles add column if not exists signature text;
 
 alter table public.profiles enable row level security;
 
