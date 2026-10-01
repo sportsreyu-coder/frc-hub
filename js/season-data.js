@@ -304,13 +304,22 @@ window.SEASON_MILESTONES = [
   // headline is whichever active phase started most recently -- i.e. the
   // newest thing the team should be shifting focus onto -- with the
   // other concurrent phases noted in the detail line.
+  //
+  // Each handoff phase's boundaries are kept in sync with the matching
+  // checklist deadline above (bs-cad=28, bs-fab=35, bs-assembly=42): a
+  // phase should mostly be *done* by the point its checklist milestone is
+  // due, with just a few days of overlap into the next phase for realistic
+  // handoff (ordering stock before CAD is 100% final, assembling the first
+  // finished parts while the rest are still being machined, etc.) --
+  // rather than, e.g., fabrication starting two full weeks before CAD is
+  // checklisted as finished.
   var BUILD_PHASES = [
     { key: "strategy", short: "Strategy", team: "design", start: 1, end: 3 },
     { key: "concepts", short: "Concepts", team: "design", start: 3, end: 5 },
     { key: "prototyping", short: "Prototyping", team: "design", start: 6, end: 21 },
-    { key: "cad", short: "CAD", team: "design", start: 8, end: 31 },
-    { key: "fab", short: "Fabrication", team: "mechanical", start: 15, end: 42 },
-    { key: "assembly", short: "Assembly", team: "mechanical", start: 22, end: 42 },
+    { key: "cad", short: "CAD", team: "design", start: 8, end: 28 },
+    { key: "fab", short: "Fabrication", team: "mechanical", start: 24, end: 35 },
+    { key: "assembly", short: "Assembly", team: "mechanical", start: 32, end: 42 },
     { key: "programming", short: "Programming", team: "programming", start: 8, end: 42 },
     { key: "testing", short: "Code Testing", team: "programming", start: 29, end: 52 },
     { key: "practice", short: "Practice", team: "mechanical", start: 36, end: 49 },
