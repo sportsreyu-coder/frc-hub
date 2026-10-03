@@ -2,6 +2,7 @@
   "use strict";
 
   var Core = window.SeasonCore;
+  var Team = window.FRCTeam;
   var daysBetween = Core.daysBetween;
   var formatDate = Core.formatDate;
   var saveProgress = Core.saveProgress;
@@ -18,6 +19,9 @@
   var MEMBERS_KEY = "frcgrants_season_members_v1";
   var ASSIGN_KEY = "frcgrants_season_assignments_v1";
   var CUSTOM_TASKS_KEY = "frcgrants_season_custom_tasks_v1";
+  var MILESTONE_OVERRIDES_KEY = "frcgrants_season_milestone_overrides_v1";
+  var HIDDEN_MILESTONES_KEY = "frcgrants_season_hidden_milestones_v1";
+  var COMPLETED_GRANTS_KEY = "frcgrants_season_completed_grants_v1";
 
   var TEAM_LABELS = {
     design: "Design",
@@ -41,6 +45,65 @@
       if (c) node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
     });
     return node;
+  }
+
+  var PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+
+  function iconButton(cls, label, svg) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = cls;
+    btn.setAttribute("aria-label", label);
+    btn.title = label;
+    btn.innerHTML = svg;
+    return btn;
+  }
+
+  function toISODate(d) {
+    var y = d.getFullYear(), m = ("0" + (d.getMonth() + 1)).slice(-2), day = ("0" + d.getDate()).slice(-2);
+    return y + "-" + m + "-" + day;
+  }
+
+  // A click-to-edit date: shows the formatted date with a small pencil
+  // affordance; clicking it swaps in a native <input type="date"> so the
+  // date can be changed in place without leaving the checklist/calendar.
+  // `onSave` is called with the new value as a "YYYY-MM-DD" string.
+  function buildEditableDate(date, onSave, opts) {
+    opts = opts || {};
+    var wrap = el("span", { class: "editable-date" });
+    var display = el("button", {
+      type: "button",
+      class: "editable-date-display",
+      "aria-label": opts.ariaLabel || "Change this date",
+      title: "Click to change this date",
+    }, [formatDate(date)]);
+    var icon = el("span", { class: "editable-date-icon" });
+    icon.innerHTML = PENCIL_SVG;
+    display.appendChild(icon);
+
+    var input = el("input", { type: "date", class: "editable-date-input", "aria-label": opts.ariaLabel || "Change this date" });
+    input.value = toISODate(date);
+
+    display.addEventListener("click", function (e) {
+      e.stopPropagation();
+      wrap.classList.add("editing");
+      input.focus();
+      if (input.showPicker) { try { input.showPicker(); } catch (err) { /* unsupported -- the visible input still works */ } }
+    });
+    input.addEventListener("click", function (e) { e.stopPropagation(); });
+    input.addEventListener("change", function (e) {
+      e.stopPropagation();
+      if (input.value) onSave(input.value);
+    });
+    input.addEventListener("blur", function () { wrap.classList.remove("editing"); });
+    input.addEventListener("keydown", function (e) {
+      e.stopPropagation();
+      if (e.key === "Escape") { input.value = toISODate(date); input.blur(); }
+    });
+
+    wrap.appendChild(display);
+    wrap.appendChild(input);
+    return wrap;
   }
 
   function loadCustomEvents() {
@@ -97,18 +160,42 @@
   function saveCustomTasks(list) {
     try { localStorage.setItem(CUSTOM_TASKS_KEY, JSON.stringify(list)); } catch (e) { /* ignore */ }
   }
+  function loadMilestoneOverrides() {
+    try { return JSON.parse(localStorage.getItem(MILESTONE_OVERRIDES_KEY) || "{}"); } catch (e) { return {}; }
+  }
+  function saveMilestoneOverrides(o) {
+    try { localStorage.setItem(MILESTONE_OVERRIDES_KEY, JSON.stringify(o)); } catch (e) { /* ignore */ }
+  }
+  function loadHiddenMilestones() {
+    try { return JSON.parse(localStorage.getItem(HIDDEN_MILESTONES_KEY) || "[]"); } catch (e) { return []; }
+  }
+  function saveHiddenMilestones(list) {
+    try { localStorage.setItem(HIDDEN_MILESTONES_KEY, JSON.stringify(list)); } catch (e) { /* ignore */ }
+  }
+  function loadCompletedGrants() {
+    try { return JSON.parse(localStorage.getItem(COMPLETED_GRANTS_KEY) || "{}"); } catch (e) { return {}; }
+  }
+  function saveCompletedGrants(g) {
+    try { localStorage.setItem(COMPLETED_GRANTS_KEY, JSON.stringify(g)); } catch (e) { /* ignore */ }
+  }
 
   // ---- Cloud sync (Supabase) ----
   //
   // Purely additive on top of the localStorage layer above: signed-out
   // (or Supabase not configured) behaves exactly as before. When signed
   // in, every render() also schedules a debounced upload of the whole
-  // state to the season_data table, and on load, an existing cloud row
-  // wins over whatever's in this browser's localStorage (so a second
-  // device picks up your data). If no cloud row exists yet, this
-  // browser's local data seeds it.
+  // state, and on load, an existing cloud row wins over whatever's in
+  // this browser's localStorage (so a second device picks up your data).
+  // If no cloud row exists yet, this browser's local data seeds it.
+  //
+  // Once FRCTeam (js/team.js) reports the signed-in user is on a team,
+  // the sync target switches from the per-user `season_data` table to the
+  // per-team `team_data` table -- the whole team shares one state instead
+  // of each person having their own. Solo/no-team users keep today's
+  // `season_data` path unchanged.
   var cloudUserId = null;
   var cloudSaveTimer = null;
+  var teamRoster = []; // real accounts, loaded from FRCTeam when on a team
 
   function cloudSnapshot() {
     return {
@@ -120,6 +207,7 @@
       members: members,
       assignments: assignments,
       customTasks: customTasks,
+      completedGrants: completedGrants,
     };
   }
 
@@ -133,9 +221,19 @@
     if (data.members) { members = data.members; saveMembers(members); }
     if (data.assignments) { assignments = data.assignments; saveAssignments(assignments); }
     if (data.customTasks) { customTasks = data.customTasks; saveCustomTasks(customTasks); }
+    if (data.completedGrants) { completedGrants = data.completedGrants; saveCompletedGrants(completedGrants); }
   }
 
   function scheduleCloudSave() {
+    if (Team && Team.state.team) {
+      clearTimeout(cloudSaveTimer);
+      cloudSaveTimer = setTimeout(function () {
+        Team.saveTeamData(cloudSnapshot()).catch(function (err) {
+          console.warn("Season Tracker cloud save failed:", err.message);
+        });
+      }, 1200);
+      return;
+    }
     if (!cloudUserId || !window.__frcHubSupabase) return;
     clearTimeout(cloudSaveTimer);
     cloudSaveTimer = setTimeout(function () {
@@ -151,9 +249,46 @@
   function updateSyncStatus() {
     var el = document.getElementById("sync-status");
     if (!el) return;
+    if (Team && Team.state.team) {
+      el.textContent = "Synced to Team " + Team.state.team.team_number + " — shared with the whole team.";
+      return;
+    }
     el.textContent = cloudUserId
       ? "Synced to your account."
       : "Saved in this browser only — sign in to sync across devices.";
+  }
+
+  function loadTeamRoster() {
+    if (!Team || !Team.state.team) { teamRoster = []; return Promise.resolve(); }
+    return Team.loadRoster().then(function (rows) {
+      teamRoster = rows.map(function (r) {
+        return { id: r.user_id, name: (r.profile && r.profile.display_name) || "Member", team: r.subteam || "cross-team" };
+      });
+    });
+  }
+
+  // Once FRCTeam resolves membership, it takes over as the sync target --
+  // loads the team's shared data (which always wins over this browser's
+  // local copy, same "cloud wins" rule season_data already used per-user),
+  // or seeds it from local state the first time a brand-new team is
+  // created with nothing in it yet.
+  function initTeamSync() {
+    if (!Team) return;
+    function handleTeam() {
+      updateSyncStatus();
+      loadTeamRoster().then(render);
+      if (!Team.state.team) return;
+      Team.loadTeamData().then(function (data) {
+        if (data && Object.keys(data).length) {
+          applyCloudSnapshot(data);
+          render();
+        } else {
+          scheduleCloudSave();
+        }
+      });
+    }
+    Team.onChange(handleTeam);
+    Team.ready.then(handleTeam);
   }
 
   function initCloudSync() {
@@ -168,11 +303,15 @@
       }
       cloudUserId = session.user.id;
       updateSyncStatus();
+      // If this user turns out to be on a team, initTeamSync's handler
+      // takes over as the source of truth -- this season_data row is only
+      // ever read for solo/no-team users.
       sb.from("season_data").select("data").eq("user_id", cloudUserId).maybeSingle().then(function (res) {
         if (res.error) {
           console.warn("Season Tracker cloud load failed:", res.error.message);
           return;
         }
+        if (Team && Team.state.team) return; // team_data already won
         if (res.data && res.data.data) {
           applyCloudSnapshot(res.data.data);
           render();
@@ -194,7 +333,39 @@
 
   var today = Core.startOfDay(new Date());
   var anchor = Core.resolveAnchor(today);
-  var milestones = Core.getMilestonesWithDates();
+  var milestoneOverrides = loadMilestoneOverrides();
+  var hiddenMilestones = loadHiddenMilestones();
+  var milestones = Core.getMilestonesWithDates().map(function (m) {
+    m.recommendedDate = m.date;
+    var ov = milestoneOverrides[m.id];
+    if (ov) {
+      if (ov.label) m.label = ov.label;
+      if (ov.team) m.team = ov.team;
+      if (ov.date) m.date = new Date(ov.date + "T00:00:00");
+    }
+    return m;
+  });
+  function visibleMilestones() {
+    return milestones.filter(function (m) { return hiddenMilestones.indexOf(m.id) === -1; });
+  }
+  function setMilestoneOverride(id, patch) {
+    milestoneOverrides[id] = Object.assign({}, milestoneOverrides[id], patch);
+    saveMilestoneOverrides(milestoneOverrides);
+  }
+  function hideMilestone(id) {
+    var m = milestones.filter(function (x) { return x.id === id; })[0];
+    if (hiddenMilestones.indexOf(id) === -1) hiddenMilestones.push(id);
+    saveHiddenMilestones(hiddenMilestones);
+    delete progress[id];
+    if (m && m.subtasks) m.subtasks.forEach(function (_, i) { delete progress[subtaskKey(m, i)]; });
+    saveProgress(progress);
+    render();
+  }
+  function restoreHiddenMilestones() {
+    hiddenMilestones = [];
+    saveHiddenMilestones(hiddenMilestones);
+    render();
+  }
   var progress = Core.loadProgress();
   var calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   var customEvents = loadCustomEvents();
@@ -204,6 +375,7 @@
   var members = loadMembers();
   var assignments = loadAssignments();
   var customTasks = loadCustomTasks();
+  var completedGrants = loadCompletedGrants();
 
   // ---- Grant deadlines (from data/grants.json) ----
   var grantDeadlines = [];
@@ -268,6 +440,22 @@
   function subtaskKey(m, idx) { return m.id + "::sub" + idx; }
   function isSubtaskDone(m, idx) { return !!progress[subtaskKey(m, idx)]; }
 
+  // Every "done" entry (progress/completedGrants) is stamped with who did
+  // it, not just when -- open to any team member (mentor or student) to
+  // set, same as before. A plain ISO-string value (what this used to
+  // store) still reads as "done, by someone unknown" -- isDone()/
+  // isSubtaskDone() above only ever check truthiness, so this is a
+  // backward-compatible shape change, not a migration.
+  function stampValue() {
+    var user = Team && Team.state.user;
+    return { at: today.toISOString(), by: user ? user.id : null };
+  }
+  function stampedByName(stamp) {
+    if (!stamp || typeof stamp === "string" || !stamp.by) return "";
+    var m = memberById(stamp.by);
+    return m ? m.name : "";
+  }
+
   function toggleMilestone(m) {
     if (progress[m.id]) {
       delete progress[m.id];
@@ -279,7 +467,7 @@
           return;
         }
       }
-      progress[m.id] = today.toISOString();
+      progress[m.id] = stampValue();
     }
     saveProgress(progress);
     render();
@@ -287,15 +475,18 @@
 
   function toggleSubtask(m, idx) {
     var key = subtaskKey(m, idx);
-    if (progress[key]) delete progress[key];
-    else progress[key] = today.toISOString();
-
-    // Auto-complete the parent once every subtask is checked -- but never
-    // auto-uncheck it, in case a team confirmed it done despite one
-    // subtask not applying to them.
-    if (m.subtasks && m.subtasks.length && !progress[m.id]) {
-      var allDone = m.subtasks.every(function (_, i) { return isSubtaskDone(m, i); });
-      if (allDone) progress[m.id] = today.toISOString();
+    if (progress[key]) {
+      delete progress[key];
+      // Unchecking a subtask means the milestone is no longer fully done,
+      // even if it was previously marked complete (manually or via auto-complete).
+      if (m.subtasks && m.subtasks.length) delete progress[m.id];
+    } else {
+      progress[key] = stampValue();
+      // Auto-complete the parent once every subtask is checked.
+      if (m.subtasks && m.subtasks.length) {
+        var allDone = m.subtasks.every(function (_, i) { return isSubtaskDone(m, i); });
+        if (allDone) progress[m.id] = stampValue();
+      }
     }
     saveProgress(progress);
     render();
@@ -303,8 +494,15 @@
 
   function toggleGeneric(id) {
     if (progress[id]) delete progress[id];
-    else progress[id] = today.toISOString();
+    else progress[id] = stampValue();
     saveProgress(progress);
+    render();
+  }
+
+  function toggleCompletedGrant(id) {
+    if (completedGrants[id]) delete completedGrants[id];
+    else completedGrants[id] = stampValue();
+    saveCompletedGrants(completedGrants);
     render();
   }
 
@@ -322,8 +520,17 @@
     render();
   }
 
+  // Assignable people: the real team roster (loaded via FRCTeam) when
+  // signed in on a team, otherwise the free-text roster added in Team
+  // Settings -- same {id, name, team} shape either way, so every other
+  // function below (assignment popover, memberById, roster chips) reads
+  // whichever one applies without needing to know which mode it's in.
+  function rosterForAssign() {
+    return (Team && Team.state.team) ? teamRoster : members;
+  }
+
   function memberById(id) {
-    return members.filter(function (mm) { return mm.id === id; })[0] || null;
+    return rosterForAssign().filter(function (mm) { return mm.id === id; })[0] || null;
   }
 
   // Assignments now hold a *list* of tokens per item, so a task can go to
@@ -425,9 +632,17 @@
   // inline on checklist rows and in the calendar item modal. Toggling a
   // checkbox saves and refreshes just this control (not a full render()),
   // so the popover stays open while picking several people.
-  function buildAssignControl(itemId, onChange) {
+  function buildAssignControl(itemId, subteam, onChange) {
     var wrap = el("div", { class: "assign-wrap" });
     wrap.addEventListener("click", function (e) { e.stopPropagation(); });
+
+    // Captains (and mentors) can assign within their scope; everyone else
+    // on a team sees who's assigned but can't change it. No team at all
+    // (solo mode) stays unrestricted, same as before.
+    if (Team && !Team.canAssign(subteam)) {
+      wrap.appendChild(el("span", { class: "assign-select is-readonly" }, [assignmentSummary(itemId) || "Unassigned"]));
+      return wrap;
+    }
 
     var btn = el("button", { type: "button", class: "assign-select" }, [assignmentSummary(itemId) || "Unassigned"]);
     var popover = el("div", { class: "assign-popover", hidden: "" });
@@ -447,12 +662,15 @@
     function fillPopover() {
       popover.innerHTML = "";
       var tokens = assignmentTokens(itemId);
+      var roster = rosterForAssign();
 
-      if (members.length) {
+      if (roster.length) {
         popover.appendChild(el("div", { class: "assign-popover-label" }, ["Members"]));
-        members.forEach(function (mm) {
+        roster.forEach(function (mm) {
           popover.appendChild(assignRow(mm.id, mm.name, tokens.indexOf(mm.id) !== -1));
         });
+      } else if (Team && Team.state.team) {
+        popover.appendChild(el("p", { class: "assign-popover-hint" }, ["No teammates have joined yet -- share your team's join code from the Account page."]));
       } else {
         popover.appendChild(el("p", { class: "assign-popover-hint" }, ["Add team members in Team Settings to assign individuals."]));
       }
@@ -488,6 +706,7 @@
     renderGrantChecklist();
     renderCalendar();
     renderSettings();
+    renderSeasonResetUI();
     if (msPanelItem) renderMsPanel();
     scheduleCloudSave();
   }
@@ -496,7 +715,7 @@
     var card = document.getElementById("pace-card");
     card.innerHTML = "";
 
-    var completed = milestones.filter(isDone);
+    var completed = visibleMilestones().filter(isDone);
     if (completed.length === 0) {
       card.appendChild(el("div", { class: "pace-neutral" }, [
         el("div", { class: "pace-eyebrow" }, ["Pace"]),
@@ -533,9 +752,10 @@
   }
 
   function renderProgressBar() {
-    var done = milestones.filter(isDone).length;
-    document.getElementById("progress-label").textContent = done + " of " + milestones.length + " milestones complete";
-    var pct = milestones.length ? Math.round((done / milestones.length) * 100) : 0;
+    var vis = visibleMilestones();
+    var done = vis.filter(isDone).length;
+    document.getElementById("progress-label").textContent = done + " of " + vis.length + " milestones complete";
+    var pct = vis.length ? Math.round((done / vis.length) * 100) : 0;
     document.getElementById("progress-fill").style.width = pct + "%";
   }
 
@@ -557,8 +777,9 @@
     var order = ["Preseason", "Build Season", "Competition Season", "Postseason"];
     container.innerHTML = "";
 
+    var visible = visibleMilestones();
     order.forEach(function (phase) {
-      var items = milestones.filter(function (m) { return m.phase === phase; });
+      var items = visible.filter(function (m) { return m.phase === phase; });
       if (!items.length) return;
 
       var doneCount = items.filter(isDone).length;
@@ -577,7 +798,7 @@
         checkbox.checked = status.done;
         checkbox.addEventListener("change", function () { toggleMilestone(m); });
 
-        function openDetails() { openMsPanel(m); }
+        function openDetails() { openMsPanel(m, { kind: "milestone", editing: false }); }
 
         var msTeam = m.team || "cross-team";
         var assignSummary = assignmentSummary(m.id);
@@ -593,12 +814,24 @@
           openDetails();
         });
 
+        var editBtn = iconButton("ms-edit-btn", "Edit " + m.label, PENCIL_SVG);
+        editBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openMsPanel(m, { kind: "milestone", editing: true });
+        });
+
+        var msDateBtn = el("button", { type: "button", class: "ms-date ms-date-btn", title: "Click to change this date" }, [formatDate(m.date)]);
+        msDateBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openMsPanel(m, { kind: "milestone", editing: true });
+        });
+
         var metaLeftChildren = [
           el("span", { class: "team-badge" }, [
             el("span", { class: "team-dot team-" + msTeam }),
             TEAM_LABELS[msTeam] || msTeam,
           ]),
-          el("span", { class: "ms-date" }, [formatDate(m.date)]),
+          msDateBtn,
         ];
         if (assignSummary) metaLeftChildren.push(el("span", { class: "ms-assigned" }, ["· " + assignSummary]));
 
@@ -611,6 +844,7 @@
           ]),
           el("div", { class: "ms-meta-row" }, [
             el("div", { class: "ms-meta-left" }, metaLeftChildren),
+            editBtn,
             detailsBtn,
           ]),
         ]);
@@ -630,6 +864,15 @@
       container.appendChild(section);
     });
 
+    if (hiddenMilestones.length) {
+      var restoreBtn = el("button", { type: "button", class: "link-btn" }, ["Restore"]);
+      restoreBtn.addEventListener("click", restoreHiddenMilestones);
+      container.appendChild(el("p", { class: "finder-hint", style: "margin:14px 0;" }, [
+        hiddenMilestones.length + (hiddenMilestones.length === 1 ? " milestone hidden from this checklist. " : " milestones hidden from this checklist. "),
+        restoreBtn,
+      ]));
+    }
+
     // ---- Custom tasks: anything the team added themselves, beyond the
     // curated milestones above -- including a quick way to hand-carry a
     // Google Classroom assignment over here (see the note above the add
@@ -640,7 +883,7 @@
         el("h2", {}, ["Custom Tasks"]),
         el("div", { class: "phase-head-right" }, [
           el("span", { class: "phase-count" }, [customDone + " / " + customTasks.length]),
-          customTasks.length
+          customTasks.length && (!Team || Team.canEditTeamSettings())
             ? (function () {
                 var btn = el("button", { type: "button", class: "reset-btn" }, ["Delete all"]);
                 btn.addEventListener("click", removeAllCustomTasks);
@@ -659,12 +902,26 @@
         chk.checked = done;
         chk.addEventListener("change", function () { toggleGeneric(t.id); });
 
-        var removeBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Remove"]);
-        removeBtn.addEventListener("click", function () { removeCustomTask(t.id); });
+        var detailsBtn = el("button", { type: "button", class: "ms-details-btn" }, ["Details"]);
+        detailsBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openMsPanel(t, { kind: "custom-task", editing: false });
+        });
 
-        var metaLeftChildren = [buildAssignControl(t.id)];
+        var editBtn = iconButton("ms-edit-btn", "Edit " + t.label, PENCIL_SVG);
+        editBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openMsPanel(t, { kind: "custom-task", editing: true });
+        });
+
+        var metaLeftChildren = [buildAssignControl(t.id, t.team)];
         if (t.dueDate) {
-          metaLeftChildren.unshift(el("span", { class: "ms-date" }, ["Due " + formatDate(new Date(t.dueDate + "T00:00:00"))]));
+          var taskDateBtn = el("button", { type: "button", class: "ms-date ms-date-btn", title: "Click to change this date" }, ["Due " + formatDate(new Date(t.dueDate + "T00:00:00"))]);
+          taskDateBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            openMsPanel(t, { kind: "custom-task", editing: true });
+          });
+          metaLeftChildren.unshift(taskDateBtn);
         }
 
         var body = el("div", { class: "ms-body" }, [
@@ -679,7 +936,8 @@
           ]),
           el("div", { class: "ms-meta-row" }, [
             el("div", { class: "ms-meta-left" }, metaLeftChildren),
-            removeBtn,
+            editBtn,
+            detailsBtn,
           ]),
         ]);
 
@@ -768,19 +1026,41 @@
       "Every grant with a published close date, soonest first. Dates repeat annually unless the grantor says otherwise — always confirm on the grantor's own site.",
     ]));
 
+    var completedCount = grantDeadlines.filter(function (g) { return !!completedGrants[g.id]; }).length;
+    if (completedCount) {
+      container.appendChild(el("p", { class: "grant-complete-summary" }, [
+        "✓ " + completedCount + " of " + grantDeadlines.length + " marked completed by your team this season.",
+      ]));
+    }
+
     var table = el("div", { class: "dates-table" });
     grantDeadlines.forEach(function (g) {
       var p = g.status === "open" ? { cls: "pill-open", label: "Open" }
         : g.status === "closed" ? { cls: "pill-closed", label: "Closed" }
         : { cls: "pill-unsure", label: "Unsure" };
       var nameLink = el("a", { class: "dname", href: g.link || "#", target: "_blank", rel: "noopener", style: "color:inherit;" }, [g.name]);
+
+      var done = !!completedGrants[g.id];
+      var chkId = "grant-complete-" + g.id;
+      var chk = el("input", { type: "checkbox", id: chkId });
+      chk.checked = done;
+      chk.addEventListener("change", function () { toggleCompletedGrant(g.id); });
+      var byName = stampedByName(completedGrants[g.id]);
+      var checkLabel = el("label", { class: "grant-complete-check", for: chkId }, [
+        chk,
+        done ? ("Completed" + (byName ? " by " + byName : "")) : "Mark completed",
+      ]);
+
       table.appendChild(el("div", { class: "dates-row" }, [
         el("span", { class: "dcode" }, [g.closeDateText]),
         el("span", {}, [
           nameLink,
           el("span", { class: "dsub" }, [g.notes || "See grantor site for criteria"]),
         ]),
-        el("span", { class: "pill " + p.cls }, [p.label]),
+        el("div", { class: "grant-complete-row" }, [
+          el("span", { class: "pill " + p.cls }, [p.label]),
+          checkLabel,
+        ]),
       ]));
     });
     container.appendChild(table);
@@ -833,7 +1113,7 @@
       toggle: function () {},
     });
 
-    milestones.forEach(function (m) {
+    visibleMilestones().forEach(function (m) {
       items.push({
         id: m.id,
         date: m.date, team: m.team || "cross-team", kind: "milestone",
@@ -841,6 +1121,7 @@
         detail: m.detail, expanded: m.expanded,
         isDone: function () { return isDone(m); },
         toggle: function () { toggleMilestone(m); },
+        onEditDate: function () { closeItemModal(); openMsPanel(m, { kind: "milestone", editing: true }); },
       });
       (m.subtasks || []).forEach(function (sub, idx) {
         items.push({
@@ -850,6 +1131,9 @@
           detail: "Part of the “" + m.label + "” milestone. " + (m.detail || ""),
           isDone: function () { return isSubtaskDone(m, idx); },
           toggle: function () { toggleSubtask(m, idx); },
+          // Subtasks share their parent milestone's date -- editing one
+          // opens the parent milestone's own date field.
+          onEditDate: function () { closeItemModal(); openMsPanel(m, { kind: "milestone", editing: true }); },
         });
       });
     });
@@ -899,6 +1183,7 @@
         detail: "A custom date your team added to the calendar.",
         isDone: function () { return !!progress[ceId]; },
         toggle: function () { toggleGeneric(ceId); },
+        setDate: function (iso) { ce.date = iso; saveCustomEvents(customEvents); render(); },
       });
     });
 
@@ -911,6 +1196,7 @@
         detail: "A custom task your team added — e.g. a Google Classroom assignment carried over here.",
         isDone: function () { return !!progress[t.id]; },
         toggle: function () { toggleGeneric(t.id); },
+        onEditDate: function () { closeItemModal(); openMsPanel(t, { kind: "custom-task", editing: true }); },
       });
     });
 
@@ -1063,7 +1349,17 @@
     modalItem = item;
 
     var team = item.team || "cross-team";
-    document.getElementById("cal-modal-date").textContent = formatDate(item.date);
+    var dateHost = document.getElementById("cal-modal-date");
+    dateHost.innerHTML = "";
+    if (item.onEditDate) {
+      var editDateBtn = el("button", { type: "button", class: "ms-date-btn", title: "Click to change this date" }, [formatDate(item.date)]);
+      editDateBtn.addEventListener("click", item.onEditDate);
+      dateHost.appendChild(editDateBtn);
+    } else if (item.setDate) {
+      dateHost.appendChild(buildEditableDate(item.date, item.setDate, { ariaLabel: "Change date for " + item.title }));
+    } else {
+      dateHost.textContent = formatDate(item.date);
+    }
     document.getElementById("cal-modal-title").textContent = item.title;
 
     var teamRow = document.getElementById("cal-modal-team");
@@ -1091,7 +1387,7 @@
       refreshModalToggle();
       var assignControlHost = document.getElementById("cal-modal-assign-control");
       assignControlHost.innerHTML = "";
-      assignControlHost.appendChild(buildAssignControl(item.id, function () {
+      assignControlHost.appendChild(buildAssignControl(item.id, item.team, function () {
         document.getElementById("cal-modal-gcal").href = googleCalendarUrl(item);
       }));
     }
@@ -1132,11 +1428,24 @@
   // compete with the milestone's own detail text for space. ----
   var msPanelOverlay = document.getElementById("ms-panel-overlay");
   var msPanelItem = null;
+  var msPanelKind = "milestone"; // or "custom-task"
   var msPanelSubtasksOpen = false;
+  var msPanelEditing = false;
+  var msPanelDraft = null;
 
-  function openMsPanel(m) {
+  function msDraftFromItem(item, kind) {
+    return kind === "custom-task"
+      ? { label: item.label, team: item.team || "cross-team", dueDate: item.dueDate || "" }
+      : { label: item.label, team: item.team || "cross-team", date: toISODate(item.date) };
+  }
+
+  function openMsPanel(m, opts) {
+    opts = opts || {};
     msPanelItem = m;
+    msPanelKind = opts.kind || "milestone";
     msPanelSubtasksOpen = true;
+    msPanelEditing = !!opts.editing;
+    msPanelDraft = msPanelEditing ? msDraftFromItem(m, msPanelKind) : null;
     renderMsPanel();
     msPanelOverlay.hidden = false;
   }
@@ -1144,38 +1453,135 @@
   function closeMsPanel() {
     msPanelOverlay.hidden = true;
     msPanelItem = null;
+    msPanelEditing = false;
+    msPanelDraft = null;
+  }
+
+  function toggleMsPanelItem() {
+    if (!msPanelItem) return;
+    if (msPanelKind === "custom-task") toggleGeneric(msPanelItem.id);
+    else toggleMilestone(msPanelItem);
+  }
+
+  function saveMsPanelEdits() {
+    if (!msPanelItem || !msPanelDraft) return;
+    var label = msPanelDraft.label.trim();
+    if (!label) { alert("Name can't be empty."); return; }
+    msPanelItem.label = label;
+    msPanelItem.team = msPanelDraft.team;
+    if (msPanelKind === "custom-task") {
+      msPanelItem.dueDate = msPanelDraft.dueDate || "";
+      saveCustomTasks(customTasks);
+    } else {
+      msPanelItem.date = msPanelDraft.date ? new Date(msPanelDraft.date + "T00:00:00") : msPanelItem.recommendedDate;
+      setMilestoneOverride(msPanelItem.id, { label: label, team: msPanelDraft.team, date: msPanelDraft.date || "" });
+    }
+    msPanelEditing = false;
+    msPanelDraft = null;
+    render();
+  }
+
+  function deleteMsPanelItem() {
+    if (!msPanelItem) return;
+    var kind = msPanelKind, id = msPanelItem.id, label = msPanelItem.label;
+    if (kind === "custom-task") {
+      if (!confirm("Delete “" + label + "”? This can't be undone.")) return;
+      closeMsPanel();
+      removeCustomTask(id);
+    } else {
+      if (!confirm("Hide “" + label + "” from your checklist? You can restore it later from the Technical Checklist.")) return;
+      closeMsPanel();
+      hideMilestone(id);
+    }
   }
 
   function renderMsPanel() {
     var m = msPanelItem;
     if (!m) return;
-    var status = statusOf(isDone(m), m.date);
+    var isCustom = msPanelKind === "custom-task";
+    var itemDate = isCustom ? (m.dueDate ? new Date(m.dueDate + "T00:00:00") : null) : m.date;
+    var done = isDone(m);
+    var status = itemDate
+      ? statusOf(done, itemDate)
+      : { done: done, label: done ? "Done" : "No due date", cls: done ? "ms-done" : "ms-upcoming" };
     var msTeam = m.team || "cross-team";
 
-    document.getElementById("ms-panel-date").textContent = "Recommended: " + formatDate(m.date);
-    document.getElementById("ms-panel-title").textContent = m.label;
+    var isOverridden = !isCustom && m.date.getTime() !== m.recommendedDate.getTime();
+    document.getElementById("ms-panel-date").textContent = isCustom
+      ? (itemDate ? "Due: " + formatDate(itemDate) : "No due date set")
+      : isOverridden
+        ? "Due: " + formatDate(m.date) + " (recommended " + formatDate(m.recommendedDate) + ")"
+        : "Recommended: " + formatDate(m.date);
+
+    var titleEl = document.getElementById("ms-panel-title");
+    titleEl.innerHTML = "";
+    if (msPanelEditing) {
+      var titleInput = el("input", { type: "text", class: "ms-panel-title-input", maxlength: "80" });
+      titleInput.value = msPanelDraft.label;
+      titleInput.addEventListener("input", function (e) { msPanelDraft.label = e.target.value; });
+      titleEl.appendChild(titleInput);
+    } else {
+      titleEl.textContent = m.label;
+    }
 
     var teamRow = document.getElementById("ms-panel-team");
     teamRow.innerHTML = "";
-    teamRow.appendChild(el("span", { class: "team-badge" }, [
-      el("span", { class: "team-dot team-" + msTeam }),
-      TEAM_LABELS[msTeam] || msTeam,
-    ]));
-    teamRow.appendChild(el("span", { class: "pill " + status.cls }, [status.label]));
+    if (msPanelEditing) {
+      var teamSelect = el("select", { class: "ms-panel-team-select" }, [
+        el("option", { value: "cross-team" }, ["Cross-team"]),
+        el("option", { value: "mechanical" }, ["Mechanical"]),
+        el("option", { value: "electrical" }, ["Electrical"]),
+        el("option", { value: "programming" }, ["Programming"]),
+        el("option", { value: "design" }, ["Design/Strategy"]),
+        el("option", { value: "business" }, ["Business/Outreach"]),
+      ]);
+      teamSelect.value = msPanelDraft.team;
+      teamSelect.addEventListener("change", function (e) { msPanelDraft.team = e.target.value; });
+      teamRow.appendChild(teamSelect);
+      if (isCustom) {
+        var dateInput = el("input", { type: "date", class: "ms-panel-date-input" });
+        dateInput.value = msPanelDraft.dueDate;
+        dateInput.addEventListener("change", function (e) { msPanelDraft.dueDate = e.target.value; });
+        teamRow.appendChild(dateInput);
+      } else {
+        var msDateInput = el("input", { type: "date", class: "ms-panel-date-input" });
+        msDateInput.value = msPanelDraft.date;
+        msDateInput.addEventListener("change", function (e) { msPanelDraft.date = e.target.value; });
+        teamRow.appendChild(msDateInput);
+        if (msPanelDraft.date !== toISODate(m.recommendedDate)) {
+          var resetBtn = el("button", { type: "button", class: "ms-panel-date-reset" }, ["Reset to recommended"]);
+          resetBtn.addEventListener("click", function () {
+            msPanelDraft.date = toISODate(m.recommendedDate);
+            renderMsPanel();
+          });
+          teamRow.appendChild(resetBtn);
+        }
+      }
+    } else {
+      teamRow.appendChild(el("span", { class: "team-badge" }, [
+        el("span", { class: "team-dot team-" + msTeam }),
+        TEAM_LABELS[msTeam] || msTeam,
+      ]));
+      teamRow.appendChild(el("span", { class: "pill " + status.cls }, [status.label]));
+    }
 
     var body = document.getElementById("ms-panel-body");
     body.innerHTML = "";
-    if (m.detail) body.appendChild(el("p", { class: "ms-detail" }, [m.detail]));
-    if (m.expanded) body.appendChild(el("p", { class: "ms-expanded" }, [m.expanded]));
+    if (!isCustom) {
+      if (m.detail) body.appendChild(el("p", { class: "ms-detail" }, [m.detail]));
+      if (m.expanded) body.appendChild(el("p", { class: "ms-expanded" }, [m.expanded]));
+    } else if (!msPanelEditing) {
+      body.appendChild(el("p", { class: "ms-detail" }, ["A custom task your team added."]));
+    }
 
     var assignHost = document.getElementById("ms-panel-assign-control");
     assignHost.innerHTML = "";
-    assignHost.appendChild(buildAssignControl(m.id));
+    assignHost.appendChild(buildAssignControl(m.id, msTeam));
 
     var subSection = document.getElementById("ms-panel-subtasks-section");
     var subToggle = document.getElementById("ms-panel-subtasks-toggle");
     var subList = document.getElementById("ms-panel-subtasks-list");
-    if (m.subtasks && m.subtasks.length) {
+    if (!isCustom && m.subtasks && m.subtasks.length) {
       subSection.hidden = false;
       var doneCount = m.subtasks.filter(function (_, i) { return isSubtaskDone(m, i); }).length;
       subToggle.textContent = (msPanelSubtasksOpen ? "Hide sub-tasks" : "See specific sub-tasks") + " (" + doneCount + "/" + m.subtasks.length + ")";
@@ -1192,10 +1598,9 @@
 
           subList.appendChild(el("label", { class: "ms-subtask-row", for: subId }, [
             subChk,
-            el("span", { class: "team-dot team-" + subTeam }),
             el("span", { class: "team-tag" }, [TEAM_LABELS[subTeam] || subTeam]),
             el("span", { class: subDone ? "ms-subtask-text ms-subtask-done" : "ms-subtask-text" }, [sub.label]),
-            buildAssignControl(subtaskKey(m, idx)),
+            buildAssignControl(subtaskKey(m, idx), subTeam),
           ]));
         });
       }
@@ -1203,9 +1608,33 @@
       subSection.hidden = true;
     }
 
-    var toggleBtn = document.getElementById("ms-panel-toggle");
-    toggleBtn.textContent = status.done ? "Mark not done" : "Mark done";
-    toggleBtn.className = "submit-btn-sm" + (status.done ? " submit-btn-ghost" : "");
+    var actions = document.getElementById("ms-panel-actions");
+    actions.innerHTML = "";
+
+    if (msPanelEditing) {
+      var saveBtn = el("button", { type: "button", class: "submit-btn-sm" }, ["Save changes"]);
+      saveBtn.addEventListener("click", saveMsPanelEdits);
+      var cancelBtn = el("button", { type: "button", class: "submit-btn-sm submit-btn-ghost" }, ["Cancel"]);
+      cancelBtn.addEventListener("click", function () { msPanelEditing = false; msPanelDraft = null; renderMsPanel(); });
+      actions.appendChild(saveBtn);
+      actions.appendChild(cancelBtn);
+    } else {
+      var toggleBtn = el("button", { type: "button", class: "submit-btn-sm" + (status.done ? " submit-btn-ghost" : "") }, [status.done ? "Mark not done" : "Mark done"]);
+      toggleBtn.addEventListener("click", toggleMsPanelItem);
+      actions.appendChild(toggleBtn);
+
+      var editActionBtn = el("button", { type: "button", class: "submit-btn-sm submit-btn-ghost" }, ["Edit"]);
+      editActionBtn.addEventListener("click", function () {
+        msPanelEditing = true;
+        msPanelDraft = msDraftFromItem(m, msPanelKind);
+        renderMsPanel();
+      });
+      actions.appendChild(editActionBtn);
+    }
+
+    var deleteBtn = el("button", { type: "button", class: "ms-panel-delete-btn" }, [isCustom ? "Delete task" : "Hide this milestone"]);
+    deleteBtn.addEventListener("click", deleteMsPanelItem);
+    actions.appendChild(deleteBtn);
   }
 
   document.getElementById("ms-panel-close").addEventListener("click", closeMsPanel);
@@ -1219,14 +1648,27 @@
     msPanelSubtasksOpen = !msPanelSubtasksOpen;
     renderMsPanel();
   });
-  document.getElementById("ms-panel-toggle").addEventListener("click", function () {
-    if (!msPanelItem) return;
-    toggleMilestone(msPanelItem);
-  });
 
   var ROSTER_TEAMS = ["mechanical", "electrical", "programming", "design", "business"];
 
   function renderSettings() {
+    // Team settings (OA preferences, roster size, mechanisms, custom
+    // dates) are mentor/team_captain-editable once on a team -- plain
+    // students (including subteam captains) see them read-only. Solo/
+    // no-team mode stays fully editable, same as before.
+    var locked = !!(Team && Team.state.team && !Team.canEditTeamSettings());
+    ["oa-checkbox", "oa-video-days", "oa-blog-day", "mechanism-label"].forEach(function (id) {
+      var elm = document.getElementById(id);
+      if (elm) elm.disabled = locked;
+    });
+    var mechFormBtn = document.querySelector("#mechanism-form button[type=submit]");
+    if (mechFormBtn) mechFormBtn.disabled = locked;
+    var customEventForm = document.getElementById("custom-event-form");
+    if (customEventForm) {
+      Array.prototype.forEach.call(customEventForm.querySelectorAll("input, button"), function (elm) { elm.disabled = locked; });
+    }
+    document.getElementById("quick-add-reveal").disabled = locked;
+
     document.getElementById("oa-checkbox").checked = oaSettings.enabled;
     document.getElementById("oa-details").hidden = !oaSettings.enabled;
     var oaVideoDaysInput = document.getElementById("oa-video-days");
@@ -1235,18 +1677,40 @@
 
     ROSTER_TEAMS.forEach(function (team) {
       var input = document.getElementById("roster-" + team);
-      if (input && document.activeElement !== input) input.value = teamSizes[team];
+      if (input) {
+        input.disabled = locked;
+        if (document.activeElement !== input) input.value = teamSizes[team];
+      }
     });
 
     var mechList = document.getElementById("mechanism-list");
     mechList.innerHTML = "";
     mechanisms.forEach(function (m, idx) {
       var chip = el("span", { class: "mechanism-chip" }, [m]);
-      var removeBtn = el("button", { type: "button", class: "mechanism-remove", "aria-label": "Remove " + m }, ["×"]);
-      removeBtn.addEventListener("click", function () { removeMechanism(idx); });
-      chip.appendChild(removeBtn);
+      if (!locked) {
+        var removeBtn = el("button", { type: "button", class: "mechanism-remove", "aria-label": "Remove " + m }, ["×"]);
+        removeBtn.addEventListener("click", function () { removeMechanism(idx); });
+        chip.appendChild(removeBtn);
+      }
       mechList.appendChild(chip);
     });
+
+    // The free-text "add a teammate by name" roster only applies in
+    // solo/no-team mode -- once on a team, assignment uses the real
+    // roster (teamRoster, from FRCTeam) managed from the Account page.
+    var membersRow = document.querySelector(".members-row");
+    if (membersRow) {
+      var onTeam = !!(Team && Team.state.team);
+      membersRow.querySelector("form").hidden = onTeam;
+      var hint = membersRow.querySelector(".team-roster-hint");
+      if (onTeam && !hint) {
+        hint = el("p", { class: "finder-hint team-roster-hint" }, ["Your team's real roster is managed from the "]);
+        hint.appendChild(el("a", { href: "account.html" }, ["Account page"]));
+        hint.appendChild(document.createTextNode(" — add teammates there and they'll show up here to assign tasks to."));
+        membersRow.appendChild(hint);
+      }
+      if (hint) hint.hidden = !onTeam;
+    }
 
     var memberListEl = document.getElementById("member-list");
     memberListEl.innerHTML = "";
@@ -1270,21 +1734,70 @@
       .sort(function (a, b) { return a.date.localeCompare(b.date); })
       .forEach(function (ce) {
         var row = el("div", { class: "custom-event-item" }, [
-          el("span", {}, [ce.label + " — " + formatDate(new Date(ce.date + "T00:00:00"))]),
+          el("span", {}, [ce.label + " — "]),
+          buildEditableDate(new Date(ce.date + "T00:00:00"), function (iso) {
+            ce.date = iso;
+            saveCustomEvents(customEvents);
+            render();
+          }, { ariaLabel: "Change date for " + ce.label }),
         ]);
-        var removeBtn = el("button", { type: "button", class: "custom-event-remove", "aria-label": "Remove" }, ["×"]);
-        removeBtn.addEventListener("click", function () { removeCustomEvent(ce.id); });
-        row.appendChild(removeBtn);
+        if (!locked) {
+          var removeBtn = el("button", { type: "button", class: "custom-event-remove", "aria-label": "Remove" }, ["×"]);
+          removeBtn.addEventListener("click", function () { removeCustomEvent(ce.id); });
+          row.appendChild(removeBtn);
+        }
         list.appendChild(row);
       });
   }
 
+  // Once a team exists, resetting progress goes through start_new_season()
+  // (mentor-only, see js/team.js) instead of just clearing locally -- it
+  // archives the outgoing season's data server-side first. The button
+  // itself is hidden for non-mentors; see renderSeasonResetUI().
   document.getElementById("season-reset").addEventListener("click", function () {
+    if (Team && Team.state.team) {
+      if (!Team.isMentor()) return;
+      if (!confirm("Start a new season? This archives and clears completed grants, checklist/calendar progress, and task assignments for the whole team. Roster, mechanisms, and settings carry over.")) return;
+      Team.startNewSeason().then(function () {
+        progress = {};
+        completedGrants = {};
+        assignments = {};
+        saveProgress(progress);
+        saveCompletedGrants(completedGrants);
+        saveAssignments(assignments);
+        render();
+      }).catch(function (err) { alert(err.message); });
+      return;
+    }
     if (!confirm("Clear all season progress? This also clears your synced copy if you're signed in.")) return;
     progress = {};
     saveProgress(progress);
     render();
   });
+
+  function renderSeasonResetUI() {
+    var btn = document.getElementById("season-reset");
+    var banner = document.getElementById("season-reset-banner");
+    if (!Team || !Team.state.team) {
+      btn.hidden = false;
+      btn.textContent = "Reset progress";
+      banner.hidden = true;
+      return;
+    }
+
+    var team = Team.state.team;
+    var dueForReset = today.getFullYear() > team.current_season_year
+      || (today.getFullYear() === team.current_season_year && today.getMonth() >= 5); // past ~June 1
+    banner.hidden = !dueForReset;
+    if (dueForReset) {
+      banner.textContent = Team.isMentor()
+        ? "Looks like this season has wrapped up — start a new one below to archive completed grants and progress for next year."
+        : "Looks like this season has wrapped up — ask a mentor to start the new season when they're ready.";
+    }
+
+    btn.hidden = !Team.isMentor();
+    btn.textContent = "Start new season";
+  }
 
   document.getElementById("view-tab-checklist").addEventListener("click", function () {
     viewMode = "checklist";
@@ -1472,5 +1985,6 @@
 
   render();
   initCloudSync();
+  initTeamSync();
   loadGrantDeadlines();
 })();

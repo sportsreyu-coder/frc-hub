@@ -45,6 +45,8 @@
 
   <section class="pace-card" id="pace-card"></section>
 
+  <div class="team-reset-banner" id="season-reset-banner" hidden></div>
+
   <section class="season-progress">
     <div class="season-progress-head">
       <span class="eyebrow" id="progress-label">0 of 0 milestones complete</span>
@@ -194,9 +196,7 @@
       <button type="button" class="ms-panel-subtasks-toggle" id="ms-panel-subtasks-toggle">See specific sub-tasks</button>
       <div class="ms-subtasks" id="ms-panel-subtasks-list" hidden></div>
     </div>
-    <div class="ms-panel-actions">
-      <button type="button" class="submit-btn-sm" id="ms-panel-toggle">Mark done</button>
-    </div>
+    <div class="ms-panel-actions" id="ms-panel-actions"></div>
   </div>
 </div>
 
@@ -211,6 +211,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
+<script src="js/team.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/season-core.js"></script>
 <script src="js/season-data.js"></script>

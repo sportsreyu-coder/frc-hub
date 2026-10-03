@@ -32,6 +32,7 @@
 
   var PAGE_SIZE = 24;
   var grants = [];
+  var completedGrants = {}; // populated from the signed-in user's team, if any (see loadCompletedGrants below)
 
   var TAG_LABELS = {
     "corporate-employee": "Employee/mentor connection helps",
@@ -239,12 +240,17 @@
       ? el("span", { class: "great-fit-badge" }, ["Great fit — " + boosted.map(function (b) { return BOOST_LABELS[b] || b; }).join(", ")])
       : null;
 
+    var completedPill = completedGrants["grant-" + g.id]
+      ? el("span", { class: "pill pill-open" }, ["✓ Your team completed this"])
+      : null;
+
     return el("article", { class: "grant-card" + (boosted.length ? " is-boosted" : "") }, [
       badge,
       el("div", { class: "gc-top" }, [
         el("h3", { class: "gc-name" }, [g.name]),
         el("span", { class: "pill " + p.cls }, [p.label]),
       ]),
+      completedPill,
       el("div", { class: "gc-dates" }, [dateBits.length ? dateBits.join(" · ") : "Dates not published"]),
       el("p", { class: "gc-notes" }, [g.notes || "No additional notes provided."]),
       el("div", { class: "gc-tags" }, visibleTags.map(function (t) {
@@ -442,4 +448,20 @@
       document.getElementById("grant-grid").innerHTML =
         '<div class="empty-state"><div class="es-title">Couldn\'t load grant data</div><p>Check that data/grants.json is reachable.</p></div>';
     });
+
+  // Read-only "your team completed this" badge, sourced from the same
+  // shared team_data blob Season Tracker's grant checklist writes to
+  // (see js/season.js's toggleCompletedGrant) -- the actual mark-complete
+  // control lives only there, so there's one write path, not two.
+  if (window.FRCTeam) {
+    window.FRCTeam.onChange(loadCompletedGrants);
+    window.FRCTeam.ready.then(loadCompletedGrants);
+  }
+  function loadCompletedGrants() {
+    if (!window.FRCTeam.state.team) { completedGrants = {}; render(); return; }
+    window.FRCTeam.loadTeamData().then(function (data) {
+      completedGrants = (data && data.completedGrants) || {};
+      render();
+    });
+  }
 })();

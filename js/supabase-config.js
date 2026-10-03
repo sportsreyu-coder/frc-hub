@@ -5,8 +5,10 @@
 //
 // Sign-in is Google-only (js/account.js calls signInWithOAuth). Before it
 // works you also need to, in the Supabase dashboard:
-//   1. Run supabase/schema.sql in the SQL editor -- creates season_data,
-//      the one table Season Tracker syncs to when someone's signed in.
+//   1. Run supabase/schema.sql in the SQL editor -- creates season_data
+//      (per-user Season Tracker sync), teams/team_members/team_data/
+//      season_history (mentor/student team accounts, see js/team.js), and
+//      profiles/forum_posts/forum_replies (the Forum).
 //   2. Authentication -> Providers -> enable Google, using a Client ID /
 //      Secret from a Google Cloud OAuth consent screen + credential you
 //      create yourself (console.cloud.google.com -> APIs & Services ->

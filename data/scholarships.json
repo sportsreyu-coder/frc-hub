@@ -99,6 +99,127 @@
     "notes": "Restricted to New Hampshire high school seniors who competed on a FIRST Robotics Competition team."
   },
   {
+    "id": "stamps-presidents-scholars-gatech",
+    "name": "Stamps President's Scholars Program",
+    "provider": "Georgia Institute of Technology",
+    "link": "https://stampsps.gatech.edu",
+    "amount": "Full ride — tuition, fees, room & board, books, and personal expenses for up to 4 years",
+    "deadline": "Tied to Georgia Tech's Early Action admission deadline; semifinalists notified in January, finalists invited to Scholars Weekend in late February",
+    "category": "stem-general",
+    "tags": ["full-ride", "renewable", "university-specific"],
+    "notes": "Open to US and UK high school seniors applying for admission to Georgia Tech. About 50 awarded per year through a multi-round process including a semifinalist interview and a finalist weekend; no separate application beyond Georgia Tech admission."
+  },
+  {
+    "id": "uc-berkeley-regents-chancellors",
+    "name": "Regents' and Chancellor's Scholarship",
+    "provider": "University of California, Berkeley",
+    "link": "https://financialaid.berkeley.edu/types-of-aid-at-berkeley/scholarships/regents-and-chancellors-scholarship/",
+    "amount": "$2,500/year honorary award for scholars without demonstrated need; scholars with need receive funding up to their full calculated need",
+    "deadline": "No separate application — tied to the UC application (due in November); interviews in early March, decisions by late March",
+    "category": "stem-general",
+    "tags": ["renewable", "university-specific"],
+    "notes": "Awarded to incoming first-years and some transfers based on academic achievement, leadership, and service shown on the UC application; renewable for up to 8 semesters."
+  },
+  {
+    "id": "umich-engineering-scholarship-of-honor",
+    "name": "Engineering Scholarship of Honor",
+    "provider": "University of Michigan College of Engineering",
+    "link": "https://scholarships.engin.umich.edu/engineering-scholarship-of-honor/",
+    "amount": "$10,000/year for in-state students; $10,000–$30,000/year for out-of-state students, renewable up to 8 semesters",
+    "deadline": "No separate application — automatic consideration upon admission, with award notification typically by mid-April",
+    "category": "stem-general",
+    "tags": ["renewable", "university-specific"],
+    "notes": "All admitted US citizens and permanent residents entering the College of Engineering are automatically considered based on their admissions application."
+  },
+  {
+    "id": "purdue-trustees-scholarship",
+    "name": "Trustees Scholarship",
+    "provider": "Purdue University",
+    "link": "https://admissions.purdue.edu/cost-financial-aid/scholarships/",
+    "amount": "$10,000/year for Indiana residents; $16,000/year for non-residents, renewable up to 4 years with a 3.00 Purdue GPA",
+    "deadline": "November 1 — no separate application; automatic merit review of the admission application",
+    "category": "stem-general",
+    "tags": ["renewable", "university-specific"],
+    "notes": "Awarded to incoming first-year applicants for exceptional academic achievement plus leadership or service in school or community."
+  },
+  {
+    "id": "tamu-presidents-endowed-scholarship",
+    "name": "President's Endowed Scholarship",
+    "provider": "Texas A&M University",
+    "link": "https://scholarships.tamu.edu/FRESHMEN/University-Scholarships",
+    "amount": "$3,000/year for 4 years ($12,000 total), plus a one-time $1,000 study-abroad award; renewable with a 3.5 cumulative GPA",
+    "deadline": "December 1 — covered by the same admission/scholarship application (ApplyTexas or Common App)",
+    "category": "stem-general",
+    "tags": ["renewable", "university-specific"],
+    "notes": "Merit-based award for entering first-time freshmen in the top 25% of their graduating class; no separate scholarship application required."
+  },
+  {
+    "id": "goldwater-scholarship",
+    "name": "Barry M. Goldwater Scholarship",
+    "provider": "Barry Goldwater Scholarship Foundation",
+    "link": "https://goldwaterscholarship.gov/",
+    "amount": "Up to $7,500/year",
+    "deadline": "National deadline is the last Friday in January; each college sets its own earlier internal nomination deadline, often November–December",
+    "category": "stem-general",
+    "tags": ["merit-based", "national"],
+    "notes": "For current college sophomores and juniors (3.0+ GPA, US citizen, national, or permanent resident) pursuing a research career in natural sciences, mathematics, or engineering. Requires nomination by your institution — students cannot apply directly."
+  },
+  {
+    "id": "swe-scholarship-program",
+    "name": "SWE Scholarship Program",
+    "provider": "Society of Women Engineers",
+    "link": "https://swe.org/scholarships/",
+    "amount": "Individual awards generally $1,000–$10,000, varying by named award within the program",
+    "deadline": "Varies by track — Collegiate/Graduate Scholars and Emerging First-Year Scholars tracks typically close in late winter/early spring",
+    "category": "stem-general",
+    "tags": ["multiple-awards", "merit-or-need", "national"],
+    "notes": "Open to women entering or enrolled in an ABET-accredited undergraduate or graduate engineering, engineering technology, or computer science program. One application considers a student for all eligible society-level awards."
+  },
+  {
+    "id": "nsbe-scholarships",
+    "name": "NSBE Scholarships",
+    "provider": "National Society of Black Engineers",
+    "link": "https://nsbe.org/scholarships/",
+    "amount": "Individual sponsored awards roughly $5,000–$17,500",
+    "deadline": "Varies by cycle — multiple cycles run per year; check current dates on NSBE's site",
+    "category": "stem-general",
+    "tags": ["multiple-awards", "merit-or-need", "national"],
+    "notes": "Requires active, paid NSBE membership and a verified GPA on file. Specific major, classification, and residency requirements vary by individual sponsored award."
+  },
+  {
+    "id": "aises-scholarships",
+    "name": "AISES Scholarships",
+    "provider": "American Indian Science and Engineering Society",
+    "link": "https://aises.org/scholarships/",
+    "amount": "Varies by named award, roughly $1,000–$20,000",
+    "deadline": "Applications generally open mid-December and close April 30 each cycle",
+    "category": "stem-general",
+    "tags": ["multiple-awards", "merit-or-need", "national"],
+    "notes": "Requires free AISES student membership and full-time enrollment in a STEM field at an accredited institution. A single profile in AISES's OASIS portal matches students to eligible named scholarships."
+  },
+  {
+    "id": "regeneron-sts",
+    "name": "Regeneron Science Talent Search",
+    "provider": "Society for Science",
+    "link": "https://www.societyforscience.org/regeneron-sts/",
+    "amount": "Top 300 scholars each receive $2,000 (plus $2,000 to their school); 40 finalists receive at least $25,000, with top awards up to $250,000",
+    "deadline": "Early November — check current cycle on site",
+    "category": "stem-general",
+    "tags": ["merit-based", "national"],
+    "notes": "Open to students in their final year of secondary school in the US or its territories, including US citizens studying abroad, based on an original, independent research project. Team research is not eligible."
+  },
+  {
+    "id": "davidson-fellows-scholarship",
+    "name": "Davidson Fellows Scholarship",
+    "provider": "Davidson Institute for Talent Development",
+    "link": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/",
+    "amount": "$10,000, $25,000, or $50,000 tiers in most categories, with top STEM/math fellows eligible for $100,000 (exact tiers can vary slightly by year)",
+    "deadline": "Mid-February — check current cycle on site",
+    "category": "stem-general",
+    "tags": ["merit-based", "national"],
+    "notes": "Open to students 18 or younger who have completed a significant, original piece of work in STEM, technology, engineering, math, or other fields. Individuals or 2-person teams are eligible."
+  },
+  {
     "id": "sme-education-foundation",
     "name": "SME Education Foundation Scholarships",
     "provider": "SME Education Foundation",

@@ -71,7 +71,61 @@
         <p class="small" id="signed-in-email"></p>
       </div>
 
-      <div class="account-card">
+      <div id="no-team-cards" hidden>
+        <div class="account-card">
+          <h2>Create a team</h2>
+          <p class="small">You'll be the team's mentor, with admin permissions students don't have. Co-mentors can join later with the separate mentor join code below.</p>
+          <div class="error-msg" id="create-team-error"></div>
+          <form id="create-team-form">
+            <div class="field">
+              <label for="create-team-number">Team number</label>
+              <input type="text" id="create-team-number" placeholder="e.g. 4152" required>
+            </div>
+            <div class="field">
+              <label for="create-team-name">Team name (optional)</label>
+              <input type="text" id="create-team-name" placeholder="e.g. RoboCats">
+            </div>
+            <div class="field">
+              <label for="create-team-district">District</label>
+              <select id="create-team-district"></select>
+            </div>
+            <button type="submit" class="submit-btn">Create team</button>
+          </form>
+        </div>
+
+        <div class="account-card">
+          <h2>Join a team</h2>
+          <p class="small">Ask your mentor for the join code or link — students and mentors use different codes, so the right role is set automatically.</p>
+          <div class="error-msg" id="join-team-error"></div>
+          <form id="join-team-form">
+            <div class="field">
+              <label for="join-team-code">Join code</label>
+              <input type="text" id="join-team-code" placeholder="e.g. 7K2PQ1" maxlength="6" required style="text-transform:uppercase;">
+            </div>
+            <button type="submit" class="submit-btn">Join team</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="account-card" id="has-team-card" hidden>
+        <h2>Your team</h2>
+        <div class="info-msg" id="team-action-info"></div>
+        <div class="error-msg" id="team-action-error"></div>
+        <div id="team-header"></div>
+        <div class="team-reset-banner" id="team-reset-banner" hidden></div>
+        <div id="team-codes-section" hidden>
+          <h3 class="team-subhead">Join codes</h3>
+          <div id="team-codes"></div>
+        </div>
+        <h3 class="team-subhead">Roster</h3>
+        <div id="team-roster"></div>
+        <div class="team-admin-actions" id="team-admin-actions" hidden>
+          <button type="button" class="submit-btn-sm" id="team-start-season-btn">Start new season</button>
+        </div>
+        <button type="button" class="reset-btn" id="leave-team-btn" style="margin-top:16px;">Leave team</button>
+      </div>
+
+      <div class="account-card" id="team-profile-card">
         <h2>Team profile</h2>
         <p class="small">Attached to anything you post in the <a href="forum.html">Forum</a> — teams see your team number, not your name or email.</p>
         <div class="info-msg" id="profile-info"></div>
@@ -127,6 +181,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
+<script src="js/team.js"></script>
 <script src="js/forum-data.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/account.js" defer></script>

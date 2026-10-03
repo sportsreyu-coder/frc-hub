@@ -15,6 +15,13 @@
 // (the `team` tags below are a reasonable default split across design,
 // mechanical, electrical, programming, and business/outreach subteams).
 //
+// Build season (CAD through driver practice) runs noticeably tighter than
+// FIRST's own default handout: a first CAD draft is targeted at 2.5 weeks,
+// full design release 2 days before fabrication wraps (fab itself held to
+// 1 week), assembly/wiring held to 1.5 weeks, programming gets whatever
+// time that leaves before driver practice, and driver practice is
+// guaranteed to start at least a week before the first event.
+//
 // `label` is the full checklist name. `short` is what's shown on the
 // calendar. `detail` is the one-line summary; `expanded` is the longer
 // write-up. `subtasks` are {label, team} steps -- they also get plotted
@@ -91,7 +98,7 @@ window.SEASON_MILESTONES = [
       { label: "Brainstorm ideas for each mechanism", team: "design" },
       { label: "Pick top ideas to build and test", team: "design" },
     ] },
-  { id: "bs-prototyping", phase: "Build Season", offset: 21, team: "design",
+  { id: "bs-prototyping", phase: "Build Season", offset: 12, team: "design",
     label: "Prototyping complete",
     short: "Prototyping Done",
     detail: "Rough mechanism prototypes built and tested enough to commit to a direction.",
@@ -100,49 +107,49 @@ window.SEASON_MILESTONES = [
       { label: "Build rough prototypes", team: "design" },
       { label: "Test prototypes & pick a final design", team: "design" },
     ] },
-  { id: "bs-cad", phase: "Build Season", offset: 28, team: "design",
+  { id: "bs-cad", phase: "Build Season", offset: 23, team: "design",
     label: "Robot design finished",
     short: "CAD Done",
-    detail: "Full robot modeled and ready to release for fabrication.",
-    expanded: "The full robot should be modeled and ready to release for fabrication -- not just the mechanisms you prototyped, but how they mount together, wiring routing, and the bumper/frame perimeter. Releasing CAD on time here is usually what keeps fabrication from running into week 6.",
+    detail: "Full robot modeled and ready to release for fabrication -- a first draft should already exist by day 18.",
+    expanded: "A first draft of the CAD should be ready around 2.5 weeks in, enough for fabrication to start cutting the parts that are already settled. The full model -- mounting, wiring routing, and the bumper/frame perimeter -- should be finished and released only 2 days before fabrication itself wraps up, so the shop isn't left waiting on late design changes.",
     subtasks: [
-      { label: "Model the whole robot in CAD", team: "design" },
+      { label: "Model the whole robot in CAD (first draft by ~2.5 weeks in)", team: "design" },
       { label: "Plan wiring & finish the bumpers/frame", team: "design" },
-      { label: "Release the design for building", team: "design" },
+      { label: "Release the final design for building", team: "design" },
     ] },
-  { id: "bs-fab", phase: "Build Season", offset: 35, team: "mechanical",
+  { id: "bs-fab", phase: "Build Season", offset: 25, team: "mechanical",
     label: "Robot parts built",
     short: "Fab Done",
-    detail: "Main structural and mechanism parts cut, machined, or printed.",
-    expanded: "Structural parts, drivetrain, and your main mechanisms should be cut, machined, or printed by now. This is usually the busiest shop week of the season -- if fabrication is running behind, it's often better to cut scope on a mechanism than to let it slip into assembly week.",
+    detail: "Main structural and mechanism parts cut, machined, or printed -- held to a 1-week sprint off the first CAD draft.",
+    expanded: "Structural parts, drivetrain, and your main mechanisms should be cut, machined, or printed within a tight 1-week sprint, starting as soon as the first CAD draft is ready. This is the busiest shop week of the season -- if fabrication is running behind, it's often better to cut scope on a mechanism than to let it slip into assembly week.",
     subtasks: [
       { label: "Cut/machine the frame & drivetrain parts", team: "mechanical" },
       { label: "Build the main mechanism parts", team: "mechanical" },
     ] },
-  { id: "bs-assembly", phase: "Build Season", offset: 42, team: "mechanical",
+  { id: "bs-assembly", phase: "Build Season", offset: 36, team: "mechanical",
     label: "Robot built & wired",
     short: "Assembly Done",
-    detail: "Competition robot fully assembled and wired -- FIRST's timeline targets this by end of week 6.",
-    expanded: "Everything should be bolted together and wired on the actual competition robot, not just the practice chassis. FIRST's build season timeline targets assembly and wiring wrapping up by the end of week 6, leaving the remaining time for programming, driver practice, and fixing whatever breaks.",
+    detail: "Competition robot fully assembled and wired -- held to a 1.5-week window, finishing well ahead of FIRST's own week-6 target.",
+    expanded: "Everything should be bolted together and wired on the actual competition robot, not just the practice chassis, inside a 1.5-week window right after fabrication wraps. Finishing ahead of FIRST's own week-6 target banks extra days for programming and driver practice before the first event.",
     subtasks: [
       { label: "Put the robot together", team: "mechanical" },
       { label: "Wire the robot", team: "electrical" },
     ] },
-  { id: "bs-code", phase: "Build Season", offset: 45, team: "programming",
+  { id: "bs-code", phase: "Build Season", offset: 41, team: "programming",
     label: "Code running on the real robot",
     short: "Code on Robot",
-    detail: "Code running on the actual robot, not just the practice chassis.",
-    expanded: "Move your code off the practice chassis and onto the real robot -- sensors, motor IDs, and wiring are never identical between the two, so this always takes longer than expected. Get basic teleop driving and at least one autonomous routine running on the competition bot itself before spending more time polishing either.",
+    detail: "Code running on the actual robot, not just the practice chassis -- gets whatever time is left before driver practice starts.",
+    expanded: "Move your code off the practice chassis and onto the real robot -- sensors, motor IDs, and wiring are never identical between the two, so this always takes longer than expected. Programming gets whatever time remains after assembly, right up until driver practice needs a working robot to practice on. Get basic teleop driving and at least one autonomous routine running on the competition bot itself before spending more time polishing either.",
     subtasks: [
       { label: "Move code to the real robot", team: "programming" },
       { label: "Get driving working on the real robot", team: "programming" },
       { label: "Get autonomous working on the real robot", team: "programming" },
     ] },
-  { id: "bs-practice", phase: "Build Season", offset: 49, team: "mechanical",
+  { id: "bs-practice", phase: "Build Season", offset: 42, team: "mechanical",
     label: "Driving practice & fixes",
     short: "Driver Practice",
-    detail: "Regular driver practice time scheduled, punch list of fixes being worked through.",
-    expanded: "Get drivers real stick time on the actual robot, and start a running punch list of fixes and improvements from what you see. Teams that treat the last week as practice-and-iterate instead of still-building usually show up to their first event in noticeably better shape.",
+    detail: "Regular driver practice time scheduled, punch list of fixes being worked through -- starting at least a week before the first event.",
+    expanded: "Get drivers real stick time on the actual robot, and start a running punch list of fixes and improvements from what you see. Driver practice is guaranteed at least a full week before the first event -- teams that treat that last week as practice-and-iterate instead of still-building usually show up to their first event in noticeably better shape.",
     subtasks: [
       { label: "Schedule regular driving practice", team: "mechanical" },
       { label: "Keep a running list of fixes", team: "mechanical" },
@@ -306,23 +313,27 @@ window.SEASON_MILESTONES = [
   // other concurrent phases noted in the detail line.
   //
   // Each handoff phase's boundaries are kept in sync with the matching
-  // checklist deadline above (bs-cad=28, bs-fab=35, bs-assembly=42): a
-  // phase should mostly be *done* by the point its checklist milestone is
-  // due, with just a few days of overlap into the next phase for realistic
-  // handoff (ordering stock before CAD is 100% final, assembling the first
-  // finished parts while the rest are still being machined, etc.) --
-  // rather than, e.g., fabrication starting two full weeks before CAD is
-  // checklisted as finished.
+  // checklist deadline above (bs-prototyping=12, bs-cad=23, bs-fab=25,
+  // bs-assembly=36, bs-code=41, bs-practice=42): a phase should mostly be
+  // *done* by the point its checklist milestone is due, with just a few
+  // days of overlap into the next phase for realistic handoff (fabrication
+  // starting off the first CAD draft while the full release is still being
+  // finished, assembling the first finished parts while the rest are still
+  // being machined, etc.) -- rather than, e.g., fabrication starting two
+  // full weeks before CAD is checklisted as finished. This build runs
+  // tighter than a default FRC season: CAD/fab/assembly are compressed so
+  // programming and driver practice have guaranteed runway before the
+  // first event.
   var BUILD_PHASES = [
     { key: "strategy", short: "Strategy", team: "design", start: 1, end: 3 },
     { key: "concepts", short: "Concepts", team: "design", start: 3, end: 5 },
-    { key: "prototyping", short: "Prototyping", team: "design", start: 6, end: 21 },
-    { key: "cad", short: "CAD", team: "design", start: 8, end: 28 },
-    { key: "fab", short: "Fabrication", team: "mechanical", start: 24, end: 35 },
-    { key: "assembly", short: "Assembly", team: "mechanical", start: 32, end: 42 },
-    { key: "programming", short: "Programming", team: "programming", start: 8, end: 42 },
-    { key: "testing", short: "Code Testing", team: "programming", start: 29, end: 52 },
-    { key: "practice", short: "Practice", team: "mechanical", start: 36, end: 49 },
+    { key: "prototyping", short: "Prototyping", team: "design", start: 6, end: 12 },
+    { key: "cad", short: "CAD", team: "design", start: 8, end: 23 },
+    { key: "fab", short: "Fabrication", team: "mechanical", start: 18, end: 25 },
+    { key: "assembly", short: "Assembly", team: "mechanical", start: 22, end: 36 },
+    { key: "programming", short: "Programming", team: "programming", start: 8, end: 36 },
+    { key: "testing", short: "Code Testing", team: "programming", start: 19, end: 52 },
+    { key: "practice", short: "Practice", team: "mechanical", start: 42, end: 49 },
   ];
 
   for (var day = 1; day <= 49; day++) {
@@ -364,10 +375,10 @@ window.SEASON_MILESTONES = [
 var SEASON_MECHANISM_STEPS = [
   { day: 4, team: "design", short: "Brainstorm", label: "Brainstorm {m} concepts and pick 2-3 worth prototyping" },
   { day: 11, team: "mechanical", short: "Prototype", label: "Build and test a rough {m} prototype" },
-  { day: 20, team: "design", short: "Finish CAD", label: "Finish {m} design (CAD) and release it for fabrication" },
-  { day: 29, team: "mechanical", short: "Machine Parts", label: "Finish machining/printing {m} parts" },
-  { day: 35, team: "mechanical", short: "Assemble", label: "Assemble {m} onto the robot" },
-  { day: 38, team: "electrical", short: "Wire", label: "Wire {m} motors, sensors, and wiring" },
+  { day: 19, team: "design", short: "Finish CAD", label: "Finish {m} design (CAD) and release it for fabrication" },
+  { day: 22, team: "mechanical", short: "Machine Parts", label: "Finish machining/printing {m} parts" },
+  { day: 28, team: "mechanical", short: "Assemble", label: "Assemble {m} onto the robot" },
+  { day: 32, team: "electrical", short: "Wire", label: "Wire {m} motors, sensors, and wiring" },
   { day: 41, team: "programming", short: "Code", label: "Write and bench-test {m} control code" },
   { day: 45, team: "mechanical", short: "Test & Tune", label: "Test and tune {m} on the competition robot" },
 ];
