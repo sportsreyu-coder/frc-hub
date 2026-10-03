@@ -74,9 +74,16 @@
       <div id="no-team-cards" hidden>
         <div class="account-card">
           <h2>Create a team</h2>
-          <p class="small">You'll be the team's mentor, with admin permissions students don't have. Co-mentors can join later with the separate mentor join code below.</p>
+          <p class="small">Mentors get admin permissions students don't have. Co-mentors and students can join later with the separate join codes below.</p>
           <div class="error-msg" id="create-team-error"></div>
           <form id="create-team-form">
+            <div class="field">
+              <label for="create-team-role">Your role</label>
+              <select id="create-team-role">
+                <option value="mentor">Mentor</option>
+                <option value="student">Student</option>
+              </select>
+            </div>
             <div class="field">
               <label for="create-team-number">Team number</label>
               <input type="text" id="create-team-number" placeholder="e.g. 4152" required>

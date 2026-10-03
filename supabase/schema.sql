@@ -341,7 +341,8 @@ language sql stable as $$
   select upper(substr(md5(gen_random_uuid()::text), 1, 6));
 $$;
 
-create or replace function public.create_team(p_team_number text, p_team_name text, p_district text)
+drop function if exists public.create_team(text, text, text);
+create or replace function public.create_team(p_team_number text, p_team_name text, p_district text, p_role text default 'mentor')
 returns public.teams
 language plpgsql security definer set search_path = public as $$
 declare
@@ -349,6 +350,11 @@ declare
   v_student_code text;
   v_mentor_code text;
 begin
+  p_role := coalesce(nullif(trim(p_role), ''), 'mentor');
+  if p_role not in ('mentor', 'student') then
+    raise exception 'Role must be mentor or student.';
+  end if;
+
   if exists (select 1 from public.team_members where user_id = auth.uid()) then
     raise exception 'You are already on a team.';
   end if;
@@ -367,7 +373,7 @@ begin
   values (trim(p_team_number), nullif(trim(p_team_name), ''), nullif(p_district, ''), v_student_code, v_mentor_code)
   returning * into v_team;
 
-  insert into public.team_members (user_id, team_id, role) values (auth.uid(), v_team.id, 'mentor');
+  insert into public.team_members (user_id, team_id, role) values (auth.uid(), v_team.id, p_role);
   insert into public.team_data (team_id, data) values (v_team.id, '{}'::jsonb);
 
   return v_team;
@@ -590,7 +596,7 @@ begin
 end;
 $$;
 
-grant execute on function public.create_team(text, text, text) to authenticated;
+grant execute on function public.create_team(text, text, text, text) to authenticated;
 grant execute on function public.join_team(text) to authenticated;
 grant execute on function public.leave_team() to authenticated;
 grant execute on function public.delete_team() to authenticated;

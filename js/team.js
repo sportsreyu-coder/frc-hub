@@ -124,8 +124,8 @@
     canEditTeamSettings: canEditTeamSettings,
     canEditRoster: canEditRoster,
 
-    createTeam: function (teamNumber, teamName, district) {
-      return refreshAfter(rpc("create_team", { p_team_number: teamNumber, p_team_name: teamName, p_district: district }));
+    createTeam: function (teamNumber, teamName, district, role) {
+      return refreshAfter(rpc("create_team", { p_team_number: teamNumber, p_team_name: teamName, p_district: district, p_role: role }));
     },
     joinTeam: function (code) {
       return refreshAfter(rpc("join_team", { p_code: code }));

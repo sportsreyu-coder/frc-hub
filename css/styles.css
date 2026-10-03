@@ -1613,6 +1613,29 @@ main.site-main {
 
 .custom-event-row .eyebrow { margin-bottom: 10px; display: block; }
 
+.comp-week-row .eyebrow { margin-bottom: 6px; display: block; }
+
+.comp-week-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 10px;
+}
+
+.comp-week-field input {
+  width: 56px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.comp-week-field input:focus { outline: none; border-color: var(--accent); }
+
 .roster-row .eyebrow { margin-bottom: 6px; display: block; }
 
 .roster-grid {
@@ -2093,24 +2116,6 @@ main.site-main {
 }
 
 .ms-details-btn:hover { color: var(--accent-hover); }
-
-.ms-edit-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--text-faint);
-  cursor: pointer;
-}
-
-.ms-edit-btn svg { width: 14px; height: 14px; }
-
-.ms-edit-btn:hover { color: var(--accent); }
 
 .link-btn {
   background: none;

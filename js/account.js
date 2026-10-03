@@ -199,27 +199,39 @@
 
     function showTeamInfo(msg) { showError(document.getElementById("team-action-info"), msg); }
     function showTeamError(msg) { showError(document.getElementById("team-action-error"), msg); }
+    function showCreateTeamError(msg) { showError(document.getElementById("create-team-error"), msg); }
+    function showJoinTeamError(msg) { showError(document.getElementById("join-team-error"), msg); }
 
     createTeamForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      showTeamError("");
+      showCreateTeamError("");
       var number = document.getElementById("create-team-number").value.trim();
       var name = document.getElementById("create-team-name").value.trim();
       var district = createTeamDistrict.value;
-      Team.createTeam(number, name, district).then(function () {
+      var role = document.getElementById("create-team-role").value;
+      Team.createTeam(number, name, district, role).then(function (team) {
         createTeamForm.reset();
         renderTeamSection();
-      }).catch(function (err) { showTeamError(err.message); });
+        // Only mentors can see join codes afterward (team-codes-section is
+        // mentor-only), so a student creator needs both codes now -- it's
+        // their only chance to get the mentor code to an actual mentor.
+        if (role === "student" && team) {
+          showTeamInfo(
+            "Team created! Save these now -- as a student you won't see them again here. " +
+            "Mentor join code: " + team.join_code_mentor + ". Student join code: " + team.join_code_student + "."
+          );
+        }
+      }).catch(function (err) { showCreateTeamError(err.message); });
     });
 
     joinTeamForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      showTeamError("");
+      showJoinTeamError("");
       var code = document.getElementById("join-team-code").value.trim();
       Team.joinTeam(code).then(function () {
         joinTeamForm.reset();
         renderTeamSection();
-      }).catch(function (err) { showTeamError(err.message); });
+      }).catch(function (err) { showJoinTeamError(err.message); });
     });
 
     document.getElementById("leave-team-btn").addEventListener("click", function () {

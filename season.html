@@ -64,9 +64,19 @@
     <button type="button" class="view-tab" id="view-tab-calendar">Calendar</button>
     <button type="button" class="ics-export-btn" id="ics-export-btn">⬇ Export to Google/Apple Calendar</button>
     <button type="button" class="settings-toggle" id="settings-toggle">⚙ Team settings</button>
+    <button type="button" class="reset-btn" id="delete-all-tasks-btn" hidden>🗑 Delete all tasks</button>
   </div>
 
   <section class="team-settings" id="team-settings" hidden>
+    <div class="settings-row comp-week-row">
+      <span class="eyebrow">What week is your first competition?</span>
+      <p class="finder-hint" style="margin-top:0">Week 1 is the standard ~7-week build season already built into this schedule. Pick a later week if your first event isn't until then — the extra weeks go mostly toward more prototyping, CAD, and programming time; fabrication, assembly, wiring, and the final driver-practice stretch stay about as tight as they are today.</p>
+      <label class="comp-week-field">First event is in week
+        <input type="number" min="1" max="12" id="comp-week-input">
+        <span>after Kickoff</span>
+      </label>
+    </div>
+
     <div class="settings-row roster-row">
       <span class="eyebrow">Subteam roster — how many students on each subteam?</span>
       <p class="finder-hint" style="margin-top:0">Paces the daily competition-season tasks on the calendar: bigger subteams get a new task most days, smaller ones get one every few days instead.</p>

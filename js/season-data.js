@@ -265,20 +265,27 @@ window.SEASON_MILESTONES = [
 // they're exactly the "daily goals" a team can check off day by day.
 // Preseason gets a weekly cadence and build season gets a day-by-day
 // build phase, since both have a fixed, universal shape from FIRST's own
-// timeline. Competition season's daily tasks are generated separately,
-// below `window.SEASON_FINE_GOALS`, since -- unlike these two -- they
-// depend on a per-team setting (subteam roster size) rather than being
-// fixed at load time. Postseason varies too much team to team (whether
-// you make champs, how many off-season events you attend) to responsibly
-// invent a daily schedule for it, so it stays at the milestone level
-// above.
-(function () {
+// timeline -- except build season's shape also depends on the per-team
+// "first competition week" setting (season.html's Team Settings; see
+// season-core.js's remapBuildDay), so window.buildFineGoals(compDay) is a
+// function, called fresh by season.js/dashboard.js once that setting is
+// known, rather than a value computed once at load time. Competition
+// season's daily tasks are generated separately, by
+// window.buildCompetitionSeasonGoals below, since they also depend on a
+// per-team setting (subteam roster size). Postseason varies too much team
+// to team (whether you make champs, how many off-season events you
+// attend) to responsibly invent a daily schedule for it, so it stays at
+// the milestone level above.
+window.buildFineGoals = function (compDay) {
   "use strict";
 
+  compDay = compDay || 49;
+  var remap = function (day) { return window.SeasonCore ? window.SeasonCore.remapBuildDay(day, compDay) : day; };
   var fine = [];
 
   // Weekly preseason goals (LearnFRC's 18-week plan, subdivided into a
-  // logical weekly step toward each phase's stated deliverable).
+  // logical weekly step toward each phase's stated deliverable). These run
+  // before Kickoff and don't depend on the competition-week setting.
   var PRESEASON_WEEKS = [
     { week: 1, team: "business", short: "Assign Leads", label: "Assign subteam leads for the season" },
     { week: 2, team: "business", short: "Lock Registration", label: "Confirm event registration & payment deadlines" },
@@ -339,20 +346,20 @@ window.SEASON_MILESTONES = [
   // -- so it reads as background context during fab/assembly/wiring
   // instead of stealing their headline the moment it begins.
   var BUILD_PHASES = [
-    { key: "strategy", short: "Strategy", team: "design", start: 1, end: 3 },
-    { key: "concepts", short: "Concepts", team: "design", start: 3, end: 5 },
-    { key: "prototyping", short: "Prototyping", team: "design", start: 6, end: 12 },
-    { key: "cad", short: "CAD", team: "design", start: 8, end: 23 },
-    { key: "fab", short: "Fabrication", team: "mechanical", start: 18, end: 25 },
-    { key: "assembly", short: "Assembly", team: "mechanical", start: 22, end: 36 },
-    { key: "wiring", short: "Wiring", team: "electrical", start: 36, end: 43 },
-    { key: "programming", short: "Programming", team: "programming", start: 8, end: 36 },
-    { key: "testing", short: "Code Testing", team: "programming", start: 36, end: 52 },
-    { key: "code", short: "Code on Robot", team: "programming", start: 42, end: 45 },
-    { key: "practice", short: "Practice", team: "mechanical", start: 45, end: 48 },
+    { key: "strategy", short: "Strategy", team: "design", start: remap(1), end: remap(3) },
+    { key: "concepts", short: "Concepts", team: "design", start: remap(3), end: remap(5) },
+    { key: "prototyping", short: "Prototyping", team: "design", start: remap(6), end: remap(12) },
+    { key: "cad", short: "CAD", team: "design", start: remap(8), end: remap(23) },
+    { key: "fab", short: "Fabrication", team: "mechanical", start: remap(18), end: remap(25) },
+    { key: "assembly", short: "Assembly", team: "mechanical", start: remap(22), end: remap(36) },
+    { key: "wiring", short: "Wiring", team: "electrical", start: remap(36), end: remap(43) },
+    { key: "programming", short: "Programming", team: "programming", start: remap(8), end: remap(36) },
+    { key: "testing", short: "Code Testing", team: "programming", start: remap(36), end: remap(52) },
+    { key: "code", short: "Code on Robot", team: "programming", start: remap(42), end: remap(45) },
+    { key: "practice", short: "Practice", team: "mechanical", start: remap(45), end: remap(48) },
   ];
 
-  for (var day = 1; day <= 49; day++) {
+  for (var day = 1; day <= compDay; day++) {
     var active = BUILD_PHASES.filter(function (p) { return day >= p.start && day <= p.end; });
     if (!active.length) continue;
     active.sort(function (a, b) { return b.start - a.start; });
@@ -372,8 +379,8 @@ window.SEASON_MILESTONES = [
     });
   }
 
-  window.SEASON_FINE_GOALS = fine;
-})();
+  return fine;
+};
 
 // ---- Mechanism-specific build season tasks (roster-aware, generated) ----
 //
@@ -406,15 +413,19 @@ function seasonSlugify(s, fallback) {
 
 // `mechanisms` is an array of strings the team entered, e.g. ["Intake",
 // "Climber"]. Returns Build Season fine-goal objects, staggered so
-// multiple mechanisms don't all land on the same days.
-window.buildMechanismGoals = function (mechanisms) {
+// multiple mechanisms don't all land on the same days. `compDay` (see
+// season-core.js's remapBuildDay) stretches/shifts the baseline days the
+// same way the rest of Build Season does when the first event moves.
+window.buildMechanismGoals = function (mechanisms, compDay) {
+  compDay = compDay || 49;
   var goals = [];
   var STAGGER_DAYS = 2;
 
   (mechanisms || []).forEach(function (m, mIdx) {
     var slug = seasonSlugify(m, "mech" + mIdx);
     SEASON_MECHANISM_STEPS.forEach(function (step, stepIdx) {
-      var day = Math.min(49, Math.max(1, step.day + mIdx * STAGGER_DAYS));
+      var baseDay = Math.min(49, Math.max(1, step.day + mIdx * STAGGER_DAYS));
+      var day = window.SeasonCore ? window.SeasonCore.remapBuildDay(baseDay, compDay) : baseDay;
       var label = step.label.replace(/\{m\}/g, m);
       goals.push({
         id: "fine-bs-mech-" + slug + "-" + stepIdx,
@@ -530,12 +541,18 @@ function seasonCadenceForTeamSize(n) {
 }
 window.seasonCadenceForTeamSize = seasonCadenceForTeamSize;
 
-// Builds the roster-aware Competition Season daily items for offsets
-// 49-90 (Kickoff+49 through Kickoff+90). `teamSizes` is a
+// Builds the roster-aware Competition Season daily items for baseline
+// offsets 49-90 (Kickoff+49 through Kickoff+90, i.e. the first event
+// through the championship-decided milestone). `teamSizes` is a
 // {mechanical, electrical, programming, design, business} map of student
 // counts; `teamLabels` optionally maps team id -> display name for the
-// generated detail text.
-window.buildCompetitionSeasonGoals = function (teamSizes, teamLabels) {
+// generated detail text. `compDay` (see season-core.js's remapBuildDay)
+// shifts this whole range to start at the actual first-event day when a
+// mentor pushes the competition week later -- Competition Season itself
+// doesn't stretch, it just starts later.
+window.buildCompetitionSeasonGoals = function (teamSizes, teamLabels, compDay) {
+  compDay = compDay || 49;
+  var remap = function (day) { return window.SeasonCore ? window.SeasonCore.remapBuildDay(day, compDay) : day; };
   var TEAM_ORDER = ["mechanical", "electrical", "programming", "design", "business"];
   var goals = [];
 
@@ -551,14 +568,15 @@ window.buildCompetitionSeasonGoals = function (teamSizes, teamLabels) {
     var poolIdx = 0;
     var teamName = (teamLabels && teamLabels[team]) || team;
 
-    for (var day = 49; day <= 90; day++) {
-      if ((day - 49 - dayOffset) % cadence !== 0) continue;
+    for (var baseDay = 49; baseDay <= 90; baseDay++) {
+      if ((baseDay - 49 - dayOffset) % cadence !== 0) continue;
       var task = pool[poolIdx % pool.length];
       poolIdx++;
-      var compDayNum = day - 48;
+      var compDayNum = baseDay - 48;
+      var day = remap(baseDay);
 
       goals.push({
-        id: "fine-cs-day" + day + "-" + team,
+        id: "fine-cs-day" + baseDay + "-" + team,
         phase: "Competition Season",
         offset: day,
         team: team,

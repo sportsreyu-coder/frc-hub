@@ -49,16 +49,6 @@
 
   var PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 
-  function iconButton(cls, label, svg) {
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = cls;
-    btn.setAttribute("aria-label", label);
-    btn.title = label;
-    btn.innerHTML = svg;
-    return btn;
-  }
-
   function toISODate(d) {
     var y = d.getFullYear(), m = ("0" + (d.getMonth() + 1)).slice(-2), day = ("0" + d.getDate()).slice(-2);
     return y + "-" + m + "-" + day;
@@ -203,6 +193,7 @@
       customEvents: customEvents,
       oaSettings: oaSettings,
       teamSizes: teamSizes,
+      compWeek: compWeek,
       mechanisms: mechanisms,
       members: members,
       assignments: assignments,
@@ -217,6 +208,7 @@
     if (data.customEvents) { customEvents = data.customEvents; saveCustomEvents(customEvents); }
     if (data.oaSettings) { oaSettings = Object.assign({}, DEFAULT_OA_SETTINGS, data.oaSettings); saveOASettings(oaSettings); }
     if (data.teamSizes) { teamSizes = Object.assign({}, DEFAULT_TEAM_SIZES, data.teamSizes); saveTeamSizes(teamSizes); }
+    if (data.compWeek) { compWeek = Core.saveCompWeek(data.compWeek); compDay = Core.resolveCompDay(compWeek); refreshMilestoneDates(); }
     if (data.mechanisms) { mechanisms = data.mechanisms; saveMechanisms(mechanisms); }
     if (data.members) { members = data.members; saveMembers(members); }
     if (data.assignments) { assignments = data.assignments; saveAssignments(assignments); }
@@ -335,6 +327,8 @@
   var anchor = Core.resolveAnchor(today);
   var milestoneOverrides = loadMilestoneOverrides();
   var hiddenMilestones = loadHiddenMilestones();
+  var compWeek = Core.loadCompWeek();
+  var compDay = Core.resolveCompDay(compWeek);
   var milestones = Core.getMilestonesWithDates().map(function (m) {
     m.recommendedDate = m.date;
     var ov = milestoneOverrides[m.id];
@@ -347,6 +341,24 @@
   });
   function visibleMilestones() {
     return milestones.filter(function (m) { return hiddenMilestones.indexOf(m.id) === -1; });
+  }
+  // Re-derives every Build-Season-and-later milestone's offset/date from
+  // the current competition-week setting (see season-core.js's
+  // remapBuildDay) and re-applies any per-milestone date override on top,
+  // mutating `milestones` in place so every closure already holding a
+  // reference to one of its entries (calendar items, the checklist, etc.)
+  // sees the update on the next render() without having to rebuild them.
+  function refreshMilestoneDates() {
+    var fresh = {};
+    Core.getMilestonesWithDates().forEach(function (f) { fresh[f.id] = f; });
+    milestones.forEach(function (m) {
+      var f = fresh[m.id];
+      if (!f) return;
+      m.offset = f.offset;
+      m.recommendedDate = f.date;
+      var ov = milestoneOverrides[m.id];
+      m.date = (ov && ov.date) ? new Date(ov.date + "T00:00:00") : f.date;
+    });
   }
   function setMilestoneOverride(id, patch) {
     milestoneOverrides[id] = Object.assign({}, milestoneOverrides[id], patch);
@@ -364,6 +376,27 @@
   function restoreHiddenMilestones() {
     hiddenMilestones = [];
     saveHiddenMilestones(hiddenMilestones);
+    render();
+  }
+  function deleteAllTasks() {
+    if (Team && Team.state.team && !Team.isMentor()) return;
+    var visibleCount = visibleMilestones().length + customTasks.length;
+    if (!visibleCount) return;
+    if (!confirm("Delete all " + visibleCount + " tasks from the Technical Checklist? Built-in milestones will be hidden (restorable later) and custom tasks will be permanently removed. This can't be undone for custom tasks.")) return;
+    milestones.forEach(function (m) {
+      if (hiddenMilestones.indexOf(m.id) === -1) hiddenMilestones.push(m.id);
+      delete progress[m.id];
+      if (m.subtasks) m.subtasks.forEach(function (_, i) { delete progress[subtaskKey(m, i)]; });
+    });
+    saveHiddenMilestones(hiddenMilestones);
+    customTasks.forEach(function (t) {
+      delete progress[t.id];
+      delete assignments[t.id];
+    });
+    customTasks = [];
+    saveCustomTasks(customTasks);
+    saveProgress(progress);
+    saveAssignments(assignments);
     render();
   }
   var progress = Core.loadProgress();
@@ -707,6 +740,7 @@
     renderCalendar();
     renderSettings();
     renderSeasonResetUI();
+    renderDeleteAllTasksUI();
     if (msPanelItem) renderMsPanel();
     scheduleCloudSave();
   }
@@ -814,12 +848,6 @@
           openDetails();
         });
 
-        var editBtn = iconButton("ms-edit-btn", "Edit " + m.label, PENCIL_SVG);
-        editBtn.addEventListener("click", function (e) {
-          e.stopPropagation();
-          openMsPanel(m, { kind: "milestone", editing: true });
-        });
-
         var msDateBtn = el("button", { type: "button", class: "ms-date ms-date-btn", title: "Click to change this date" }, [formatDate(m.date)]);
         msDateBtn.addEventListener("click", function (e) {
           e.stopPropagation();
@@ -844,7 +872,6 @@
           ]),
           el("div", { class: "ms-meta-row" }, [
             el("div", { class: "ms-meta-left" }, metaLeftChildren),
-            editBtn,
             detailsBtn,
           ]),
         ]);
@@ -908,12 +935,6 @@
           openMsPanel(t, { kind: "custom-task", editing: false });
         });
 
-        var editBtn = iconButton("ms-edit-btn", "Edit " + t.label, PENCIL_SVG);
-        editBtn.addEventListener("click", function (e) {
-          e.stopPropagation();
-          openMsPanel(t, { kind: "custom-task", editing: true });
-        });
-
         var metaLeftChildren = [buildAssignControl(t.id, t.team)];
         if (t.dueDate) {
           var taskDateBtn = el("button", { type: "button", class: "ms-date ms-date-btn", title: "Click to change this date" }, ["Due " + formatDate(new Date(t.dueDate + "T00:00:00"))]);
@@ -936,7 +957,6 @@
           ]),
           el("div", { class: "ms-meta-row" }, [
             el("div", { class: "ms-meta-left" }, metaLeftChildren),
-            editBtn,
             detailsBtn,
           ]),
         ]);
@@ -1138,12 +1158,12 @@
       });
     });
 
-    var fineGoals = (window.SEASON_FINE_GOALS || []);
+    var fineGoals = window.buildFineGoals ? window.buildFineGoals(compDay) : [];
     if (window.buildMechanismGoals) {
-      fineGoals = fineGoals.concat(window.buildMechanismGoals(mechanisms));
+      fineGoals = fineGoals.concat(window.buildMechanismGoals(mechanisms, compDay));
     }
     if (window.buildCompetitionSeasonGoals) {
-      fineGoals = fineGoals.concat(window.buildCompetitionSeasonGoals(teamSizes, TEAM_LABELS));
+      fineGoals = fineGoals.concat(window.buildCompetitionSeasonGoals(teamSizes, TEAM_LABELS, compDay));
     }
 
     fineGoals.forEach(function (g) {
@@ -1489,7 +1509,7 @@
       closeMsPanel();
       removeCustomTask(id);
     } else {
-      if (!confirm("Hide “" + label + "” from your checklist? You can restore it later from the Technical Checklist.")) return;
+      if (!confirm("Delete “" + label + "” from your checklist? You can restore it later from the Technical Checklist.")) return;
       closeMsPanel();
       hideMilestone(id);
     }
@@ -1632,7 +1652,7 @@
       actions.appendChild(editActionBtn);
     }
 
-    var deleteBtn = el("button", { type: "button", class: "ms-panel-delete-btn" }, [isCustom ? "Delete task" : "Hide this milestone"]);
+    var deleteBtn = el("button", { type: "button", class: "ms-panel-delete-btn" }, [isCustom ? "Delete task" : "Delete this task"]);
     deleteBtn.addEventListener("click", deleteMsPanelItem);
     actions.appendChild(deleteBtn);
   }
@@ -1674,6 +1694,12 @@
     var oaVideoDaysInput = document.getElementById("oa-video-days");
     if (document.activeElement !== oaVideoDaysInput) oaVideoDaysInput.value = oaSettings.videoDaysPerWeek;
     document.getElementById("oa-blog-day").value = oaSettings.blogDay;
+
+    var compWeekInput = document.getElementById("comp-week-input");
+    if (compWeekInput) {
+      compWeekInput.disabled = locked;
+      if (document.activeElement !== compWeekInput) compWeekInput.value = compWeek;
+    }
 
     ROSTER_TEAMS.forEach(function (team) {
       var input = document.getElementById("roster-" + team);
@@ -1799,6 +1825,16 @@
     btn.textContent = "Start new season";
   }
 
+  // Mentor-only wipe of the Technical Checklist -- hides every built-in
+  // milestone (restorable, same as hiding one at a time) and permanently
+  // deletes every custom task. Hidden entirely for non-mentor team members;
+  // solo (no-team) users can always run it on their own data.
+  document.getElementById("delete-all-tasks-btn").addEventListener("click", deleteAllTasks);
+  function renderDeleteAllTasksUI() {
+    var btn = document.getElementById("delete-all-tasks-btn");
+    btn.hidden = !!(Team && Team.state.team && !Team.isMentor());
+  }
+
   document.getElementById("view-tab-checklist").addEventListener("click", function () {
     viewMode = "checklist";
     document.getElementById("view-tab-checklist").classList.add("active");
@@ -1843,6 +1879,17 @@
     saveOASettings(oaSettings);
     render();
   });
+
+  var compWeekInputEl = document.getElementById("comp-week-input");
+  if (compWeekInputEl) {
+    compWeekInputEl.addEventListener("change", function (e) {
+      var n = parseInt(e.target.value, 10);
+      compWeek = Core.saveCompWeek(isNaN(n) ? Core.DEFAULT_COMP_WEEK : n);
+      compDay = Core.resolveCompDay(compWeek);
+      refreshMilestoneDates();
+      render();
+    });
+  }
 
   ROSTER_TEAMS.forEach(function (team) {
     var input = document.getElementById("roster-" + team);
