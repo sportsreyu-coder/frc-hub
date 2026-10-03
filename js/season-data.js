@@ -18,9 +18,10 @@
 // Build season (CAD through driver practice) runs noticeably tighter than
 // FIRST's own default handout: a first CAD draft is targeted at 2.5 weeks,
 // full design release 2 days before fabrication wraps (fab itself held to
-// 1 week), assembly/wiring held to 1.5 weeks, programming gets whatever
-// time that leaves before driver practice, and driver practice is
-// guaranteed to start at least a week before the first event.
+// 1 week), assembly runs about 2 weeks, wiring is tracked as its own
+// ~1-week milestone right after assembly, programming overlaps the tail
+// end of wiring, and driver practice runs the last few days right up to
+// the day before the first event.
 //
 // `label` is the full checklist name. `short` is what's shown on the
 // calendar. `detail` is the one-line summary; `expanded` is the longer
@@ -127,29 +128,37 @@ window.SEASON_MILESTONES = [
       { label: "Build the main mechanism parts", team: "mechanical" },
     ] },
   { id: "bs-assembly", phase: "Build Season", offset: 36, team: "mechanical",
-    label: "Robot built & wired",
+    label: "Robot built",
     short: "Assembly Done",
-    detail: "Competition robot fully assembled and wired -- held to a 1.5-week window, finishing well ahead of FIRST's own week-6 target.",
-    expanded: "Everything should be bolted together and wired on the actual competition robot, not just the practice chassis, inside a 1.5-week window right after fabrication wraps. Finishing ahead of FIRST's own week-6 target banks extra days for programming and driver practice before the first event.",
+    detail: "Competition robot's structure fully assembled and mechanisms mounted -- wiring is tracked as its own milestone right after this.",
+    expanded: "Everything should be bolted together on the actual competition robot, not just the practice chassis, in the roughly 2-week window right after fabrication wraps. Wiring is tracked separately as its own milestone immediately after this one, so assembly doesn't have to wait on the electrical team to finish before it's considered done.",
     subtasks: [
       { label: "Put the robot together", team: "mechanical" },
-      { label: "Wire the robot", team: "electrical" },
     ] },
-  { id: "bs-code", phase: "Build Season", offset: 41, team: "programming",
+  { id: "bs-wiring", phase: "Build Season", offset: 43, team: "electrical",
+    label: "Robot wired",
+    short: "Wiring Done",
+    detail: "Full power path, CAN bus, and sensor wiring complete and strain-relieved -- about a 1-week window right after assembly.",
+    expanded: "With the robot physically assembled, electrical gets its own dedicated week to run the full power path, CAN bus, and sensor wiring, then label and strain-relieve all of it before it disappears behind panels and bumpers. Programming can start loading code onto the robot a couple of days before this fully wraps, once the core systems are live.",
+    subtasks: [
+      { label: "Wire the robot", team: "electrical" },
+      { label: "Label and strain-relieve all wiring", team: "electrical" },
+    ] },
+  { id: "bs-code", phase: "Build Season", offset: 45, team: "programming",
     label: "Code running on the real robot",
     short: "Code on Robot",
-    detail: "Code running on the actual robot, not just the practice chassis -- gets whatever time is left before driver practice starts.",
-    expanded: "Move your code off the practice chassis and onto the real robot -- sensors, motor IDs, and wiring are never identical between the two, so this always takes longer than expected. Programming gets whatever time remains after assembly, right up until driver practice needs a working robot to practice on. Get basic teleop driving and at least one autonomous routine running on the competition bot itself before spending more time polishing either.",
+    detail: "Code running on the actual robot, not just the practice chassis -- starts once core wiring is live, overlapping wiring's last couple of days.",
+    expanded: "Move your code off the practice chassis and onto the real robot -- sensors, motor IDs, and wiring are never identical between the two, so this always takes longer than expected. Start as soon as the core systems are wired (around day 42) rather than waiting for wiring to fully wrap, so there's less dead time before driver practice needs a working robot. Get basic teleop driving and at least one autonomous routine running on the competition bot itself before spending more time polishing either.",
     subtasks: [
       { label: "Move code to the real robot", team: "programming" },
       { label: "Get driving working on the real robot", team: "programming" },
       { label: "Get autonomous working on the real robot", team: "programming" },
     ] },
-  { id: "bs-practice", phase: "Build Season", offset: 42, team: "mechanical",
+  { id: "bs-practice", phase: "Build Season", offset: 48, team: "mechanical",
     label: "Driving practice & fixes",
     short: "Driver Practice",
-    detail: "Regular driver practice time scheduled, punch list of fixes being worked through -- starting at least a week before the first event.",
-    expanded: "Get drivers real stick time on the actual robot, and start a running punch list of fixes and improvements from what you see. Driver practice is guaranteed at least a full week before the first event -- teams that treat that last week as practice-and-iterate instead of still-building usually show up to their first event in noticeably better shape.",
+    detail: "Regular driver practice time scheduled, punch list of fixes being worked through -- running right up to the day before the first event.",
+    expanded: "Get drivers real stick time on the actual robot, and start a running punch list of fixes and improvements from what you see, for the few days you have before the first event. With a short practice window, triage the punch list by whatever actually affects scoring or reliability first.",
     subtasks: [
       { label: "Schedule regular driving practice", team: "mechanical" },
       { label: "Keep a running list of fixes", team: "mechanical" },
@@ -314,16 +323,21 @@ window.SEASON_MILESTONES = [
   //
   // Each handoff phase's boundaries are kept in sync with the matching
   // checklist deadline above (bs-prototyping=12, bs-cad=23, bs-fab=25,
-  // bs-assembly=36, bs-code=41, bs-practice=42): a phase should mostly be
-  // *done* by the point its checklist milestone is due, with just a few
-  // days of overlap into the next phase for realistic handoff (fabrication
-  // starting off the first CAD draft while the full release is still being
-  // finished, assembling the first finished parts while the rest are still
-  // being machined, etc.) -- rather than, e.g., fabrication starting two
-  // full weeks before CAD is checklisted as finished. This build runs
-  // tighter than a default FRC season: CAD/fab/assembly are compressed so
-  // programming and driver practice have guaranteed runway before the
-  // first event.
+  // bs-assembly=36, bs-wiring=43, bs-code=45, bs-practice=48): a phase
+  // should mostly be *done* by the point its checklist milestone is due,
+  // with just a few days of overlap into the next phase for realistic
+  // handoff (fabrication starting off the first CAD draft while the full
+  // release is still being finished, code moving onto the robot a couple
+  // of days before wiring is fully done, etc.) -- rather than, e.g.,
+  // fabrication starting two full weeks before CAD is checklisted as
+  // finished. This build runs tighter than a default FRC season:
+  // CAD/fab/assembly/wiring are compressed so driver practice has
+  // guaranteed (if short) runway before the first event.
+  //
+  // `testing` (ongoing code testing/tuning, as opposed to `programming`'s
+  // initial dev work) intentionally starts late -- once wiring is underway
+  // -- so it reads as background context during fab/assembly/wiring
+  // instead of stealing their headline the moment it begins.
   var BUILD_PHASES = [
     { key: "strategy", short: "Strategy", team: "design", start: 1, end: 3 },
     { key: "concepts", short: "Concepts", team: "design", start: 3, end: 5 },
@@ -331,9 +345,11 @@ window.SEASON_MILESTONES = [
     { key: "cad", short: "CAD", team: "design", start: 8, end: 23 },
     { key: "fab", short: "Fabrication", team: "mechanical", start: 18, end: 25 },
     { key: "assembly", short: "Assembly", team: "mechanical", start: 22, end: 36 },
+    { key: "wiring", short: "Wiring", team: "electrical", start: 36, end: 43 },
     { key: "programming", short: "Programming", team: "programming", start: 8, end: 36 },
-    { key: "testing", short: "Code Testing", team: "programming", start: 19, end: 52 },
-    { key: "practice", short: "Practice", team: "mechanical", start: 42, end: 49 },
+    { key: "testing", short: "Code Testing", team: "programming", start: 36, end: 52 },
+    { key: "code", short: "Code on Robot", team: "programming", start: 42, end: 45 },
+    { key: "practice", short: "Practice", team: "mechanical", start: 45, end: 48 },
   ];
 
   for (var day = 1; day <= 49; day++) {
@@ -378,8 +394,8 @@ var SEASON_MECHANISM_STEPS = [
   { day: 19, team: "design", short: "Finish CAD", label: "Finish {m} design (CAD) and release it for fabrication" },
   { day: 22, team: "mechanical", short: "Machine Parts", label: "Finish machining/printing {m} parts" },
   { day: 28, team: "mechanical", short: "Assemble", label: "Assemble {m} onto the robot" },
-  { day: 32, team: "electrical", short: "Wire", label: "Wire {m} motors, sensors, and wiring" },
-  { day: 41, team: "programming", short: "Code", label: "Write and bench-test {m} control code" },
+  { day: 37, team: "electrical", short: "Wire", label: "Wire {m} motors, sensors, and wiring" },
+  { day: 42, team: "programming", short: "Code", label: "Write and bench-test {m} control code" },
   { day: 45, team: "mechanical", short: "Test & Tune", label: "Test and tune {m} on the competition robot" },
 ];
 
