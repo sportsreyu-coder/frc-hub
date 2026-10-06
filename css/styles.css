@@ -1122,6 +1122,10 @@ main.site-main {
   padding: 56px 0 8px;
 }
 
+.legal-section { max-width: 68ch; margin: 28px 0; }
+.legal-section h2 { margin: 0 0 8px; font-family: var(--font-serif); font-weight: 500; font-size: 19px; }
+.legal-section p { margin: 0 0 10px; color: var(--text-dim); font-size: 14.5px; line-height: 1.6; }
+
 .locate-row {
   margin-top: 24px;
   padding: 18px 22px;
@@ -2573,10 +2577,20 @@ main.site-main {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 10px 24px;
   color: var(--text-faint);
   font-size: 13.5px;
 }
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  flex: 1 0 100%;
+  order: 3;
+}
+.footer-links a { color: var(--text-faint); text-decoration: underline; }
+.footer-links a:hover { color: var(--text-dim); }
 
 /* ---------- Account page ---------- */
 
