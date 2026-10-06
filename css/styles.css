@@ -2805,6 +2805,22 @@ main.site-main {
 
 @media (max-width: 720px) {
   .main-nav { display: none; }
+  .main-nav.open {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 8px 16px 16px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.18);
+  }
+  .main-nav.open a { padding: 12px 10px; font-size: 15px; min-height: 44px; }
   .nav-toggle { display: inline-flex; }
   .category-bar { flex-direction: column; align-items: flex-start; }
   .dates-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
