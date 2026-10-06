@@ -23,6 +23,7 @@
   var MILESTONE_OVERRIDES_KEY = "frcgrants_season_milestone_overrides_v1";
   var HIDDEN_MILESTONES_KEY = "frcgrants_season_hidden_milestones_v1";
   var COMPLETED_GRANTS_KEY = "frcgrants_season_completed_grants_v1";
+  var WHOAMI_KEY = "frcgrants_season_whoami_v1";
 
   var TEAM_LABELS = {
     design: "Design",
@@ -49,6 +50,25 @@
   }
 
   var PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+  var CALENDAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>';
+
+  // A due-date button that doubles as a trigger for the date picker (C2):
+  // a calendar icon plus an aria-label spelling out what clicking it does,
+  // since the dotted-underline styling alone doesn't tell a keyboard or
+  // touch user that it's interactive.
+  function dateButton(label, extraClass) {
+    var btn = el("button", {
+      type: "button",
+      class: "ms-date ms-date-btn" + (extraClass ? " " + extraClass : ""),
+      "aria-label": "Change due date: " + label,
+      title: "Change due date",
+    });
+    var icon = el("span", { class: "ms-date-icon", "aria-hidden": "true" });
+    icon.innerHTML = CALENDAR_SVG;
+    btn.appendChild(icon);
+    btn.appendChild(document.createTextNode(label));
+    return btn;
+  }
 
   // A 10-second "Undo" toast for destructive actions (C1) -- onUndo restores
   // whatever the caller already snapshotted before mutating. Only one toast
@@ -346,6 +366,7 @@
   var initialSub = "";
   try { initialSub = new URLSearchParams(window.location.search).get("sub") || ""; } catch (e) { /* ignore */ }
   var checklistSub = initialSub === "grants" ? "grants" : "technical"; // or "grants"
+  var mineOnly = false;
 
   var today = Core.startOfDay(new Date());
   var anchor = Core.resolveAnchor(today);
@@ -692,6 +713,52 @@
     return labels.length ? labels.join(", ") : "";
   }
 
+  // C6: avatar/initials shown on every task so who's responsible is
+  // visible without opening the assign popover -- one chip per assigned
+  // person, color-keyed off their token so the same person reads the
+  // same color everywhere. Whole-subteam assignments stay text-only
+  // (there's no one person to show an avatar for), via assignSummary.
+  var AVATAR_COLORS = ["#8b5cf6", "#f97316", "#2563eb", "#0891b2", "#db2777", "#15803d", "#c2410c"];
+  function initialsFor(name) {
+    var parts = (name || "").trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "?";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  function colorForToken(token) {
+    var hash = 0;
+    for (var i = 0; i < token.length; i++) hash = (hash * 31 + token.charCodeAt(i)) >>> 0;
+    return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+  }
+  function assigneeAvatars(itemId) {
+    return assignmentTokens(itemId)
+      .filter(function (t) { return t.indexOf(TEAM_TOKEN_PREFIX) !== 0; })
+      .map(function (t) {
+        var m = memberById(t);
+        var name = m ? m.name : "?";
+        return el("span", {
+          class: "assignee-avatar",
+          style: "background:" + colorForToken(t),
+          title: "Assigned to " + name,
+          "aria-label": "Assigned to " + name,
+        }, [initialsFor(name)]);
+      });
+  }
+
+  // "Mine" filter (C6): on a team, "me" is just the signed-in user's id
+  // (teamRoster entries are keyed by real user_id). Off a team, there's
+  // no login tying a free-text member to a person, so whoAmI() below
+  // lets someone mark which roster entry is them, from the Team Settings
+  // panel -- see the whoami-select wiring in the settings render code.
+  function myId() {
+    if (Team && Team.state.user) return Team.state.user.id;
+    try { return localStorage.getItem(WHOAMI_KEY) || ""; } catch (e) { return ""; }
+  }
+  function isMine(itemId) {
+    var id = myId();
+    return !!id && assignmentTokens(itemId).indexOf(id) !== -1;
+  }
+
   // `light` skips the full render() (used while a checkbox popover is
   // open, so picking several people in a row doesn't close it -- the
   // caller updates just its own button text instead).
@@ -834,6 +901,7 @@
     document.getElementById("cal-filter-row").hidden = viewMode !== "calendar";
     document.getElementById("subnav-technical").classList.toggle("active", checklistSub === "technical");
     document.getElementById("subnav-grants").classList.toggle("active", checklistSub === "grants");
+    document.getElementById("mine-filter-toggle").setAttribute("aria-pressed", String(mineOnly));
     renderPhases();
     renderGrantChecklist();
     renderCalendar();
@@ -918,6 +986,7 @@
     var visible = visibleMilestones();
     order.forEach(function (phase) {
       var items = visible.filter(function (m) { return m.phase === phase; });
+      if (mineOnly) items = items.filter(function (m) { return isMine(m.id); });
       if (!items.length) return;
 
       var doneCount = items.filter(isDone).length;
@@ -952,7 +1021,7 @@
           openDetails();
         });
 
-        var msDateBtn = el("button", { type: "button", class: "ms-date ms-date-btn", title: "Click to change this date" }, [formatDate(m.date)]);
+        var msDateBtn = dateButton(formatDate(m.date));
         msDateBtn.addEventListener("click", function (e) {
           e.stopPropagation();
           openMsPanel(m, { kind: "milestone", editing: true });
@@ -965,6 +1034,8 @@
           ]),
           msDateBtn,
         ];
+        var msAvatars = assigneeAvatars(m.id);
+        if (msAvatars.length) metaLeftChildren.push(el("span", { class: "ms-assignee-group" }, msAvatars));
         if (assignSummary) metaLeftChildren.push(el("span", { class: "ms-assigned" }, ["· " + assignSummary]));
 
         var body = el("div", { class: "ms-body", tabindex: "0", role: "button" }, [
@@ -1025,9 +1096,10 @@
       ]),
     ]);
 
-    if (customTasks.length) {
+    var visibleCustomTasks = mineOnly ? customTasks.filter(function (t) { return isMine(t.id); }) : customTasks;
+    if (visibleCustomTasks.length) {
       var customList = el("div", { class: "milestone-list" });
-      customTasks.forEach(function (t) {
+      visibleCustomTasks.forEach(function (t) {
         var done = !!progress[t.id];
         var chk = el("input", { type: "checkbox", "aria-label": t.label });
         chk.checked = done;
@@ -1039,9 +1111,12 @@
           openMsPanel(t, { kind: "custom-task", editing: false });
         });
 
-        var metaLeftChildren = [buildAssignControl(t.id, t.team)];
+        var taskAvatars = assigneeAvatars(t.id);
+        var metaLeftChildren = taskAvatars.length
+          ? [el("span", { class: "ms-assignee-group" }, taskAvatars), buildAssignControl(t.id, t.team)]
+          : [buildAssignControl(t.id, t.team)];
         if (t.dueDate) {
-          var taskDateBtn = el("button", { type: "button", class: "ms-date ms-date-btn", title: "Click to change this date" }, ["Due " + formatDate(new Date(t.dueDate + "T00:00:00"))]);
+          var taskDateBtn = dateButton("Due " + formatDate(new Date(t.dueDate + "T00:00:00")));
           taskDateBtn.addEventListener("click", function (e) {
             e.stopPropagation();
             openMsPanel(t, { kind: "custom-task", editing: true });
@@ -1068,6 +1143,8 @@
         customList.appendChild(el("div", { class: "milestone-row team-edge team-edge-" + t.team }, [chk, body]));
       });
       customSection.appendChild(customList);
+    } else if (mineOnly && customTasks.length) {
+      customSection.appendChild(el("p", { class: "finder-hint" }, ["None of the custom tasks are assigned to you."]));
     } else {
       customSection.appendChild(el("p", { class: "finder-hint" }, ["No custom tasks yet — add one below."]));
     }
@@ -1474,7 +1551,7 @@
     var dateHost = document.getElementById("cal-modal-date");
     dateHost.innerHTML = "";
     if (item.onEditDate) {
-      var editDateBtn = el("button", { type: "button", class: "ms-date-btn", title: "Click to change this date" }, [formatDate(item.date)]);
+      var editDateBtn = dateButton(formatDate(item.date));
       editDateBtn.addEventListener("click", item.onEditDate);
       dateHost.appendChild(editDateBtn);
     } else if (item.setDate) {
@@ -1528,6 +1605,7 @@
   function closeItemModal() {
     modalOverlay.hidden = true;
     modalItem = null;
+    render();
   }
 
   document.getElementById("cal-modal-close").addEventListener("click", closeItemModal);
@@ -1577,6 +1655,11 @@
     msPanelItem = null;
     msPanelEditing = false;
     msPanelDraft = null;
+    // The assign popover inside this panel saves with the "light" path
+    // (no full render, so it can stay open while picking several people
+    // -- see buildAssignControl) -- catch the background checklist up now
+    // that the panel's closing.
+    render();
   }
 
   function toggleMsPanelItem() {
@@ -1853,6 +1936,21 @@
       memberListEl.appendChild(chip);
     });
 
+    var whoamiField = document.getElementById("whoami-field");
+    var onTeamForWhoami = !!(Team && Team.state.team);
+    whoamiField.hidden = onTeamForWhoami || !members.length;
+    if (!whoamiField.hidden) {
+      var whoamiSelect = document.getElementById("whoami-select");
+      var current = "";
+      try { current = localStorage.getItem(WHOAMI_KEY) || ""; } catch (e) { /* ignore */ }
+      whoamiSelect.innerHTML = "";
+      whoamiSelect.appendChild(el("option", { value: "" }, ["Not set"]));
+      members.forEach(function (mm) {
+        whoamiSelect.appendChild(el("option", { value: mm.id }, [mm.name]));
+      });
+      whoamiSelect.value = current;
+    }
+
     var list = document.getElementById("custom-event-list");
     list.innerHTML = "";
     if (!customEvents.length) return;
@@ -2123,6 +2221,14 @@
   });
   document.getElementById("subnav-grants").addEventListener("click", function () {
     checklistSub = "grants";
+    render();
+  });
+  document.getElementById("mine-filter-toggle").addEventListener("click", function () {
+    mineOnly = !mineOnly;
+    render();
+  });
+  document.getElementById("whoami-select").addEventListener("change", function (e) {
+    try { localStorage.setItem(WHOAMI_KEY, e.target.value); } catch (err) { /* ignore */ }
     render();
   });
 

@@ -698,6 +698,21 @@ main.site-main {
   max-width: 56ch;
 }
 
+.reset-btn,
+.settings-toggle,
+.ics-export-btn,
+.kickoff-jump-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.reset-btn svg, .settings-toggle svg, .ics-export-btn svg, .kickoff-jump-btn svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
 .reset-btn {
   padding: 9px 16px;
   border: 1px solid var(--border-strong);
@@ -1562,8 +1577,51 @@ main.site-main {
   cursor: pointer;
 }
 
-.subnav-tab.active { background: var(--bg-soft); border-color: var(--border-strong); color: var(--text); }
-.subnav-tab:not(.active):hover { color: var(--text-dim); }
+.subnav-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.subnav-tab:not(.active):hover { color: var(--text-dim); border-color: var(--border-strong); }
+
+.mine-toggle {
+  margin-left: auto;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 32px;
+}
+.mine-toggle:hover { color: var(--text-dim); }
+.mine-toggle[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.whoami-field {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.whoami-field select { margin-left: 8px; }
+
+.ms-assignee-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.assignee-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0;
+  flex: 0 0 auto;
+}
 
 .cal-filter-row {
   display: flex;
@@ -1619,7 +1677,7 @@ main.site-main {
   --team-electrical: #d97706;
   --team-programming: #2563eb;
   --team-business: #0891b2;
-  --team-cross-team: #9ca3af;
+  --team-cross-team: #15803d;
   --team-custom: #db2777;
 }
 
@@ -2230,17 +2288,24 @@ main.site-main {
 .link-btn:hover { color: var(--accent-hover); }
 
 .ms-date-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: none;
   border: none;
-  padding: 0;
+  padding: 6px 2px;
+  min-height: 32px;
   font: inherit;
   color: inherit;
   cursor: pointer;
   text-decoration: underline dotted;
   text-underline-offset: 2px;
+  border-radius: 6px;
 }
 
 .ms-date-btn:hover { color: var(--accent); }
+.ms-date-icon { display: inline-flex; flex: 0 0 auto; }
+.ms-date-icon svg { width: 13px; height: 13px; }
 
 .ms-panel-date-reset {
   background: none;
@@ -2728,3 +2793,18 @@ main.site-main {
 .team-edge-business { border-left-color: var(--team-business) !important; }
 .team-edge-cross-team { border-left-color: var(--team-cross-team) !important; }
 .team-edge-custom { border-left-color: var(--team-custom) !important; }
+
+/* ---------- Focus (F7) ----------
+   Several controls above set outline:none on :focus without a
+   replacement; this re-adds a visible ring for keyboard focus only
+   (not mouse clicks) on every one of them, kept last so it wins the
+   cascade against those earlier rules of equal specificity. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
