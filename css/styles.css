@@ -811,6 +811,35 @@ main.site-main {
   color: #fff;
 }
 
+.active-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 0;
+}
+
+.active-filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px 6px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--accent);
+  background: var(--bg-card);
+  color: var(--accent);
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.active-filter-chip:hover { background: var(--accent); color: #fff; }
+
+.afc-remove {
+  font-size: 15px;
+  line-height: 1;
+}
+
 /* ---------- Results / sort ---------- */
 
 .results-row {

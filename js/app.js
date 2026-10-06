@@ -308,8 +308,80 @@
     document.getElementById("filters-toggle-label").textContent = n > 0 ? "Filters (" + n + " active)" : "Filters";
   }
 
+  var C3_LABELS = {
+    have: "We have a 501(c)(3)",
+    school: "School-affiliated, no 501(c)(3)",
+    neither: "Neither",
+  };
+
+  function clearAllFilters() {
+    state.search = "";
+    state.statusOpen = false;
+    state.boosts.clear();
+    state.c3 = null;
+    state.stateFilter = "";
+    state.limit = PAGE_SIZE;
+    document.getElementById("search-input").value = "";
+    document.getElementById("state-select").value = "";
+    document.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("active"); });
+  }
+
+  function syncFilterButtons() {
+    document.querySelectorAll('[data-filter="status"]').forEach(function (b) { b.classList.toggle("active", state.statusOpen); });
+    document.querySelectorAll('[data-filter="c3"]').forEach(function (b) {
+      b.classList.toggle("active", state.c3 === b.getAttribute("data-value"));
+    });
+    document.querySelectorAll('[data-filter="boost"]').forEach(function (b) {
+      b.classList.toggle("active", state.boosts.has(b.getAttribute("data-value")));
+    });
+  }
+
+  function renderActiveChips() {
+    var row = document.getElementById("active-filter-chips");
+    row.innerHTML = "";
+    var chips = [];
+
+    if (state.search) {
+      chips.push({ label: "Search: “" + state.search + "”", remove: function () { state.search = ""; document.getElementById("search-input").value = ""; } });
+    }
+    if (state.statusOpen) {
+      chips.push({ label: "Currently open", remove: function () { state.statusOpen = false; } });
+    }
+    if (state.c3) {
+      chips.push({ label: C3_LABELS[state.c3] || state.c3, remove: function () { state.c3 = null; } });
+    }
+    if (state.stateFilter) {
+      var label = state.stateFilter === "__nationwide__" ? "Nationwide grants only" : state.stateFilter;
+      chips.push({ label: label, remove: function () { state.stateFilter = ""; document.getElementById("state-select").value = ""; } });
+    }
+    state.boosts.forEach(function (b) {
+      chips.push({ label: BOOST_LABELS[b] || b, remove: function () { state.boosts.delete(b); } });
+    });
+
+    if (chips.length === 0) {
+      row.hidden = true;
+      return;
+    }
+    row.hidden = false;
+    chips.forEach(function (c) {
+      var btn = el("button", { type: "button", class: "active-filter-chip" }, [
+        c.label,
+        el("span", { class: "afc-remove", "aria-hidden": "true" }, ["×"]),
+      ]);
+      btn.setAttribute("aria-label", "Remove filter: " + c.label);
+      btn.addEventListener("click", function () {
+        c.remove();
+        state.limit = PAGE_SIZE;
+        syncFilterButtons();
+        render();
+      });
+      row.appendChild(btn);
+    });
+  }
+
   function render() {
     updateFiltersToggleLabel();
+    renderActiveChips();
     var searchMatched = grants.filter(textMatches);
     var shown = [];
     var excluded = [];
@@ -325,9 +397,16 @@
     document.getElementById("results-count").textContent = resultsText(sorted);
 
     if (sorted.length === 0 && grants.length > 0) {
+      var clearBtn = el("button", { type: "button", class: "reset-btn" }, ["Clear filters"]);
+      clearBtn.addEventListener("click", function () {
+        clearAllFilters();
+        syncFilterButtons();
+        render();
+      });
       grid.appendChild(el("div", { class: "empty-state" }, [
-        el("div", { class: "es-title" }, ["No grants match those filters"]),
+        el("div", { class: "es-title" }, ["No grants match these filters"]),
         el("p", {}, ["Try clearing a filter or broadening your search."]),
+        clearBtn,
       ]));
     } else {
       sorted.slice(0, state.limit).forEach(function (g) { grid.appendChild(grantCard(g)); });
@@ -452,15 +531,7 @@
     });
 
     document.getElementById("reset-filters").addEventListener("click", function () {
-      state.search = "";
-      state.statusOpen = false;
-      state.boosts.clear();
-      state.c3 = null;
-      state.stateFilter = "";
-      state.limit = PAGE_SIZE;
-      document.getElementById("search-input").value = "";
-      document.getElementById("state-select").value = "";
-      document.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("active"); });
+      clearAllFilters();
       render();
     });
   }
