@@ -141,7 +141,7 @@
       ]));
       return;
     }
-    openWithDates.slice(0, 5).forEach(function (g) {
+    openWithDates.slice(0, 3).forEach(function (g) {
       var p = pillClass(g);
       var sub = g.notes || (g.tags.indexOf("no-geo-restrictions") !== -1 ? "No location restrictions" : "See grantor site for criteria");
       datesTable.appendChild(el("div", { class: "dates-row" }, [
@@ -283,7 +283,22 @@
     return base;
   }
 
+  function activeFilterCount() {
+    var n = 0;
+    if (state.statusOpen) n++;
+    if (state.c3) n++;
+    if (state.stateFilter) n++;
+    n += state.boosts.size;
+    return n;
+  }
+
+  function updateFiltersToggleLabel() {
+    var n = activeFilterCount();
+    document.getElementById("filters-toggle-label").textContent = n > 0 ? "Filters (" + n + " active)" : "Filters";
+  }
+
   function render() {
+    updateFiltersToggleLabel();
     var searchMatched = grants.filter(textMatches);
     var shown = [];
     var excluded = [];
@@ -356,6 +371,14 @@
   }
 
   function setupFinder() {
+    var filterPanel = document.getElementById("filter-panel");
+    var filtersToggleBtn = document.getElementById("filters-toggle-btn");
+    filtersToggleBtn.addEventListener("click", function () {
+      var expanded = filtersToggleBtn.getAttribute("aria-expanded") === "true";
+      filterPanel.hidden = expanded;
+      filtersToggleBtn.setAttribute("aria-expanded", String(!expanded));
+    });
+
     document.querySelectorAll('[data-filter="status"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
         state.statusOpen = !state.statusOpen;

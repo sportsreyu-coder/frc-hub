@@ -50,42 +50,17 @@
     <div class="hr-divider"></div>
   </section>
 
-  <section class="snap-section">
-    <div>
-      <div class="eyebrow">Snapshot</div>
-      <div class="stat-list">
-        <div class="stat-card">
-          <div><div class="label">Grants tracked</div><div class="sub">community database</div></div>
-          <div class="num" id="stat-total">—</div>
-        </div>
-        <div class="stat-card">
-          <div><div class="label">Currently open</div><div class="sub">accepting applications</div></div>
-          <div class="num green" id="stat-open">—</div>
-        </div>
-        <div class="stat-card">
-          <div><div class="label">No geo limits</div><div class="sub">open to any state</div></div>
-          <div class="num" id="stat-geo">—</div>
-        </div>
-        <div class="stat-card">
-          <div><div class="label">No 501(c)(3)</div><div class="sub">no nonprofit status needed</div></div>
-          <div class="num" id="stat-no501">—</div>
-        </div>
-      </div>
-      <p class="finder-hint" id="stat-undated-note"></p>
+  <section id="grants" class="finder-top-row">
+    <div class="search-row">
+      <input type="text" id="search-input" placeholder="Search by name, state, or keyword — “Texas”, “corporate”, “sustainability”">
     </div>
-
-    <div>
-      <div class="featured-card" id="featured-card"></div>
-
-      <div class="dates-head">
-        <div class="eyebrow">Coming up</div>
-        <a href="season.html?sub=grants">Full deadline calendar →</a>
-      </div>
-      <div class="dates-table" id="dates-table"></div>
-    </div>
+    <button type="button" class="filters-toggle-btn" id="filters-toggle-btn" aria-expanded="false" aria-controls="filter-panel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line><circle cx="9" cy="6" r="2" fill="var(--bg-card)"></circle><circle cx="15" cy="12" r="2" fill="var(--bg-card)"></circle><circle cx="7" cy="18" r="2" fill="var(--bg-card)"></circle></svg>
+      <span id="filters-toggle-label">Filters</span>
+    </button>
   </section>
 
-  <section id="grants" class="category-bar" style="flex-direction:column; align-items:stretch;">
+  <section class="category-bar" id="filter-panel" style="flex-direction:column; align-items:stretch;" hidden>
     <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap;">
       <div>
         <h2>Eligibility finder</h2>
@@ -95,9 +70,6 @@
     </div>
 
     <div class="finder">
-      <div class="search-row">
-        <input type="text" id="search-input" placeholder="Search by name, state, or keyword — “Texas”, “corporate”, “sustainability”">
-      </div>
       <div class="finder-grid">
         <div class="finder-group">
           <div class="eyebrow">Status</div>
@@ -134,7 +106,9 @@
         </div>
       </div>
     </div>
+  </section>
 
+  <section class="grants-results">
     <div class="results-row">
       <span class="results-count" id="results-count"></span>
       <label class="sort-row" for="sort-select">Sort
@@ -149,7 +123,7 @@
     <div class="grant-grid" id="grant-grid"></div>
     <div class="show-more-row" id="show-more-row" hidden>
       <button class="show-more-btn" id="show-more-btn"></button>
-      <a href="#grants" class="back-to-finder-btn" aria-label="Back to eligibility finder">
+      <a href="#grants" class="back-to-finder-btn" aria-label="Back to search and filters">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
       </a>
     </div>
@@ -157,6 +131,41 @@
     <div class="excluded-panel" id="excluded-panel" hidden>
       <button class="excluded-toggle" id="excluded-toggle" type="button"></button>
       <div class="excluded-list" id="excluded-list" hidden></div>
+    </div>
+  </section>
+
+  <section class="snap-section">
+    <div>
+      <div class="eyebrow">Snapshot</div>
+      <div class="stat-list">
+        <div class="stat-card">
+          <div><div class="label">Grants tracked</div><div class="sub">community database</div></div>
+          <div class="num" id="stat-total">—</div>
+        </div>
+        <div class="stat-card">
+          <div><div class="label">Currently open</div><div class="sub">accepting applications</div></div>
+          <div class="num green" id="stat-open">—</div>
+        </div>
+        <div class="stat-card">
+          <div><div class="label">No geo limits</div><div class="sub">open to any state</div></div>
+          <div class="num" id="stat-geo">—</div>
+        </div>
+        <div class="stat-card">
+          <div><div class="label">No 501(c)(3)</div><div class="sub">no nonprofit status needed</div></div>
+          <div class="num" id="stat-no501">—</div>
+        </div>
+      </div>
+      <p class="finder-hint" id="stat-undated-note"></p>
+    </div>
+
+    <div>
+      <div class="featured-card" id="featured-card"></div>
+
+      <div class="dates-head">
+        <div class="eyebrow">Coming up</div>
+        <a href="season.html?sub=grants">Full deadline calendar →</a>
+      </div>
+      <div class="dates-table" id="dates-table"></div>
     </div>
   </section>
 

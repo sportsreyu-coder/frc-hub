@@ -462,7 +462,39 @@ main.site-main {
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   gap: 40px;
   align-items: start;
+  margin-top: 88px;
 }
+
+.finder-top-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  scroll-margin-top: 90px;
+}
+
+.finder-top-row .search-row { flex: 1 1 auto; }
+
+.filters-toggle-btn {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.filters-toggle-btn svg { width: 18px; height: 18px; flex: 0 0 auto; }
+.filters-toggle-btn:hover { border-color: var(--accent); }
+.filters-toggle-btn[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
+
+.grants-results { margin-top: 8px; }
 
 .eyebrow {
   font-weight: 600;
