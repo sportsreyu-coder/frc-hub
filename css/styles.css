@@ -2826,6 +2826,24 @@ main.site-main {
   .dates-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .dates-row .dsub { white-space: normal; overflow: visible; text-overflow: clip; }
   .dates-row .pill { justify-self: start; margin-top: 4px; }
+
+  /* F4: 44x44 minimum hit areas on touch. Standalone pills/buttons just
+     grow via min-height/min-width (there's room around them); a card's
+     "Details (0/3)" link sits in a tighter row, so it instead gets
+     invisible padding offset by an equal negative margin, which expands
+     the tappable area without pushing neighbors around or changing how
+     big the control looks. */
+  .theme-toggle, .nav-toggle { min-width: 44px; min-height: 44px; }
+  .chip, .active-filter-chip, .scholarship-filter-chip { min-height: 44px; display: inline-flex; align-items: center; }
+  .reset-btn, .settings-toggle, .ics-export-btn, .kickoff-jump-btn,
+  .view-tab, .subnav-tab, .mine-toggle, .filters-toggle-btn,
+  .account-avatar-btn, .nav-cta, .submit-btn-sm {
+    min-height: 44px;
+  }
+  .ms-details-btn, .ms-expand-toggle {
+    padding: 14px;
+    margin: -14px;
+  }
 }
 
 /* .grant-grid / .simple-grid use a fixed column count (not
