@@ -15,6 +15,8 @@
 
   var state = "";
   var activeType = "";
+  var search = "";
+  var sort = "az";
   var items = [];
 
   function el(tag, attrs, children) {
@@ -52,14 +54,46 @@
     });
   }
 
+  function matches(item) {
+    if (activeType && item.type !== activeType) return false;
+    if (!search) return true;
+    var hay = (item.name + " " + (item.notes || "") + " " + (item.type || "")).toLowerCase();
+    return hay.indexOf(search) !== -1;
+  }
+
+  function sortItems(list) {
+    var copy = list.slice();
+    if (sort === "payout") {
+      copy.sort(function (a, b) { return (b.payout || -1) - (a.payout || -1) || a.name.localeCompare(b.name); });
+    } else if (sort === "type") {
+      copy.sort(function (a, b) { return (a.type || "").localeCompare(b.type || "") || a.name.localeCompare(b.name); });
+    } else {
+      copy.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    }
+    return copy;
+  }
+
   function render() {
     var grid = document.getElementById("fundraising-grid");
     grid.innerHTML = "";
-    var shown = activeType ? items.filter(function (i) { return i.type === activeType; }) : items;
+    var shown = sortItems(items.filter(matches));
+
+    document.getElementById("fundraising-count").textContent =
+      shown.length === items.length ? "Showing all " + items.length + " ideas" : "Showing " + shown.length + " of " + items.length + " ideas";
+
+    if (shown.length === 0) {
+      grid.appendChild(el("div", { class: "empty-state" }, [
+        el("div", { class: "es-title" }, ["No fundraising ideas match those filters"]),
+        el("p", {}, ["Try a different type or search term."]),
+      ]));
+      return;
+    }
+
     shown.forEach(function (item) {
       var children = [
         el("span", { class: "badge" }, [item.type || "Fundraiser"]),
         el("a", { class: "title-link", href: item.link || "#", target: "_blank", rel: "noopener" }, [item.name]),
+        item.payout ? el("div", { class: "gc-amount" }, [item.payout + "% back"]) : null,
         item.notes ? el("p", {}, [item.notes]) : null,
       ];
       if (state) {
@@ -80,6 +114,16 @@
   });
   locateSelect.addEventListener("change", function (e) {
     state = e.target.value;
+    render();
+  });
+
+  document.getElementById("fundraising-search").addEventListener("input", function (e) {
+    search = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  document.getElementById("fundraising-sort").addEventListener("change", function (e) {
+    sort = e.target.value;
     render();
   });
 

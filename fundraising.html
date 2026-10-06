@@ -43,6 +43,10 @@
     <p>Restaurant givebacks, product sales, and other quick ways to raise cash outside of formal grant applications.</p>
   </section>
 
+  <div class="search-row" style="margin-bottom: 16px;">
+    <input type="text" id="fundraising-search" placeholder="Search fundraising ideas">
+  </div>
+
   <div class="locate-row">
     <label for="locate-select">Find these near you:
       <select id="locate-select">
@@ -53,6 +57,17 @@
   </div>
 
   <div class="chip-row" id="type-filter-row" style="margin: 20px 0 24px;"></div>
+
+  <div class="results-row" style="margin: 0 0 16px;">
+    <span class="results-count" id="fundraising-count"></span>
+    <label class="sort-row" for="fundraising-sort">Sort
+      <select id="fundraising-sort">
+        <option value="az">A–Z</option>
+        <option value="payout">Highest payout</option>
+        <option value="type">Type</option>
+      </select>
+    </label>
+  </div>
 
   <div class="simple-grid" id="fundraising-grid"></div>
 </main>

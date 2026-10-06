@@ -4,279 +4,319 @@
     "name": "Applebee's",
     "link": "https://www.flapjackfunds.com/program.php?id=1",
     "type": "Other Fundraiser",
-    "notes": "Sell tickets to a meal (costs about $6 per ticket sold) Set your own prices and keep the rest"
+    "notes": "Sell tickets to a meal (costs about $6 per ticket sold) Set your own prices and keep the rest",
+    "payout": null
   },
   {
     "id": "barnes-and-nobles",
     "name": "Barnes & Noble",
     "link": "https://www.barnesandnobleinc.com/about-bn/sponsorships-charitable-donations/",
     "type": "Other Fundraiser",
-    "notes": "Request a Bookfair or in-store fundraising event through Barnes & Noble's sponsorship program."
+    "notes": "Request a Bookfair or in-store fundraising event through Barnes & Noble's sponsorship program.",
+    "payout": null
   },
   {
     "id": "bd-s-mongolian-grill",
     "name": "BD's Mongolian Grill",
     "link": "https://www.bdsgrill.com/fundraising",
     "type": "Restaurant Giveback",
-    "notes": "15% back"
+    "notes": "15% back",
+    "payout": 15
   },
   {
     "id": "bertucci-s",
     "name": "Bertucci's",
     "link": "https://www.bertuccis.com/fundraising/",
     "type": "Restaurant Giveback",
-    "notes": "15% back"
+    "notes": "15% back",
+    "payout": 15
   },
   {
     "id": "bj-s-restaurant",
     "name": "BJ's Restaurant",
     "link": "https://www.cvent.com/events/SMMForm/MeetingRequest/MeetingMain.aspx?smm_form_stub=a8eea31e-858b-454c-8ad9-d5c2e318f893",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "blaze-pizza",
     "name": "Blaze Pizza",
     "link": "https://www.blazepizza.com/fundraising",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "brusters",
     "name": "Bruster's",
     "link": "https://brusters.com/fundraising/",
     "type": "Food/Item Sale",
-    "notes": "Partner with a local Bruster's for a percentage-back fundraising night -- contact your nearest location to set a date."
+    "notes": "Partner with a local Bruster's for a percentage-back fundraising night -- contact your nearest location to set a date.",
+    "payout": null
   },
   {
     "id": "buffalo-wild-wings",
     "name": "Buffalo Wild Wings",
     "link": "https://ewrf.buffalowildwings.com/",
     "type": "Restaurant Giveback",
-    "notes": "15% back"
+    "notes": "15% back",
+    "payout": 15
   },
   {
     "id": "butter-braid",
     "name": "Butter Braid",
     "link": "https://butterbraid.com/fundraising/",
     "type": "Food/Item Sale",
-    "notes": "Sell Butter Braid pastries door-to-door or online; your team keeps a cut of each sale."
+    "notes": "Sell Butter Braid pastries door-to-door or online; your team keeps a cut of each sale.",
+    "payout": null
   },
   {
     "id": "california-pizza-kitchen",
     "name": "California Pizza Kitchen",
     "link": "https://www.cpk.com/events/fundraisers",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "cheesecake-factory",
     "name": "Cheesecake Factory",
     "link": "https://thecheesecakefactorybakeryfundraising.com/start-fundraiser/",
     "type": "Food/Item Sale",
-    "notes": "Selling frozen cheesecakes"
+    "notes": "Selling frozen cheesecakes",
+    "payout": null
   },
   {
     "id": "chick-fil-a",
     "name": "Chick-fil-A",
     "link": "https://www.chick-fil-a.com/customer-support/who-we-are/giving-back/does-chick-fil-a-offer-fundraising-opportunities-to-help-organizations-raise-money",
     "type": "Restaurant Giveback",
-    "notes": "15% back - Need to talk to local locations"
+    "notes": "15% back - Need to talk to local locations",
+    "payout": 15
   },
   {
     "id": "chipotle",
     "name": "Chipotle",
     "link": "https://marketing.chipotle.com/partner/fundraiser-request/",
     "type": "Restaurant Giveback",
-    "notes": "25% back"
+    "notes": "25% back",
+    "payout": 25
   },
   {
     "id": "dave-and-busters",
     "name": "Dave & Buster's",
     "link": "https://www.groupraise.com/offers/power-card",
     "type": "Other Fundraiser",
-    "notes": "50% back"
+    "notes": "50% back",
+    "payout": 50
   },
   {
     "id": "double-good-popcorn",
     "name": "Double Good Popcorn",
     "link": "https://www.doublegood.com/virtual-fundraising",
     "type": "Food/Item Sale",
-    "notes": "50% back"
+    "notes": "50% back",
+    "payout": 50
   },
   {
     "id": "el-pollo-loco",
     "name": "El Pollo Loco",
     "link": "https://www.elpolloloco.com/fundraisers-charities/",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "famous-dave-s",
     "name": "Famous Dave's",
     "link": "https://www.famousdaves.com/LandingPage/fdcommunity//",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "ge",
     "name": "GE",
     "link": "https://www.ge.com/sites/default/files/GEA33663_Matching_Gifts_Jan_2020.pdf",
     "type": "Gift Matching",
-    "notes": "GE matches employee and retiree donations to eligible nonprofits -- have a GE-affiliated mentor or parent submit the match request."
+    "notes": "GE matches employee and retiree donations to eligible nonprofits -- have a GE-affiliated mentor or parent submit the match request.",
+    "payout": null
   },
   {
     "id": "groupraise",
     "name": "Groupraise",
     "link": "https://www.groupraise.com/",
     "type": "Other Fundraiser",
-    "notes": "Help find local fundraising opportunities"
+    "notes": "Help find local fundraising opportunities",
+    "payout": null
   },
   {
     "id": "home-run-inn-pizza",
     "name": "Home Run Inn Pizza",
     "link": "https://www.homeruninnpizza.com/fundraising/",
     "type": "Restaurant Giveback",
-    "notes": "Up to 30% back"
+    "notes": "Up to 30% back",
+    "payout": 30
   },
   {
     "id": "houlihan-s",
     "name": "Houlihan's",
     "link": "https://www.houlihans.com/event/plate-it-forward/",
     "type": "Restaurant Giveback",
-    "notes": "15% back"
+    "notes": "15% back",
+    "payout": 15
   },
   {
     "id": "in-and-out",
     "name": "In-N-Out",
     "link": "https://www.in-n-out.com/community",
     "type": "Other Fundraiser",
-    "notes": "Sell tickets  at $8 each (you keep $6 per) to host a cookout truck (Minimum 200 tickets sold)"
+    "notes": "Sell tickets  at $8 each (you keep $6 per) to host a cookout truck (Minimum 200 tickets sold)",
+    "payout": null
   },
   {
     "id": "jersey-mikes",
     "name": "Jersey Mike's",
     "link": "https://jerseymikes.force4good.com/",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "krispy-kreme",
     "name": "Krispy Kreme",
     "link": "https://www.krispykreme.com/fundraising/home",
     "type": "Food/Item Sale",
-    "notes": "Varies by store, confirm locally"
+    "notes": "Varies by store, confirm locally",
+    "payout": null
   },
   {
     "id": "little-caesars",
     "name": "Little Caesars",
     "link": "https://fundraising.littlecaesars.com/start-a-fundraiser/meal-deal?referralsource=%3cweareteachers",
     "type": "Food/Item Sale",
-    "notes": "$6 earned for each meal deal or make your own pizza kit sold"
+    "notes": "$6 earned for each meal deal or make your own pizza kit sold",
+    "payout": null
   },
   {
     "id": "mlb-ticket-fundraiser",
     "name": "MLB Ticket Fundraiser",
     "link": "https://www.mlb.com/mets/forms/group-information",
     "type": "Other Fundraiser",
-    "notes": "Mets linked as an example, but all MLB teams offer this. Can use a 3rd party site to sell tickets, or you buy and sell them yourself."
+    "notes": "Mets linked as an example, but all MLB teams offer this. Can use a 3rd party site to sell tickets, or you buy and sell them yourself.",
+    "payout": null
   },
   {
     "id": "moe-s",
     "name": "Moe's",
     "link": "",
     "type": "Restaurant Giveback",
-    "notes": "Local moes will offer fundraising opportunities"
+    "notes": "Local moes will offer fundraising opportunities",
+    "payout": null
   },
   {
     "id": "noodles-company",
     "name": "Noodles & Company",
     "link": "https://www.noodles.com/about-noodles/giving-back",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "panda-express",
     "name": "Panda Express",
     "link": "https://community.pandaexpress.com/fundraisers",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "panera",
     "name": "Panera",
     "link": "https://fundraising.panerabread.com/",
     "type": "Restaurant Giveback",
-    "notes": "Up to 25% back"
+    "notes": "Up to 25% back",
+    "payout": 25
   },
   {
     "id": "pieology",
     "name": "Pieology",
     "link": "https://pieology.com/fundraising-nonprofits-schools/",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "pizza-hut",
     "name": "Pizza Hut",
     "link": "https://www.pizzahutgivesback.com/",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "rasing-canes",
     "name": "Raising Cane's",
     "link": "https://raisingcanes.com/community-partnerships/",
     "type": "Restaurant Giveback",
-    "notes": "15% back"
+    "notes": "15% back",
+    "payout": 15
   },
   {
     "id": "red-robin",
     "name": "Red Robin",
     "link": "https://www.redrobin.com/fundraisers",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   },
   {
     "id": "regal-movies",
     "name": "Regal Movies",
     "link": "https://www.groupraise.com/offers/regal-movie-ticket-bundle",
     "type": "Other Fundraiser",
-    "notes": "25% back"
+    "notes": "25% back",
+    "payout": 25
   },
   {
     "id": "rita-s-ices",
     "name": "Rita's Ices",
     "link": "https://www.ritasice.com/community/",
     "type": "Restaurant Giveback",
-    "notes": "Host a percentage-back fundraising night at a local Rita's Italian Ice location."
+    "notes": "Host a percentage-back fundraising night at a local Rita's Italian Ice location.",
+    "payout": null
   },
   {
     "id": "shake-shack",
     "name": "Shake Shack",
     "link": "https://shakeshack.com/fundraising#/",
     "type": "Restaurant Giveback",
-    "notes": "25% back"
+    "notes": "25% back",
+    "payout": 25
   },
   {
     "id": "skyzone",
     "name": "Sky Zone",
     "link": "https://www.skyzone.com/deerpark/fundraising/",
     "type": "Other Fundraiser",
-    "notes": "20% of ticket sales"
+    "notes": "20% of ticket sales",
+    "payout": 20
   },
   {
     "id": "target",
     "name": "Target",
     "link": "https://corporate.target.com/getmedia/f651039a-10ac-4514-bde3-6c5926886100/Target_GiftCard-Request-Form.pdf",
     "type": "Other Fundraiser",
-    "notes": "Gift Card Donation"
+    "notes": "Gift Card Donation",
+    "payout": null
   },
   {
     "id": "uno-s",
     "name": "Uno's",
     "link": "https://www.unos.com/raisers.php",
     "type": "Restaurant Giveback",
-    "notes": "20% back"
+    "notes": "20% back",
+    "payout": 20
   }
 ]
