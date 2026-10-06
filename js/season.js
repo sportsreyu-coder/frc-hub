@@ -501,6 +501,11 @@
         }
       }
       progress[m.id] = stampValue();
+      // Marking the task done completes its sub-tasks too, so the two stay in sync.
+      if (m.subtasks) {
+        var stamp = progress[m.id];
+        m.subtasks.forEach(function (_, i) { if (!isSubtaskDone(m, i)) progress[subtaskKey(m, i)] = stamp; });
+      }
     }
     saveProgress(progress);
     render();
