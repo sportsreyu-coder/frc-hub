@@ -276,7 +276,7 @@
       badge,
       saveBtn,
       el("div", { class: "gc-top" }, [
-        el("h3", { class: "gc-name" }, [g.name]),
+        el("h2", { class: "gc-name" }, [g.name]),
         el("span", { class: "pill " + p.cls }, [p.label]),
       ]),
       completedPill,

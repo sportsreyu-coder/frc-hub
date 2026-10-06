@@ -1156,7 +1156,7 @@
     var addForm = el("form", { class: "custom-task-form" });
     var labelInput = el("input", { type: "text", placeholder: "e.g. Order new bumpers, or paste a Classroom assignment title", maxlength: "80", required: "" });
     var dueDateInput = el("input", { type: "date", "aria-label": "Due date (optional)" });
-    var teamSelect = el("select", {}, [
+    var teamSelect = el("select", { "aria-label": "Subteam" }, [
       el("option", { value: "cross-team" }, ["Cross-team"]),
       el("option", { value: "mechanical" }, ["Mechanical"]),
       el("option", { value: "electrical" }, ["Electrical"]),
@@ -1732,7 +1732,7 @@
     var teamRow = document.getElementById("ms-panel-team");
     teamRow.innerHTML = "";
     if (msPanelEditing) {
-      var teamSelect = el("select", { class: "ms-panel-team-select" }, [
+      var teamSelect = el("select", { class: "ms-panel-team-select", "aria-label": "Subteam" }, [
         el("option", { value: "cross-team" }, ["Cross-team"]),
         el("option", { value: "mechanical" }, ["Mechanical"]),
         el("option", { value: "electrical" }, ["Electrical"]),

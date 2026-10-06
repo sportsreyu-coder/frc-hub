@@ -12,12 +12,12 @@
   --accent-hover: #4c7ddb;
   --accent-soft: #eaf0fb;
   --accent-border: #cddcf5;
-  --green: #0e7c5d;
+  --green: #0d7558;
   --green-bg: rgba(14, 124, 93, 0.12);
-  --amber: #9a6b0e;
+  --amber: #8a600c;
   --amber-bg: rgba(154, 107, 14, 0.12);
   --gray-bg: #ede8df;
-  --gray-fg: #7a7468;
+  --gray-fg: #6d685d;
   --red-bg: #fbe9e7;
   --red-border: #f0b8ae;
   --red-fg: #a3391f;
@@ -1125,6 +1125,7 @@ main.site-main {
 .legal-section { max-width: 68ch; margin: 28px 0; }
 .legal-section h2 { margin: 0 0 8px; font-family: var(--font-serif); font-weight: 500; font-size: 19px; }
 .legal-section p { margin: 0 0 10px; color: var(--text-dim); font-size: 14.5px; line-height: 1.6; }
+.legal-section a, .page-head p a { text-decoration: underline; }
 
 .locate-row {
   margin-top: 24px;
