@@ -7,6 +7,7 @@
   };
 
   var activeCategory = "";
+  var search = "";
   var scholarships = [];
 
   function el(tag, attrs, children) {
@@ -28,14 +29,26 @@
     grid.innerHTML = "";
 
     var shown = scholarships.filter(function (s) {
-      return !activeCategory || s.category === activeCategory;
+      if (activeCategory && s.category !== activeCategory) return false;
+      if (!search) return true;
+      var hay = (s.name + " " + s.provider + " " + (s.notes || "")).toLowerCase();
+      return hay.indexOf(search) !== -1;
     });
 
     document.getElementById("scholarships-count").textContent =
       shown.length + (shown.length === 1 ? " scholarship" : " scholarships") +
       (activeCategory ? " — " + CATEGORY_LABELS[activeCategory] : "");
 
+    if (shown.length === 0) {
+      grid.appendChild(el("div", { class: "empty-state" }, [
+        el("div", { class: "es-title" }, ["No scholarships match those filters"]),
+        el("p", {}, ["Try a different category or search term."]),
+      ]));
+      return;
+    }
+
     shown.forEach(function (s) {
+      var verifiedText = window.GrantStatus ? window.GrantStatus.verifiedLabel(s.lastVerified) : null;
       var card = el("div", { class: "simple-card" }, [
         el("span", { class: "badge" }, [CATEGORY_LABELS[s.category] || s.category]),
         el("a", { class: "title-link", href: s.link, target: "_blank", rel: "noopener" }, [s.name]),
@@ -43,6 +56,7 @@
         el("p", { class: "scholarship-meta" }, ["💰 " + s.amount]),
         el("p", { class: "scholarship-meta" }, ["📅 " + s.deadline]),
         s.notes ? el("p", {}, [s.notes]) : null,
+        el("div", { class: "gc-verified" + (verifiedText ? "" : " gc-needs-verification") }, [verifiedText || "Needs verification"]),
       ]);
       grid.appendChild(card);
     });
@@ -57,6 +71,11 @@
       });
       render();
     });
+  });
+
+  document.getElementById("scholarships-search").addEventListener("input", function (e) {
+    search = e.target.value.trim().toLowerCase();
+    render();
   });
 
   fetch("data/scholarships.json")

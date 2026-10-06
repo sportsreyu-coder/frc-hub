@@ -7,8 +7,12 @@
     "amount": "Full tuition, 4 years (~$220,000 total)",
     "deadline": "Applications typically open mid-December and close in late February",
     "category": "frc-specific",
-    "tags": ["full-ride", "renewable"],
-    "notes": "For FIRST Robotics Competition, FIRST Tech Challenge, or FIRST Global Challenge team members admitted to WPI. One of the largest scholarships available to FIRST alumni."
+    "tags": [
+      "full-ride",
+      "renewable"
+    ],
+    "notes": "For FIRST Robotics Competition, FIRST Tech Challenge, or FIRST Global Challenge team members admitted to WPI. One of the largest scholarships available to FIRST alumni.",
+    "lastVerified": ""
   },
   {
     "id": "rose-hulman-first-scholarship",
@@ -16,10 +20,14 @@
     "provider": "Rose-Hulman Institute of Technology",
     "link": "https://www.rose-hulman.edu/admissions-and-aid/financial-aid/scholarships-and-grants/rose-hulman-scholarships/index.html",
     "amount": "$10,000/year, renewable up to $40,000 over 4 years",
-    "deadline": "Typically due February 1 — must already be admitted to apply",
+    "deadline": "Typically due February 1 \u2014 must already be admitted to apply",
     "category": "frc-specific",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Two awarded per year to admitted students who competed on a FIRST Robotics Competition team, contingent on maintaining good academic standing."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Two awarded per year to admitted students who competed on a FIRST Robotics Competition team, contingent on maintaining good academic standing.",
+    "lastVerified": ""
   },
   {
     "id": "kettering-robotics-scholarship",
@@ -29,19 +37,27 @@
     "amount": "Up to $5,000/year, up to $25,000 over 5 years",
     "deadline": "Application window typically opens November 1; accepted students apply by March 1",
     "category": "frc-specific",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Kettering has awarded nearly $5 million in robotics scholarships since 1999 — up to 50 awarded annually to FRC/VEX competitors."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Kettering has awarded nearly $5 million in robotics scholarships since 1999 \u2014 up to 50 awarded annually to FRC/VEX competitors.",
+    "lastVerified": ""
   },
   {
     "id": "michigan-tech-first-scholarship",
     "name": "Michigan Tech FIRST Scholarship",
     "provider": "Michigan Technological University",
     "link": "https://www.mtu.edu/admissions/financial/scholarships/",
-    "amount": "$1,500–$4,000/year",
-    "deadline": "Awarded competitively to incoming first-year applicants — apply as part of admission",
+    "amount": "$1,500\u2013$4,000/year",
+    "deadline": "Awarded competitively to incoming first-year applicants \u2014 apply as part of admission",
     "category": "frc-specific",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Open to incoming students who competed on a FIRST Robotics Competition, FIRST Tech Challenge, or VEX Robotics team."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Open to incoming students who competed on a FIRST Robotics Competition, FIRST Tech Challenge, or VEX Robotics team.",
+    "lastVerified": ""
   },
   {
     "id": "detroit-mercy-first-scholarship",
@@ -51,8 +67,12 @@
     "amount": "Up to $4,000/year, renewable up to 4 years",
     "deadline": "Check current cycle on Detroit Mercy's site",
     "category": "frc-specific",
-    "tags": ["renewable", "university-specific"],
-    "notes": "For high school seniors with a background in robotics, including FIRST Robotics Competition participants."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For high school seniors with a background in robotics, including FIRST Robotics Competition participants.",
+    "lastVerified": ""
   },
   {
     "id": "mercer-first-scholars",
@@ -62,8 +82,12 @@
     "amount": "$1,000/year, renewable",
     "deadline": "Check current cycle on Mercer's site",
     "category": "frc-specific",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Awarded to admitted students selected as Mercer FIRST Scholars based on their FIRST program participation."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Awarded to admitted students selected as Mercer FIRST Scholars based on their FIRST program participation.",
+    "lastVerified": ""
   },
   {
     "id": "oregon-tech-first-scholarship",
@@ -73,19 +97,26 @@
     "amount": "$1,500/year, renewable",
     "deadline": "Check current cycle on Oregon Tech's site",
     "category": "frc-specific",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Two awarded per year. Requires two years of active participation and demonstrated leadership on a FIRST Robotics Competition, FIRST Tech Challenge, or VEX team."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Two awarded per year. Requires two years of active participation and demonstrated leadership on a FIRST Robotics Competition, FIRST Tech Challenge, or VEX team.",
+    "lastVerified": ""
   },
   {
     "id": "georgia-tech-first-scholarship",
     "name": "FIRST Robotics Scholarship",
     "provider": "Georgia Institute of Technology",
     "link": "https://www.gatech.edu/",
-    "amount": "Varies — check current cycle",
+    "amount": "Varies \u2014 check current cycle",
     "deadline": "Check current cycle on Georgia Tech's site",
     "category": "frc-specific",
-    "tags": ["university-specific"],
-    "notes": "Offered to graduating high school seniors admitted to Georgia Tech who participated in FIRST Robotics Competition."
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Offered to graduating high school seniors admitted to Georgia Tech who participated in FIRST Robotics Competition.",
+    "lastVerified": ""
   },
   {
     "id": "elbit-america-nh",
@@ -95,19 +126,27 @@
     "amount": "$1,000 (two awarded)",
     "deadline": "Check current cycle on Elbit America's application portal",
     "category": "frc-specific",
-    "tags": ["state-restricted"],
-    "notes": "Restricted to New Hampshire high school seniors who competed on a FIRST Robotics Competition team."
+    "tags": [
+      "state-restricted"
+    ],
+    "notes": "Restricted to New Hampshire high school seniors who competed on a FIRST Robotics Competition team.",
+    "lastVerified": ""
   },
   {
     "id": "stamps-presidents-scholars-gatech",
     "name": "Stamps President's Scholars Program",
     "provider": "Georgia Institute of Technology",
     "link": "https://stampsps.gatech.edu",
-    "amount": "Full ride — tuition, fees, room & board, books, and personal expenses for up to 4 years",
+    "amount": "Full ride \u2014 tuition, fees, room & board, books, and personal expenses for up to 4 years",
     "deadline": "Tied to Georgia Tech's Early Action admission deadline; semifinalists notified in January, finalists invited to Scholars Weekend in late February",
     "category": "stem-general",
-    "tags": ["full-ride", "renewable", "university-specific"],
-    "notes": "Open to US and UK high school seniors applying for admission to Georgia Tech. About 50 awarded per year through a multi-round process including a semifinalist interview and a finalist weekend; no separate application beyond Georgia Tech admission."
+    "tags": [
+      "full-ride",
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Open to US and UK high school seniors applying for admission to Georgia Tech. About 50 awarded per year through a multi-round process including a semifinalist interview and a finalist weekend; no separate application beyond Georgia Tech admission.",
+    "lastVerified": ""
   },
   {
     "id": "uc-berkeley-regents-chancellors",
@@ -115,21 +154,29 @@
     "provider": "University of California, Berkeley",
     "link": "https://financialaid.berkeley.edu/types-of-aid-at-berkeley/scholarships/regents-and-chancellors-scholarship/",
     "amount": "$2,500/year honorary award for scholars without demonstrated need; scholars with need receive funding up to their full calculated need",
-    "deadline": "No separate application — tied to the UC application (due in November); interviews in early March, decisions by late March",
+    "deadline": "No separate application \u2014 tied to the UC application (due in November); interviews in early March, decisions by late March",
     "category": "stem-general",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Awarded to incoming first-years and some transfers based on academic achievement, leadership, and service shown on the UC application; renewable for up to 8 semesters."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Awarded to incoming first-years and some transfers based on academic achievement, leadership, and service shown on the UC application; renewable for up to 8 semesters.",
+    "lastVerified": ""
   },
   {
     "id": "umich-engineering-scholarship-of-honor",
     "name": "Engineering Scholarship of Honor",
     "provider": "University of Michigan College of Engineering",
     "link": "https://scholarships.engin.umich.edu/engineering-scholarship-of-honor/",
-    "amount": "$10,000/year for in-state students; $10,000–$30,000/year for out-of-state students, renewable up to 8 semesters",
-    "deadline": "No separate application — automatic consideration upon admission, with award notification typically by mid-April",
+    "amount": "$10,000/year for in-state students; $10,000\u2013$30,000/year for out-of-state students, renewable up to 8 semesters",
+    "deadline": "No separate application \u2014 automatic consideration upon admission, with award notification typically by mid-April",
     "category": "stem-general",
-    "tags": ["renewable", "university-specific"],
-    "notes": "All admitted US citizens and permanent residents entering the College of Engineering are automatically considered based on their admissions application."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "All admitted US citizens and permanent residents entering the College of Engineering are automatically considered based on their admissions application.",
+    "lastVerified": ""
   },
   {
     "id": "purdue-trustees-scholarship",
@@ -137,10 +184,14 @@
     "provider": "Purdue University",
     "link": "https://admissions.purdue.edu/cost-financial-aid/scholarships/",
     "amount": "$10,000/year for Indiana residents; $16,000/year for non-residents, renewable up to 4 years with a 3.00 Purdue GPA",
-    "deadline": "November 1 — no separate application; automatic merit review of the admission application",
+    "deadline": "November 1 \u2014 no separate application; automatic merit review of the admission application",
     "category": "stem-general",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Awarded to incoming first-year applicants for exceptional academic achievement plus leadership or service in school or community."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Awarded to incoming first-year applicants for exceptional academic achievement plus leadership or service in school or community.",
+    "lastVerified": ""
   },
   {
     "id": "tamu-presidents-endowed-scholarship",
@@ -148,10 +199,14 @@
     "provider": "Texas A&M University",
     "link": "https://scholarships.tamu.edu/FRESHMEN/University-Scholarships",
     "amount": "$3,000/year for 4 years ($12,000 total), plus a one-time $1,000 study-abroad award; renewable with a 3.5 cumulative GPA",
-    "deadline": "December 1 — covered by the same admission/scholarship application (ApplyTexas or Common App)",
+    "deadline": "December 1 \u2014 covered by the same admission/scholarship application (ApplyTexas or Common App)",
     "category": "stem-general",
-    "tags": ["renewable", "university-specific"],
-    "notes": "Merit-based award for entering first-time freshmen in the top 25% of their graduating class; no separate scholarship application required."
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Merit-based award for entering first-time freshmen in the top 25% of their graduating class; no separate scholarship application required.",
+    "lastVerified": ""
   },
   {
     "id": "goldwater-scholarship",
@@ -159,43 +214,62 @@
     "provider": "Barry Goldwater Scholarship Foundation",
     "link": "https://goldwaterscholarship.gov/",
     "amount": "Up to $7,500/year",
-    "deadline": "National deadline is the last Friday in January; each college sets its own earlier internal nomination deadline, often November–December",
+    "deadline": "National deadline is the last Friday in January; each college sets its own earlier internal nomination deadline, often November\u2013December",
     "category": "stem-general",
-    "tags": ["merit-based", "national"],
-    "notes": "For current college sophomores and juniors (3.0+ GPA, US citizen, national, or permanent resident) pursuing a research career in natural sciences, mathematics, or engineering. Requires nomination by your institution — students cannot apply directly."
+    "tags": [
+      "merit-based",
+      "national"
+    ],
+    "notes": "For current college sophomores and juniors (3.0+ GPA, US citizen, national, or permanent resident) pursuing a research career in natural sciences, mathematics, or engineering. Requires nomination by your institution \u2014 students cannot apply directly.",
+    "lastVerified": ""
   },
   {
     "id": "swe-scholarship-program",
     "name": "SWE Scholarship Program",
     "provider": "Society of Women Engineers",
     "link": "https://swe.org/scholarships/",
-    "amount": "Individual awards generally $1,000–$10,000, varying by named award within the program",
-    "deadline": "Varies by track — Collegiate/Graduate Scholars and Emerging First-Year Scholars tracks typically close in late winter/early spring",
+    "amount": "Individual awards generally $1,000\u2013$10,000, varying by named award within the program",
+    "deadline": "Varies by track \u2014 Collegiate/Graduate Scholars and Emerging First-Year Scholars tracks typically close in late winter/early spring",
     "category": "stem-general",
-    "tags": ["multiple-awards", "merit-or-need", "national"],
-    "notes": "Open to women entering or enrolled in an ABET-accredited undergraduate or graduate engineering, engineering technology, or computer science program. One application considers a student for all eligible society-level awards."
+    "tags": [
+      "multiple-awards",
+      "merit-or-need",
+      "national"
+    ],
+    "notes": "Open to women entering or enrolled in an ABET-accredited undergraduate or graduate engineering, engineering technology, or computer science program. One application considers a student for all eligible society-level awards.",
+    "lastVerified": ""
   },
   {
     "id": "nsbe-scholarships",
     "name": "NSBE Scholarships",
     "provider": "National Society of Black Engineers",
     "link": "https://nsbe.org/scholarships/",
-    "amount": "Individual sponsored awards roughly $5,000–$17,500",
-    "deadline": "Varies by cycle — multiple cycles run per year; check current dates on NSBE's site",
+    "amount": "Individual sponsored awards roughly $5,000\u2013$17,500",
+    "deadline": "Varies by cycle \u2014 multiple cycles run per year; check current dates on NSBE's site",
     "category": "stem-general",
-    "tags": ["multiple-awards", "merit-or-need", "national"],
-    "notes": "Requires active, paid NSBE membership and a verified GPA on file. Specific major, classification, and residency requirements vary by individual sponsored award."
+    "tags": [
+      "multiple-awards",
+      "merit-or-need",
+      "national"
+    ],
+    "notes": "Requires active, paid NSBE membership and a verified GPA on file. Specific major, classification, and residency requirements vary by individual sponsored award.",
+    "lastVerified": ""
   },
   {
     "id": "aises-scholarships",
     "name": "AISES Scholarships",
     "provider": "American Indian Science and Engineering Society",
     "link": "https://aises.org/scholarships/",
-    "amount": "Varies by named award, roughly $1,000–$20,000",
+    "amount": "Varies by named award, roughly $1,000\u2013$20,000",
     "deadline": "Applications generally open mid-December and close April 30 each cycle",
     "category": "stem-general",
-    "tags": ["multiple-awards", "merit-or-need", "national"],
-    "notes": "Requires free AISES student membership and full-time enrollment in a STEM field at an accredited institution. A single profile in AISES's OASIS portal matches students to eligible named scholarships."
+    "tags": [
+      "multiple-awards",
+      "merit-or-need",
+      "national"
+    ],
+    "notes": "Requires free AISES student membership and full-time enrollment in a STEM field at an accredited institution. A single profile in AISES's OASIS portal matches students to eligible named scholarships.",
+    "lastVerified": ""
   },
   {
     "id": "regeneron-sts",
@@ -203,10 +277,14 @@
     "provider": "Society for Science",
     "link": "https://www.societyforscience.org/regeneron-sts/",
     "amount": "Top 300 scholars each receive $2,000 (plus $2,000 to their school); 40 finalists receive at least $25,000, with top awards up to $250,000",
-    "deadline": "Early November — check current cycle on site",
+    "deadline": "Early November \u2014 check current cycle on site",
     "category": "stem-general",
-    "tags": ["merit-based", "national"],
-    "notes": "Open to students in their final year of secondary school in the US or its territories, including US citizens studying abroad, based on an original, independent research project. Team research is not eligible."
+    "tags": [
+      "merit-based",
+      "national"
+    ],
+    "notes": "Open to students in their final year of secondary school in the US or its territories, including US citizens studying abroad, based on an original, independent research project. Team research is not eligible.",
+    "lastVerified": ""
   },
   {
     "id": "davidson-fellows-scholarship",
@@ -214,10 +292,14 @@
     "provider": "Davidson Institute for Talent Development",
     "link": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/",
     "amount": "$10,000, $25,000, or $50,000 tiers in most categories, with top STEM/math fellows eligible for $100,000 (exact tiers can vary slightly by year)",
-    "deadline": "Mid-February — check current cycle on site",
+    "deadline": "Mid-February \u2014 check current cycle on site",
     "category": "stem-general",
-    "tags": ["merit-based", "national"],
-    "notes": "Open to students 18 or younger who have completed a significant, original piece of work in STEM, technology, engineering, math, or other fields. Individuals or 2-person teams are eligible."
+    "tags": [
+      "merit-based",
+      "national"
+    ],
+    "notes": "Open to students 18 or younger who have completed a significant, original piece of work in STEM, technology, engineering, math, or other fields. Individuals or 2-person teams are eligible.",
+    "lastVerified": ""
   },
   {
     "id": "sme-education-foundation",
@@ -225,10 +307,14 @@
     "provider": "SME Education Foundation",
     "link": "https://www.smeef.org/scholarships",
     "amount": "Varies by program (60+ distinct scholarships)",
-    "deadline": "Varies by program — most open in fall/winter",
+    "deadline": "Varies by program \u2014 most open in fall/winter",
     "category": "stem-general",
-    "tags": ["multiple-awards", "merit-or-need"],
-    "notes": "Not FIRST-exclusive, but manufacturing/engineering-focused scholarships that many FRC alumni are well-positioned for given hands-on robotics experience."
+    "tags": [
+      "multiple-awards",
+      "merit-or-need"
+    ],
+    "notes": "Not FIRST-exclusive, but manufacturing/engineering-focused scholarships that many FRC alumni are well-positioned for given hands-on robotics experience.",
+    "lastVerified": ""
   },
   {
     "id": "nfpa-first-scholarship",
@@ -238,7 +324,10 @@
     "amount": "One merit-based award",
     "deadline": "Check current cycle on NFPA's site",
     "category": "frc-specific",
-    "tags": ["merit-based"],
-    "notes": "For a high school senior who participated in FIRST, VEX, or the National Robotics League."
+    "tags": [
+      "merit-based"
+    ],
+    "notes": "For a high school senior who participated in FIRST, VEX, or the National Robotics League.",
+    "lastVerified": ""
   }
 ]
