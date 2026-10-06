@@ -632,6 +632,10 @@ main.site-main {
 .pill-closed { background: var(--gray-bg); color: var(--gray-fg); }
 .pill-unsure { background: var(--amber-bg); color: var(--amber); }
 .pill-suggested { background: var(--accent-soft); color: var(--accent); }
+.pill-closing-soon { background: var(--amber-bg); color: var(--amber); }
+.pill-upcoming { background: var(--accent-soft); color: var(--accent); }
+.pill-rolling { background: transparent; color: var(--text-dim); border: 1px solid var(--border-strong); }
+.pill-unknown { background: transparent; color: var(--text-faint); border: 1px solid var(--border); }
 
 /* ---------- Eligibility finder ---------- */
 

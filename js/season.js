@@ -428,6 +428,7 @@
               date: GrantStatus.parseDate(g.closeDate),
               closeDateText: g.closeDate,
               status: GrantStatus.getGrantStatus(g),
+              badge: GrantStatus.describe(g),
               notes: g.notes,
             };
           })
@@ -1042,19 +1043,9 @@
       ]));
     }
 
-    // g.status here is already a GrantStatus category (see loadGrantDeadlines),
-    // collapsed to the 3 pill styles the same way app.js does on grants.html.
-    var PILL_BY_KEY = {
-      open: { cls: "pill-open", label: "Open" },
-      "closing-soon": { cls: "pill-open", label: "Open" },
-      rolling: { cls: "pill-open", label: "Open" },
-      closed: { cls: "pill-closed", label: "Closed" },
-      upcoming: { cls: "pill-unsure", label: "Unsure" },
-      unknown: { cls: "pill-unsure", label: "Unsure" },
-    };
     var table = el("div", { class: "dates-table" });
     grantDeadlines.forEach(function (g) {
-      var p = PILL_BY_KEY[g.status];
+      var p = g.badge;
       var nameLink = el("a", { class: "dname", href: g.link || "#", target: "_blank", rel: "noopener", style: "color:inherit;" }, [g.name]);
 
       var done = !!completedGrants[g.id];

@@ -74,18 +74,8 @@
     return node;
   }
 
-  // Maps the 6 GrantStatus categories down to the 3 pill styles that
-  // exist today; B3 gives each category its own label/color.
-  var PILL_BY_KEY = {
-    open: { cls: "pill-open", label: "Open" },
-    "closing-soon": { cls: "pill-open", label: "Open" },
-    rolling: { cls: "pill-open", label: "Open" },
-    closed: { cls: "pill-closed", label: "Closed" },
-    upcoming: { cls: "pill-unsure", label: "Unsure" },
-    unknown: { cls: "pill-unsure", label: "Unsure" },
-  };
   function pillClass(g) {
-    return PILL_BY_KEY[GrantStatus.getGrantStatus(g)];
+    return GrantStatus.describe(g);
   }
 
   function fetchJSON(path) {

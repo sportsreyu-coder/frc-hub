@@ -94,10 +94,32 @@
     return out;
   }
 
+  // Badge for a grant: { key, cls, label }. One pill class per status key
+  // (see css/styles.css) and never color-only -- label always says why.
+  function describe(grant, today) {
+    today = startOfDay(today instanceof Date ? today : new Date());
+    var key = getGrantStatus(grant, today);
+    var openD = parseDate(grant.openDate);
+    var closeD = parseDate(grant.closeDate);
+
+    if (key === "closing-soon") {
+      var days = Math.round((closeD - today) / 86400000);
+      return { key: key, cls: "pill-closing-soon", label: days === 0 ? "Closes today" : "Closes in " + days + (days === 1 ? " day" : " days") };
+    }
+    if (key === "upcoming") {
+      return { key: key, cls: "pill-upcoming", label: "Opens " + formatDeadline(openD, today) };
+    }
+    if (key === "open") return { key: key, cls: "pill-open", label: "Open" };
+    if (key === "closed") return { key: key, cls: "pill-closed", label: "Closed" };
+    if (key === "rolling") return { key: key, cls: "pill-rolling", label: "Rolling" };
+    return { key: key, cls: "pill-unknown", label: "Dates not published" };
+  }
+
   window.GrantStatus = {
     getGrantStatus: getGrantStatus,
     parseDate: parseDate,
     isCurrentlyOpen: isCurrentlyOpen,
     formatDeadline: formatDeadline,
+    describe: describe,
   };
 })();
