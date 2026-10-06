@@ -30,6 +30,61 @@
     await sb.auth.signOut();
   });
 
+  // G5: self-serve data export/deletion -- see delete_my_data() in
+  // supabase/schema.sql for exactly what deletion covers (profile,
+  // forum posts/replies, solo season_data) and what it deliberately
+  // doesn't (team data, the auth account itself).
+  document.getElementById("export-data-btn").addEventListener("click", async function () {
+    if (!currentUser) return;
+    var exportInfo = document.getElementById("export-info");
+    showError(exportInfo, "Gathering your data…");
+    var data = {
+      account: { id: currentUser.id, email: currentUser.email, created_at: currentUser.created_at },
+      profile: null,
+      season_data: null,
+      team: null,
+    };
+    try {
+      var profileRes = await sb.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
+      data.profile = profileRes.data || null;
+      var seasonRes = await sb.from("season_data").select("data, updated_at").eq("user_id", currentUser.id).maybeSingle();
+      data.season_data = seasonRes.data || null;
+      if (window.FRCTeam && window.FRCTeam.state.team) {
+        data.team = {
+          team_number: window.FRCTeam.state.team.team_number,
+          team_name: window.FRCTeam.state.team.team_name,
+          role: window.FRCTeam.state.membership && window.FRCTeam.state.membership.role,
+        };
+      }
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "frc-hub-data.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showError(exportInfo, "Downloaded.");
+    } catch (err) {
+      showError(exportInfo, "Couldn't gather your data: " + err.message);
+    }
+  });
+
+  document.getElementById("delete-account-btn").addEventListener("click", async function () {
+    if (!currentUser) return;
+    var errEl = document.getElementById("delete-account-error");
+    if (window.FRCTeam && window.FRCTeam.state.team) {
+      showError(errEl, "Leave your team first (see the Your team card above), then come back to delete your account data.");
+      return;
+    }
+    if (!confirm("Delete your FRC Hub profile, forum posts, and season progress? This can't be undone.")) return;
+    var res = await sb.rpc("delete_my_data");
+    if (res.error) { showError(errEl, res.error.message); return; }
+    await sb.auth.signOut();
+    location.href = "index.html";
+  });
+
   var districtSelect = document.getElementById("profile-district");
   (window.FRC_DISTRICTS || []).forEach(function (d) {
     var opt = document.createElement("option");

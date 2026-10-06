@@ -776,3 +776,26 @@ drop policy if exists "Site admins can delete any forum reply" on public.forum_r
 create policy "Site admins can delete any forum reply"
   on public.forum_replies for delete
   using (public.is_site_admin());
+
+-- ---- Self-serve data deletion (G5) ----
+--
+-- Deletes everything this app stores FOR the caller that it alone
+-- controls: their profile (forum_posts/forum_replies cascade from
+-- that via author_id's FK) and their solo season_data row. It
+-- deliberately does NOT touch team_data (shared with teammates, not
+-- solely theirs) or team_members (leaving/removing from a team is its
+-- own, already-guarded flow via leave_team()/remove_member() -- a
+-- blanket delete here could strand a team with no mentor) or the
+-- Supabase auth.users row itself, which this client-side anon-key app
+-- has no permission to remove; the account.html UI tells the user to
+-- leave their team first and that full account removal goes through
+-- the Contact link.
+create or replace function public.delete_my_data()
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  delete from public.profiles where id = auth.uid();
+  delete from public.season_data where user_id = auth.uid();
+end;
+$$;
+grant execute on function public.delete_my_data() to authenticated;
