@@ -915,6 +915,12 @@ main.site-main {
   flex: 1;
 }
 
+.gc-amount {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text);
+}
+
 .gc-tags {
   display: flex;
   flex-wrap: wrap;

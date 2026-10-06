@@ -258,11 +258,12 @@
       completedPill,
       el("div", { class: "gc-dates" }, [datesLine(g)]),
       g.notes ? el("p", { class: "gc-notes" }, [g.notes]) : null,
-      el("div", { class: "gc-tags" }, visibleTags.map(function (t) {
+      g.amount ? el("div", { class: "gc-amount" }, [g.amount]) : null,
+      visibleTags.length ? el("div", { class: "gc-tags" }, visibleTags.map(function (t) {
         return el("span", { class: "tag" }, [TAG_LABELS[t] || t]);
-      })),
+      })) : null,
       el("div", { class: "gc-bottom" }, [
-        el("span", { class: "gc-meta" }, [g.employeeConnection === "yes" ? "Employee/mentor tie noted" : " "]),
+        g.employeeConnection === "yes" ? el("span", { class: "gc-meta" }, ["Employee/mentor tie noted"]) : null,
         el("a", { class: "gc-link", href: g.link || "#", target: "_blank", rel: "noopener" }, [g.link ? "View & apply →" : "No link yet"]),
       ]),
       el("div", { class: "gc-verified" + (verifiedText ? "" : " gc-needs-verification") }, [verifiedText || "Needs verification"]),
