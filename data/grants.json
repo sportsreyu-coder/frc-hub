@@ -14,7 +14,8 @@
       "corporate-employee",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "aauw",
@@ -31,7 +32,8 @@
       "501c3-required",
       "demographics",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "abell-foundation",
@@ -46,7 +48,8 @@
     "notes": "Baltimore Area",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "actuonix",
@@ -62,7 +65,8 @@
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "aiaa",
@@ -78,7 +82,8 @@
     "tags": [
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "akamai-foundation",
@@ -94,7 +99,8 @@
     "tags": [
       "501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "american-honda-foundation",
@@ -109,7 +115,8 @@
     "notes": "Not sure if different from the Honda Grant",
     "tags": [
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "arconic-foundation",
@@ -125,7 +132,8 @@
     "tags": [
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "argosy-new-team-grant",
@@ -142,7 +150,8 @@
       "currently-open",
       "geo-restricted",
       "rookie-friendly"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "at-t",
@@ -158,7 +167,8 @@
     "tags": [
       "corporate-employee",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "bae-grant",
@@ -175,7 +185,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "bank-of-america",
@@ -190,7 +201,8 @@
     "notes": "",
     "tags": [
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "bauch",
@@ -205,7 +217,8 @@
     "notes": "",
     "tags": [
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "benjamin-moore",
@@ -222,7 +235,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "bloomingdales",
@@ -238,7 +252,8 @@
     "tags": [
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "bmw",
@@ -255,7 +270,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "bnsf-railway-foundation",
@@ -271,7 +287,8 @@
     "tags": [
       "501c3-required",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "boeing-first-grant",
@@ -286,7 +303,8 @@
     "notes": "",
     "tags": [
       "corporate-employee"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "boston-scientific-frc-grant",
@@ -303,7 +321,8 @@
       "currently-open",
       "demographics",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "brown-rudnick-center",
@@ -321,7 +340,8 @@
       "demographics",
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "canon-usa",
@@ -338,7 +358,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "cisco",
@@ -355,7 +376,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "coca-cola",
@@ -371,7 +393,8 @@
     "tags": [
       "corporate-employee",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "con-edison",
@@ -387,7 +410,8 @@
     "tags": [
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "costco",
@@ -404,7 +428,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "daniels-fund",
@@ -421,7 +446,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "digital-citizen-fund-rookie-team-grant",
@@ -439,7 +465,8 @@
       "demographics",
       "geo-restricted",
       "rookie-friendly"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "dodstem",
@@ -456,7 +483,8 @@
       "corporate-employee",
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "dow",
@@ -471,7 +499,8 @@
     "notes": "FIRST Come FIRST Serve, Teams without a Dow Mentor won't be viewed until June 23rd",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "dow-international-team-grant",
@@ -487,7 +516,8 @@
     "tags": [
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "dr-scholl-foundation",
@@ -502,7 +532,8 @@
     "notes": "",
     "tags": [
       "501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "ecolab",
@@ -517,7 +548,8 @@
     "notes": "St Paul is main, other locations include: Beloit, City of Industry, CA, Clearing, IL (southwest Chicago), Elk Grove Village, IL, Ellwood City, PA,  Garland, TX, Garyville, LA, Greensboro, NC,  Huntington, IN, Irving / Fort Worth, TX, Jacksonville, FL, Joliet, IL, Martinsburg, WV, McDonough, GA, Naperville, IL, Sugar Land / Fresno, TX (Fort Bend County only)",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "emc-insurance",
@@ -530,7 +562,8 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   },
   {
     "id": "eversource",
@@ -546,7 +579,8 @@
     "tags": [
       "501c3-required",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "fabworks",
@@ -563,7 +597,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "fikret-y-ksel-foundation",
@@ -578,7 +613,8 @@
     "notes": "",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "first-grant-submittables",
@@ -591,7 +627,8 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "Where various grant applications appear like rockwell",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   },
   {
     "id": "first-in-texas-grant",
@@ -607,7 +644,8 @@
     "tags": [
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "fnc-bank",
@@ -624,7 +662,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "ford",
@@ -639,7 +678,8 @@
     "notes": "",
     "tags": [
       "corporate-employee"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "ford-foundation",
@@ -655,7 +695,8 @@
     "tags": [
       "501c3-required",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "frc-tees",
@@ -672,7 +713,8 @@
       "currently-open",
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "geico",
@@ -687,7 +729,8 @@
     "notes": "",
     "tags": [
       "501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "gene-haas",
@@ -704,7 +747,8 @@
       "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "general-dynamics-nassco",
@@ -722,7 +766,8 @@
       "corporate-employee",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "glenn-w-bailey-foundation",
@@ -739,7 +784,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "gm",
@@ -756,7 +802,8 @@
       "corporate-employee",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "grants-gov",
@@ -771,7 +818,8 @@
     "notes": "Database of Government Grants",
     "tags": [
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "hall-family-foundation",
@@ -787,7 +835,8 @@
     "tags": [
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "harbor-freight",
@@ -804,7 +853,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "hershey",
@@ -820,7 +870,8 @@
     "tags": [
       "501c3-required",
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "honda",
@@ -836,7 +887,8 @@
     "tags": [
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "idaho-national-labratory",
@@ -851,7 +903,8 @@
     "notes": "Idaho",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "indiana-first-grants",
@@ -866,7 +919,8 @@
     "notes": "Only in Indiana",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "indiana-toyota-grant",
@@ -882,7 +936,8 @@
     "tags": [
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "intuitive-grant",
@@ -899,7 +954,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "investors-foundation",
@@ -916,7 +972,8 @@
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "jb-hunt",
@@ -933,7 +990,8 @@
       "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "john-deere",
@@ -949,7 +1007,8 @@
     "tags": [
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "johnson-controls",
@@ -964,7 +1023,8 @@
     "notes": "",
     "tags": [
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "kars4kids",
@@ -981,7 +1041,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "kgmiaa-kettering",
@@ -996,7 +1057,8 @@
     "notes": "",
     "tags": [
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "last-anvil",
@@ -1013,7 +1075,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "lockheed-martin",
@@ -1029,7 +1092,8 @@
     "tags": [
       "corporate-employee",
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "m-j-murdock",
@@ -1046,7 +1110,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "makers-making-change",
@@ -1063,7 +1128,8 @@
       "currently-open",
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "max-and-victoria-dreyfus-foundation",
@@ -1080,7 +1146,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "mccarthey-dressman-education-foundation",
@@ -1093,7 +1160,8 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   },
   {
     "id": "meta",
@@ -1108,7 +1176,8 @@
     "notes": "",
     "tags": [
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "michael-and-susan-dell-foundation",
@@ -1125,7 +1194,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "midco",
@@ -1142,7 +1212,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "molex",
@@ -1155,7 +1226,8 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   },
   {
     "id": "motorola-solutions",
@@ -1170,7 +1242,8 @@
     "notes": "",
     "tags": [
       "corporate-employee"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "msc",
@@ -1186,7 +1259,8 @@
     "tags": [
       "501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "msoe",
@@ -1202,7 +1276,8 @@
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "nasa",
@@ -1219,7 +1294,8 @@
       "geo-restricted",
       "no-501c3-required",
       "rookie-friendly"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "national-fuel",
@@ -1235,7 +1311,8 @@
     "tags": [
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "nea-foundation",
@@ -1250,7 +1327,8 @@
     "notes": "Must be a NEA member",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "ni",
@@ -1267,7 +1345,8 @@
       "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "nikon",
@@ -1284,7 +1363,8 @@
       "currently-open",
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "nordstrom",
@@ -1299,7 +1379,8 @@
     "notes": "North America Only",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "norfolk-southern-foundation",
@@ -1315,7 +1396,8 @@
     "tags": [
       "501c3-required",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "northrop-grumman",
@@ -1333,7 +1415,8 @@
       "corporate-employee",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "novelis-and-ball-first-robotics-alliance",
@@ -1351,7 +1434,8 @@
       "no-501c3-required",
       "no-geo-restrictions",
       "sustainability"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "online-metals",
@@ -1364,7 +1448,8 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   },
   {
     "id": "optimum",
@@ -1380,7 +1465,8 @@
     "tags": [
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "pershing-square-foundation",
@@ -1395,7 +1481,8 @@
     "notes": "Greater NYC Area",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "pitsco",
@@ -1412,7 +1499,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "polymaker",
@@ -1427,7 +1515,8 @@
     "notes": "Requires using only Polymaker Filament",
     "tags": [
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "ptc",
@@ -1444,7 +1533,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "raytheon",
@@ -1459,7 +1549,8 @@
     "notes": "",
     "tags": [
       "501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "regeneron",
@@ -1477,7 +1568,8 @@
       "corporate-employee",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "reiman-foundation",
@@ -1492,7 +1584,8 @@
     "notes": "",
     "tags": [
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "rev-robotics",
@@ -1509,7 +1602,8 @@
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "robonauts-everybot-sustainability-grant",
@@ -1527,7 +1621,8 @@
       "rookie-friendly",
       "school-or-501c3",
       "sustainability"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "rockland-trust",
@@ -1544,7 +1639,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "rockwell-automation",
@@ -1560,7 +1656,8 @@
     "tags": [
       "corporate-employee",
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "rural-technology-fund",
@@ -1576,7 +1673,8 @@
     "tags": [
       "currently-open",
       "demographics"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "saint-gobain-corporation-foundation",
@@ -1593,7 +1691,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "samsung-solve-for-tomorrow",
@@ -1606,7 +1705,8 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   },
   {
     "id": "samsung-south-carolina",
@@ -1622,7 +1722,8 @@
     "tags": [
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "sc-johnson",
@@ -1638,7 +1739,8 @@
     "tags": [
       "501c3-required",
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "science-education-foundation-general-atomics",
@@ -1655,7 +1757,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "scte-foundation-grant-for-first",
@@ -1670,7 +1773,8 @@
     "notes": "Requires a parent of a team member to be an SCTE (cable telecommunications engineers) member in good standing -- the SCTE-member parent submits the application. Roughly $5,000 per award historically.",
     "tags": [
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "siemens",
@@ -1685,7 +1789,8 @@
     "notes": "",
     "tags": [
       "corporate-employee"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "society-for-science",
@@ -1702,7 +1807,8 @@
       "501c3-required",
       "demographics",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "sony",
@@ -1719,7 +1825,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "state-farm",
@@ -1737,7 +1844,8 @@
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "stemify-grants",
@@ -1752,7 +1860,8 @@
     "notes": "1000s of grants for states and nationally",
     "tags": [
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "swyft",
@@ -1768,7 +1877,8 @@
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "target",
@@ -1785,7 +1895,8 @@
       "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "td-bank",
@@ -1802,7 +1913,8 @@
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "te-connectivity",
@@ -1818,7 +1930,8 @@
     "tags": [
       "501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "team-foundation",
@@ -1835,7 +1948,8 @@
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "the-standard",
@@ -1852,7 +1966,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "toshiba",
@@ -1869,7 +1984,8 @@
       "currently-open",
       "geo-restricted",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "toyota",
@@ -1886,7 +2002,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "union-pacific-grant",
@@ -1903,7 +2020,8 @@
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "united-therapeutics",
@@ -1919,7 +2037,8 @@
     "tags": [
       "currently-open",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "verizon",
@@ -1935,7 +2054,8 @@
     "tags": [
       "corporate-employee",
       "currently-open"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "viasat",
@@ -1951,7 +2071,8 @@
     "tags": [
       "currently-open",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "w-k-kellog-foundation",
@@ -1968,7 +2089,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "walmart",
@@ -1985,7 +2107,8 @@
       "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "weinberg-foundation",
@@ -2001,7 +2124,8 @@
     "tags": [
       "501c3-required",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "wells-fargo",
@@ -2018,7 +2142,8 @@
       "corporate-employee",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "west-coast-products",
@@ -2034,7 +2159,8 @@
     "tags": [
       "currently-open",
       "no-501c3-required"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "westinghouse",
@@ -2051,7 +2177,8 @@
       "501c3-required",
       "currently-open",
       "geo-restricted"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "wolfspeed-grant",
@@ -2067,7 +2194,8 @@
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "yawkey-foundation",
@@ -2084,7 +2212,8 @@
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
-    ]
+    ],
+    "lastVerified": ""
   },
   {
     "id": "zendesk-foundation",
@@ -2097,6 +2226,7 @@
     "geoRestricted": "unsure",
     "require501c3": "unsure",
     "notes": "",
-    "tags": []
+    "tags": [],
+    "lastVerified": ""
   }
 ]

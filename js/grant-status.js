@@ -115,11 +115,25 @@
     return { key: key, cls: "pill-unknown", label: "Dates not published" };
   }
 
+  // "Verified Sep 2026" from an item's `lastVerified` ISO date (YYYY-MM-DD),
+  // or null if it's missing, unparseable, or older than 12 months -- those
+  // all render as "Needs verification" instead (see callers).
+  function verifiedLabel(lastVerified, today) {
+    if (!lastVerified) return null;
+    var d = new Date(lastVerified);
+    if (isNaN(d.getTime())) return null;
+    today = today instanceof Date ? today : new Date();
+    var months = (today.getFullYear() - d.getFullYear()) * 12 + (today.getMonth() - d.getMonth());
+    if (months >= 12) return null;
+    return "Verified " + MONTH_SHORT[d.getUTCMonth()] + " " + d.getUTCFullYear();
+  }
+
   window.GrantStatus = {
     getGrantStatus: getGrantStatus,
     parseDate: parseDate,
     isCurrentlyOpen: isCurrentlyOpen,
     formatDeadline: formatDeadline,
     describe: describe,
+    verifiedLabel: verifiedLabel,
   };
 })();

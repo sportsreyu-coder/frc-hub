@@ -225,10 +225,17 @@
     return copy;
   }
 
+  function datesLine(g) {
+    var openD = GrantStatus.parseDate(g.openDate);
+    var closeD = GrantStatus.parseDate(g.closeDate);
+    if (!openD && !closeD) return "Dates not published, check the grantor site";
+    var bits = [];
+    if (openD) bits.push("Opens " + GrantStatus.formatDeadline(openD));
+    if (closeD) bits.push("Closes " + GrantStatus.formatDeadline(closeD));
+    return bits.join(" · ");
+  }
+
   function grantCard(g) {
-    var dateBits = [];
-    if (g.openDate) dateBits.push("Opens " + g.openDate);
-    if (g.closeDate) dateBits.push("Closes " + g.closeDate);
     var p = pillClass(g);
     var visibleTags = TAG_ORDER.filter(function (t) { return g.tags.indexOf(t) !== -1; });
     var boosted = matchedBoosts(g);
@@ -240,6 +247,8 @@
       ? el("span", { class: "pill pill-open" }, ["✓ Your team completed this"])
       : null;
 
+    var verifiedText = GrantStatus.verifiedLabel(g.lastVerified);
+
     return el("article", { class: "grant-card" + (boosted.length ? " is-boosted" : "") }, [
       badge,
       el("div", { class: "gc-top" }, [
@@ -247,8 +256,8 @@
         el("span", { class: "pill " + p.cls }, [p.label]),
       ]),
       completedPill,
-      el("div", { class: "gc-dates" }, [dateBits.length ? dateBits.join(" · ") : "Dates not published"]),
-      el("p", { class: "gc-notes" }, [g.notes || "No additional notes provided."]),
+      el("div", { class: "gc-dates" }, [datesLine(g)]),
+      g.notes ? el("p", { class: "gc-notes" }, [g.notes]) : null,
       el("div", { class: "gc-tags" }, visibleTags.map(function (t) {
         return el("span", { class: "tag" }, [TAG_LABELS[t] || t]);
       })),
@@ -256,6 +265,7 @@
         el("span", { class: "gc-meta" }, [g.employeeConnection === "yes" ? "Employee/mentor tie noted" : " "]),
         el("a", { class: "gc-link", href: g.link || "#", target: "_blank", rel: "noopener" }, [g.link ? "View & apply →" : "No link yet"]),
       ]),
+      el("div", { class: "gc-verified" + (verifiedText ? "" : " gc-needs-verification") }, [verifiedText || "Needs verification"]),
     ]);
   }
 

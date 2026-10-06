@@ -941,6 +941,9 @@ main.site-main {
 
 .gc-link { font-size: 14px; font-weight: 500; }
 
+.gc-verified { margin-top: 10px; font-size: 11px; color: var(--text-faint); }
+.gc-verified.gc-needs-verification { color: var(--amber); }
+
 .empty-state {
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius);
