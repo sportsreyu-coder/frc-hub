@@ -7,7 +7,7 @@
     boosts: new Set(),
     c3: null, // "have" | "school" | "neither" | null
     stateFilter: "", // "" | "__nationwide__" | a US state name
-    sort: "status",
+    sort: "deadline",
     limit: 24,
   };
 
