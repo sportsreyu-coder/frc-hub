@@ -470,10 +470,12 @@ main.site-main {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
   scroll-margin-top: 90px;
 }
 
 .finder-top-row .search-row { flex: 1 1 auto; }
+.finder-top-row .search-hint { flex: 1 0 100%; margin: 0; }
 
 .filters-toggle-btn {
   flex: 0 0 auto;
