@@ -1,116 +1,173 @@
 [
   {
     "id": "1511-fundraising",
-    "name": "1511 Fundraising",
+    "name": "Team 1511: Fundraising Guide",
     "link": "https://penfieldrobotics.com/fundraising/",
-    "notes": ""
+    "notes": "",
+    "type": "Toolkit",
+    "team": "1511",
+    "year": ""
   },
   {
     "id": "1622-resources",
-    "name": "1622 Resources",
+    "name": "Team 1622: Resource Folder",
     "link": "https://drive.google.com/drive/folders/1NnaFUzcZebgtmQ4OrCZQaO3u5wHoD5qG",
-    "notes": ""
+    "notes": "",
+    "type": "Toolkit",
+    "team": "1622",
+    "year": ""
   },
   {
     "id": "195-championship-sponsorship-presentation",
-    "name": "195 Championship Sponsorship Presentation",
+    "name": "Team 195: Championship Sponsorship Presentation",
     "link": "https://www.team195.com/_files/ugd/31b07b_7a456c0a99a045538fa2e2ee4f562836.pdf",
-    "notes": ""
+    "notes": "",
+    "type": "Presentation",
+    "team": "195",
+    "year": ""
   },
   {
     "id": "3128-sponsorship-packet",
-    "name": "3128 Sponsorship Packet",
+    "name": "Team 3128: Sponsorship Packet",
     "link": "https://docs.google.com/document/d/1LrBxJlPjeXdrGl5DOi-ywKCYrtqr2qy10e_hXdEtNSY/edit#heading=h.h6y699utb1nu",
-    "notes": ""
+    "notes": "",
+    "type": "Sponsorship packet",
+    "team": "3128",
+    "year": ""
   },
   {
     "id": "353-expense-sponsor-tracker-example",
-    "name": "353 Expense/Sponsor Tracker Example",
+    "name": "Team 353: Expense/Sponsor Tracker Example",
     "link": "https://docs.google.com/spreadsheets/d/1c5J-J_kZHioQYRrA4Rg1vi9HOsdU2VHuu_rQ5ia-_Vk/edit?usp=sharing",
-    "notes": ""
+    "notes": "",
+    "type": "Template",
+    "team": "353",
+    "year": ""
   },
   {
     "id": "353-sponsorship-packet",
-    "name": "353 Sponsorship Packet",
+    "name": "Team 353: Sponsorship Packet",
     "link": "https://drive.google.com/file/d/1GnBKG9Dm8QH0urCXwyBS3fETt7w1gTGQ/view?usp=drive_link",
-    "notes": ""
+    "notes": "",
+    "type": "Sponsorship packet",
+    "team": "353",
+    "year": ""
   },
   {
     "id": "4476-sponsorship-packet",
-    "name": "4476 Sponsorship Packet",
+    "name": "Team 4476: Sponsorship Packet",
     "link": "https://drive.google.com/file/d/1ANcgovNquKlPPYbKU9yE3XouaYzNNF7o/view",
-    "notes": ""
+    "notes": "",
+    "type": "Sponsorship packet",
+    "team": "4476",
+    "year": ""
   },
   {
     "id": "77-donation-opportunities",
     "name": "77+ Donation Opportunities",
     "link": "https://nonprofitmegaphone.com/corporate-donation-opportunities/",
-    "notes": "A curated list of corporate donation and sponsorship programs for nonprofits -- check for overlap with grants already tracked here."
+    "notes": "A curated list of corporate donation and sponsorship programs for nonprofits -- check for overlap with grants already tracked here.",
+    "type": "Grant list",
+    "team": "",
+    "year": ""
   },
   {
     "id": "first-fundraising-guide",
     "name": "FIRST Fundraising Guide",
     "link": "https://www.firstinspires.org/sites/default/files/uploads/resource_library/frc/team-resources/frc-fundraising-guide.pdf?utm_content=314285423&utm_medium=social&utm_source=facebook&hss_channel=fbp-378744932190811",
-    "notes": ""
+    "notes": "",
+    "type": "Toolkit",
+    "team": "",
+    "year": ""
   },
   {
     "id": "first-fundraising-toolkit-2022",
     "name": "FIRST Fundraising Toolkit (2022)",
     "link": "https://www.firstinspires.org/resource-library/fundraising-toolkit",
-    "notes": ""
+    "notes": "",
+    "type": "Toolkit",
+    "team": "",
+    "year": "2022"
   },
   {
     "id": "makerbot-grant-guide",
     "name": "Makerbot Grant Guide",
     "link": "https://explore.ultimaker.com/rs/444-ZTM-866/images/2025_MakerBot_EDU_Grant_Guide.pdf?version=0",
-    "notes": "Includes grants for teachers"
+    "notes": "Includes grants for teachers",
+    "type": "Grant list",
+    "team": "",
+    "year": ""
   },
   {
     "id": "stemify-grant-pages",
     "name": "Stemify Grant Pages",
     "link": "https://stemfinity.com/pages/stem-grants",
-    "notes": "1000's of national and state grants listed"
+    "notes": "1000's of national and state grants listed",
+    "type": "Grant list",
+    "team": "",
+    "year": ""
   },
   {
     "id": "team-27-s-toolkit-for-success",
-    "name": "Team 27's Toolkit for Success",
+    "name": "Team 27: Toolkit for Success",
     "link": "https://drive.google.com/file/d/1V4zaVAjYfBUymqzRTItV5PmWlR3c9cxP/view",
-    "notes": ""
+    "notes": "",
+    "type": "Toolkit",
+    "team": "27",
+    "year": ""
   },
   {
     "id": "353-treasury-handbook",
-    "name": "353 Treasury Handbook",
+    "name": "Team 353: Treasury Handbook",
     "link": "https://docs.google.com/presentation/d/1A3m9NCX518nSBAvglSn-OlgHkciCtddB1fkx1tju1QY/edit?usp=sharing",
-    "notes": ""
+    "notes": "",
+    "type": "Treasury guide",
+    "team": "353",
+    "year": ""
   },
   {
     "id": "118-s-sponsorship-packet",
-    "name": "118's Sponsorship Packet",
+    "name": "Team 118: Sponsorship Packet",
     "link": "https://www.118robonauts.org/_files/ugd/209e0c_f3002f512abd4c91b634563c48023e68.pdf",
-    "notes": ""
+    "notes": "",
+    "type": "Sponsorship packet",
+    "team": "118",
+    "year": ""
   },
   {
     "id": "not-another-finance-presentation-champs-2026",
-    "name": "Not another finance Presentation Champs 2026",
+    "name": "Not Another Finance Presentation (Champs 2026)",
     "link": "https://docs.google.com/presentation/d/1OFHrIq5cXvlbN0-ugRctiLFFLm97Epdj/edit?usp=sharing&ouid=116717958017002889195&rtpof=true&sd=true",
-    "notes": ""
+    "notes": "",
+    "type": "Presentation",
+    "team": "",
+    "year": "2026"
   },
   {
     "id": "non-traditional-fundraising-for-first-robotics-teams",
     "name": "Non-Traditional Fundraising for FIRST Robotics Teams",
     "link": "https://docs.google.com/presentation/d/1aFaseSdHg8rVK-RcLCkQGXWs_zS6Mu44/edit?usp=sharing&ouid=116717958017002889195&rtpof=true&sd=true",
-    "notes": ""
+    "notes": "",
+    "type": "Presentation",
+    "team": "",
+    "year": ""
   },
   {
     "id": "yes-funding-for-stem-educator",
-    "name": "Yes Funding for STEM Educator",
+    "name": "Funding for STEM Educators",
     "link": "https://drive.google.com/file/d/11nDgav_r1ULT43r97FDvPS2uvnloVij8/view?usp=drive_link",
-    "notes": ""
+    "notes": "",
+    "type": "Grant list",
+    "team": "",
+    "year": ""
   },
   {
     "id": "grants-gov",
     "name": "Grants.gov",
     "link": "https://www.grants.gov/",
-    "notes": "Search tool for federal government grants -- not FRC-specific, but worth searching directly."
+    "notes": "Search tool for federal government grants -- not FRC-specific, but worth searching directly.",
+    "type": "Search tool",
+    "team": "",
+    "year": ""
   }
 ]
