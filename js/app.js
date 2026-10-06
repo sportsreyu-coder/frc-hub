@@ -4,6 +4,7 @@
   var state = {
     search: "",
     statusOpen: false,
+    savedOnly: false,
     boosts: new Set(),
     c3: null, // "have" | "school" | "neither" | null
     stateFilter: "", // "" | "__nationwide__" | a US state name
@@ -52,6 +53,10 @@
   ];
 
   var GrantStatus = window.GrantStatus;
+
+  var STAR_POINTS = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>';
+  var STAR_SVG_OUTLINE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + STAR_POINTS + '</svg>';
+  var STAR_SVG_FILLED = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + STAR_POINTS + '</svg>';
 
   // Sorts by actual close date (grants without a parseable one sort last).
   function closeTimestamp(g) {
@@ -161,6 +166,10 @@
     return hay.indexOf(state.search) !== -1;
   }
 
+  function savedMatches(g) {
+    return !state.savedOnly || (window.SavedGrants && window.SavedGrants.isSaved(g.id));
+  }
+
   // Only status, 501(c)(3) requirement, and geographic restriction can make
   // a grant genuinely unavailable to a team -- those are the only things
   // allowed to remove a grant from the list. Team-profile attributes
@@ -248,9 +257,24 @@
       : null;
 
     var verifiedText = GrantStatus.verifiedLabel(g.lastVerified);
+    var saved = window.SavedGrants && window.SavedGrants.isSaved(g.id);
+    var saveBtn = el("button", {
+      type: "button",
+      class: "gc-save-btn" + (saved ? " is-saved" : ""),
+      "aria-pressed": String(!!saved),
+      "aria-label": saved ? "Unsave " + g.name : "Save " + g.name,
+      title: saved ? "Saved" : "Save this grant",
+    });
+    saveBtn.innerHTML = saved ? STAR_SVG_FILLED : STAR_SVG_OUTLINE;
+    saveBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.SavedGrants.toggle(g.id);
+      render();
+    });
 
     return el("article", { class: "grant-card" + (boosted.length ? " is-boosted" : "") }, [
       badge,
+      saveBtn,
       el("div", { class: "gc-top" }, [
         el("h3", { class: "gc-name" }, [g.name]),
         el("span", { class: "pill " + p.cls }, [p.label]),
@@ -297,6 +321,7 @@
   function activeFilterCount() {
     var n = 0;
     if (state.statusOpen) n++;
+    if (state.savedOnly) n++;
     if (state.c3) n++;
     if (state.stateFilter) n++;
     n += state.boosts.size;
@@ -317,6 +342,7 @@
   function clearAllFilters() {
     state.search = "";
     state.statusOpen = false;
+    state.savedOnly = false;
     state.boosts.clear();
     state.c3 = null;
     state.stateFilter = "";
@@ -328,6 +354,7 @@
 
   function syncFilterButtons() {
     document.querySelectorAll('[data-filter="status"]').forEach(function (b) { b.classList.toggle("active", state.statusOpen); });
+    document.querySelectorAll('[data-filter="saved"]').forEach(function (b) { b.classList.toggle("active", state.savedOnly); });
     document.querySelectorAll('[data-filter="c3"]').forEach(function (b) {
       b.classList.toggle("active", state.c3 === b.getAttribute("data-value"));
     });
@@ -346,6 +373,9 @@
     }
     if (state.statusOpen) {
       chips.push({ label: "Currently open", remove: function () { state.statusOpen = false; } });
+    }
+    if (state.savedOnly) {
+      chips.push({ label: "★ Saved only", remove: function () { state.savedOnly = false; } });
     }
     if (state.c3) {
       chips.push({ label: C3_LABELS[state.c3] || state.c3, remove: function () { state.c3 = null; } });
@@ -382,7 +412,7 @@
   function render() {
     updateFiltersToggleLabel();
     renderActiveChips();
-    var searchMatched = grants.filter(textMatches);
+    var searchMatched = grants.filter(textMatches).filter(savedMatches);
     var shown = [];
     var excluded = [];
     searchMatched.forEach(function (g) {
@@ -478,6 +508,15 @@
       });
     });
 
+    document.querySelectorAll('[data-filter="saved"]').forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.savedOnly = !state.savedOnly;
+        state.limit = PAGE_SIZE;
+        btn.classList.toggle("active", state.savedOnly);
+        render();
+      });
+    });
+
     var stateSelect = document.getElementById("state-select");
     US_STATES.forEach(function (s) {
       stateSelect.appendChild(el("option", { value: s }, [s]));
@@ -543,6 +582,7 @@
       renderFeatured();
       setupFinder();
       render();
+      if (window.SavedGrants) window.SavedGrants.onChange(render);
     })
     .catch(function (err) {
       console.error(err);
