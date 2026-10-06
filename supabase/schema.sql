@@ -215,8 +215,34 @@ create table if not exists public.team_members (
   -- only; mentors already have full access regardless of this.
   captain_roles text[] not null default '{}'
     check (captain_roles <@ array['team_captain','technical_captain','nontechnical_captain','design_captain','mechanical_captain','electrical_captain','programming_captain','business_captain']::text[]),
+  -- Ownership/admin tier, independent of role -- a mentor does NOT get
+  -- this just by joining (see join_team() below); only the team's
+  -- creator starts with it, and an existing admin has to grant it to a
+  -- co-mentor explicitly (grant_admin()). Gates team-wide/irreversible
+  -- actions (join codes, deleting the team, starting a new season,
+  -- removing another mentor) that a newly-joined mentor shouldn't be
+  -- able to do on day one. Meaningless for students.
+  is_admin boolean not null default false,
   joined_at timestamptz not null default now()
 );
+
+-- Added after the initial release, once teams already had co-mentors
+-- with full admin rights just from joining -- see is_admin's comment
+-- above. Kept as an explicit alter so re-running this file against an
+-- already-provisioned database picks up the column without dropping
+-- data; existing mentor rows default to false and get reconciled by the
+-- backfill below (first mentor per team becomes its admin).
+alter table public.team_members add column if not exists is_admin boolean not null default false;
+
+update public.team_members tm
+  set is_admin = true
+  where tm.role = 'mentor'
+    and not exists (select 1 from public.team_members tm2 where tm2.team_id = tm.team_id and tm2.is_admin)
+    and tm.user_id = (
+      select user_id from public.team_members tm3
+      where tm3.team_id = tm.team_id and tm3.role = 'mentor'
+      order by tm3.joined_at asc limit 1
+    );
 
 create index if not exists team_members_team_idx on public.team_members (team_id);
 
@@ -281,9 +307,19 @@ language sql stable security definer set search_path = public as $$
   );
 $$;
 
+create or replace function public.is_admin_of(t uuid)
+returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.team_members
+    where user_id = auth.uid() and team_id = t and role = 'mentor' and is_admin
+  );
+$$;
+
 grant execute on function public.my_team_id() to authenticated;
 grant execute on function public.is_mentor_of(uuid) to authenticated;
 grant execute on function public.is_team_captain_of(uuid) to authenticated;
+grant execute on function public.is_admin_of(uuid) to authenticated;
 
 -- ---- RLS ----
 --
@@ -373,7 +409,12 @@ begin
   values (trim(p_team_number), nullif(trim(p_team_name), ''), nullif(p_district, ''), v_student_code, v_mentor_code)
   returning * into v_team;
 
-  insert into public.team_members (user_id, team_id, role) values (auth.uid(), v_team.id, p_role);
+  -- The creator is the one case that starts as admin outright -- there's
+  -- no one else yet to have granted it. Only applies if they created it
+  -- as a mentor; a student creator (bootstrapping a team before any
+  -- mentor has signed up) stays a plain student, and the first mentor to
+  -- join below becomes admin instead.
+  insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, p_role, p_role = 'mentor');
   insert into public.team_data (team_id, data) values (v_team.id, '{}'::jsonb);
 
   return v_team;
@@ -386,6 +427,7 @@ language plpgsql security definer set search_path = public as $$
 declare
   v_team public.teams;
   v_role text;
+  v_is_admin boolean := false;
 begin
   if exists (select 1 from public.team_members where user_id = auth.uid()) then
     raise exception 'You are already on a team.';
@@ -403,7 +445,17 @@ begin
     raise exception 'That join code was not found. Double-check it with your mentor.';
   end if;
 
-  insert into public.team_members (user_id, team_id, role) values (auth.uid(), v_team.id, v_role);
+  -- A mentor joining via the mentor code never arrives with admin rights
+  -- already -- an existing admin has to grant that explicitly afterward
+  -- (see grant_admin()) -- EXCEPT when the team has no admin yet (e.g. a
+  -- student bootstrapped the team, or every admin has since left); then
+  -- the first mentor through the door becomes it, so the team is never
+  -- left permanently unownable.
+  if v_role = 'mentor' then
+    v_is_admin := not exists (select 1 from public.team_members where team_id = v_team.id and role = 'mentor' and is_admin);
+  end if;
+
+  insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, v_role, v_is_admin);
 
   return v_team;
 end;
@@ -415,9 +467,11 @@ language plpgsql security definer set search_path = public as $$
 declare
   v_team_id uuid;
   v_role text;
+  v_is_admin boolean;
   v_other_mentors int;
+  v_other_admins int;
 begin
-  select team_id, role into v_team_id, v_role from public.team_members where user_id = auth.uid();
+  select team_id, role, is_admin into v_team_id, v_role, v_is_admin from public.team_members where user_id = auth.uid();
   if v_team_id is null then
     raise exception 'You are not on a team.';
   end if;
@@ -427,6 +481,13 @@ begin
       where team_id = v_team_id and role = 'mentor' and user_id <> auth.uid();
     if v_other_mentors = 0 then
       raise exception 'You are the only mentor on this team -- promote a co-mentor first, or delete the team instead.';
+    end if;
+    if v_is_admin then
+      select count(*) into v_other_admins from public.team_members
+        where team_id = v_team_id and role = 'mentor' and is_admin and user_id <> auth.uid();
+      if v_other_admins = 0 then
+        raise exception 'You are the only admin on this team -- grant admin to a co-mentor first, or delete the team instead.';
+      end if;
     end if;
   end if;
 
@@ -440,9 +501,9 @@ language plpgsql security definer set search_path = public as $$
 declare
   v_team_id uuid;
 begin
-  select team_id into v_team_id from public.team_members where user_id = auth.uid() and role = 'mentor';
+  select team_id into v_team_id from public.team_members where user_id = auth.uid() and role = 'mentor' and is_admin;
   if v_team_id is null then
-    raise exception 'Only a mentor can delete the team.';
+    raise exception 'Only a team admin can delete the team.';
   end if;
   delete from public.teams where id = v_team_id; -- cascades team_members/team_data/season_history
 end;
@@ -454,8 +515,8 @@ language plpgsql security definer set search_path = public as $$
 declare
   v_code text;
 begin
-  if not public.is_mentor_of(p_team_id) then
-    raise exception 'Only a mentor can regenerate a join code.';
+  if not public.is_admin_of(p_team_id) then
+    raise exception 'Only a team admin can regenerate a join code.';
   end if;
   if p_which not in ('student', 'mentor') then
     raise exception 'Unknown join code type.';
@@ -480,8 +541,8 @@ create or replace function public.update_team_info(p_team_id uuid, p_team_number
 returns void
 language plpgsql security definer set search_path = public as $$
 begin
-  if not public.is_mentor_of(p_team_id) then
-    raise exception 'Only a mentor can edit team info.';
+  if not public.is_admin_of(p_team_id) then
+    raise exception 'Only a team admin can edit team info.';
   end if;
   update public.teams
     set team_number = trim(p_team_number),
@@ -536,7 +597,14 @@ begin
   if v_team_id is null or v_target_team_id is distinct from v_team_id then
     raise exception 'That person is not on your team.';
   end if;
-  if not (public.is_mentor_of(v_team_id) or (public.is_team_captain_of(v_team_id) and v_target_role = 'student')) then
+  -- Removing a mentor is an admin-only action (otherwise any co-mentor
+  -- could remove the team's actual admin and strand it); removing a
+  -- student follows the regular mentor/team-captain roster permission.
+  if v_target_role = 'mentor' then
+    if not public.is_admin_of(v_team_id) then
+      raise exception 'Only a team admin can remove a mentor.';
+    end if;
+  elsif not (public.is_mentor_of(v_team_id) or public.is_team_captain_of(v_team_id)) then
     raise exception 'You do not have permission to remove that person.';
   end if;
 
@@ -564,6 +632,35 @@ begin
 end;
 $$;
 
+-- How a co-mentor actually gets admin/ownership rights -- join_team()
+-- never grants it to anyone but the first mentor on a team (see its
+-- comment), so every mentor after that has to be handed it explicitly
+-- by someone who already has it.
+create or replace function public.grant_admin(p_user_id uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  v_team_id uuid;
+  v_target_team_id uuid;
+  v_target_role text;
+begin
+  select team_id into v_team_id from public.team_members where user_id = auth.uid();
+  if v_team_id is null or not public.is_admin_of(v_team_id) then
+    raise exception 'Only a team admin can grant admin.';
+  end if;
+
+  select team_id, role into v_target_team_id, v_target_role from public.team_members where user_id = p_user_id;
+  if v_target_team_id is distinct from v_team_id then
+    raise exception 'That person is not on your team.';
+  end if;
+  if v_target_role <> 'mentor' then
+    raise exception 'Only a mentor can be made an admin.';
+  end if;
+
+  update public.team_members set is_admin = true where user_id = p_user_id;
+end;
+$$;
+
 -- Archives the team's current shared blob into season_history, then
 -- clears just the parts of it that are meant to reset each year
 -- (completed grants, checklist/calendar progress, and who's assigned to
@@ -577,8 +674,8 @@ declare
   v_data jsonb;
   v_year int;
 begin
-  if not public.is_mentor_of(p_team_id) then
-    raise exception 'Only a mentor can start a new season.';
+  if not public.is_admin_of(p_team_id) then
+    raise exception 'Only a team admin can start a new season.';
   end if;
 
   select data into v_data from public.team_data where team_id = p_team_id;
@@ -605,4 +702,5 @@ grant execute on function public.update_team_info(uuid, text, text, text) to aut
 grant execute on function public.set_member_roles(uuid, text, text[]) to authenticated;
 grant execute on function public.remove_member(uuid) to authenticated;
 grant execute on function public.promote_to_mentor(uuid) to authenticated;
+grant execute on function public.grant_admin(uuid) to authenticated;
 grant execute on function public.start_new_season(uuid) to authenticated;

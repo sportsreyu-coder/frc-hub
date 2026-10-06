@@ -45,12 +45,12 @@
     }
     return sb
       .from("team_members")
-      .select("role, subteam, captain_roles, teams(*)")
+      .select("role, subteam, captain_roles, is_admin, teams(*)")
       .eq("user_id", state.user.id)
       .maybeSingle()
       .then(function (res) {
         if (res.data) {
-          state.membership = { role: res.data.role, subteam: res.data.subteam, captain_roles: res.data.captain_roles || [] };
+          state.membership = { role: res.data.role, subteam: res.data.subteam, captain_roles: res.data.captain_roles || [], is_admin: !!res.data.is_admin };
           state.team = res.data.teams;
         } else {
           state.membership = null;
@@ -76,6 +76,7 @@
   }
 
   function isMentor() { return !!state.membership && state.membership.role === "mentor"; }
+  function isAdmin() { return isMentor() && !!state.membership.is_admin; }
   function captainRoles() { return state.membership ? state.membership.captain_roles || [] : []; }
   function isTeamCaptain() { return isMentor() || captainRoles().indexOf("team_captain") !== -1; }
 
@@ -118,6 +119,7 @@
     onChange: function (fn) { listeners.push(fn); },
 
     isMentor: isMentor,
+    isAdmin: isAdmin,
     isTeamCaptain: isTeamCaptain,
     captainScope: captainScope,
     canAssign: canAssign,
@@ -153,6 +155,9 @@
     promoteToMentor: function (userId) {
       return rpc("promote_to_mentor", { p_user_id: userId });
     },
+    grantAdmin: function (userId) {
+      return rpc("grant_admin", { p_user_id: userId });
+    },
     startNewSeason: function () {
       return rpc("start_new_season", { p_team_id: state.team.id });
     },
@@ -166,7 +171,7 @@
       if (!state.team) return Promise.resolve([]);
       return sb
         .from("team_members")
-        .select("user_id, role, subteam, captain_roles, joined_at")
+        .select("user_id, role, subteam, captain_roles, is_admin, joined_at")
         .eq("team_id", state.team.id)
         .then(function (res) {
           if (res.error) throw new Error(res.error.message);

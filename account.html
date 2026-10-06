@@ -71,18 +71,30 @@
         <p class="small" id="signed-in-email"></p>
       </div>
 
+      <div class="account-card" id="role-prompt-card" hidden>
+        <h2>Are you a mentor or a student?</h2>
+        <p class="small">This decides what you can do once you create or join a team. You can change it any time before you're on a team.</p>
+        <div class="role-choice-row">
+          <button type="button" class="role-choice-btn" id="role-choice-mentor" data-role="mentor">
+            <strong>Mentor</strong>
+            <span>Adults coaching the team. The first mentor on a team is its admin.</span>
+          </button>
+          <button type="button" class="role-choice-btn" id="role-choice-student" data-role="student">
+            <strong>Student</strong>
+            <span>Team members building the robot.</span>
+          </button>
+        </div>
+      </div>
+
       <div id="no-team-cards" hidden>
         <div class="account-card">
           <h2>Create a team</h2>
-          <p class="small">Mentors get admin permissions students don't have. Co-mentors and students can join later with the separate join codes below.</p>
+          <p class="small">The first mentor on a team is its admin; co-mentors who join later need to be granted admin rights by an existing admin. Co-mentors and students can join later with the separate join codes below.</p>
           <div class="error-msg" id="create-team-error"></div>
           <form id="create-team-form">
-            <div class="field">
-              <label for="create-team-role">Your role</label>
-              <select id="create-team-role">
-                <option value="mentor">Mentor</option>
-                <option value="student">Student</option>
-              </select>
+            <div class="role-chosen-row">
+              <span>Creating as: <strong id="create-team-role-label">Mentor</strong></span>
+              <button type="button" id="create-team-role-change">Change</button>
             </div>
             <div class="field">
               <label for="create-team-number">Team number</label>

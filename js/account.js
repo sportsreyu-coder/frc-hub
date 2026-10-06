@@ -110,6 +110,44 @@
     }
   }
 
+  // ---- Mentor/student prompt ----
+  //
+  // Gates "no-team-cards" (create/join) the first time someone signs in
+  // with no team yet -- the actual role is only binding once they create
+  // or join a team (team_members.role), this is just so "Create a team"
+  // doesn't make them hunt for a role dropdown buried in the form.
+  // Stored per-browser/per-user since it's purely a UI convenience, not
+  // something any RPC reads.
+  var chosenRole = null;
+
+  function roleStorageKey() { return "frcgrants_role_" + (currentUser ? currentUser.id : "anon"); }
+  function loadChosenRole() {
+    try { chosenRole = localStorage.getItem(roleStorageKey()); } catch (e) { chosenRole = null; }
+  }
+  function setChosenRole(role) {
+    chosenRole = role;
+    try { localStorage.setItem(roleStorageKey(), role); } catch (e) { /* ignore */ }
+    renderOnboarding();
+  }
+
+  document.getElementById("role-choice-mentor").addEventListener("click", function () { setChosenRole("mentor"); });
+  document.getElementById("role-choice-student").addEventListener("click", function () { setChosenRole("student"); });
+  document.getElementById("create-team-role-change").addEventListener("click", function () {
+    chosenRole = null;
+    try { localStorage.removeItem(roleStorageKey()); } catch (e) { /* ignore */ }
+    renderOnboarding();
+  });
+
+  function renderOnboarding() {
+    loadChosenRole();
+    var showPrompt = !chosenRole;
+    document.getElementById("role-prompt-card").hidden = !showPrompt;
+    document.getElementById("no-team-cards").hidden = showPrompt;
+    if (!showPrompt) {
+      document.getElementById("create-team-role-label").textContent = chosenRole === "student" ? "Student" : "Mentor";
+    }
+  }
+
   function showAuthed() {
     document.getElementById("auth-section").hidden = true;
     document.getElementById("dashboard-section").hidden = false;
@@ -208,13 +246,15 @@
       var number = document.getElementById("create-team-number").value.trim();
       var name = document.getElementById("create-team-name").value.trim();
       var district = createTeamDistrict.value;
-      var role = document.getElementById("create-team-role").value;
+      var role = chosenRole || "mentor";
       Team.createTeam(number, name, district, role).then(function (team) {
         createTeamForm.reset();
         renderTeamSection();
-        // Only mentors can see join codes afterward (team-codes-section is
-        // mentor-only), so a student creator needs both codes now -- it's
-        // their only chance to get the mentor code to an actual mentor.
+        // Only an admin can see join codes afterward (team-codes-section is
+        // admin-only), and a student creator never becomes admin (the first
+        // mentor to join does -- see join_team() in schema.sql), so this is
+        // a student creator's only chance to get both codes out: the mentor
+        // code to an actual mentor, and the student code to teammates.
         if (role === "student" && team) {
           showTeamInfo(
             "Team created! Save these now -- as a student you won't see them again here. " +
@@ -255,8 +295,8 @@
 
     function renderCodes() {
       var section = document.getElementById("team-codes-section");
-      section.hidden = !Team.isMentor();
-      if (!Team.isMentor()) return;
+      section.hidden = !Team.isAdmin();
+      if (!Team.isAdmin()) return;
       var team = Team.state.team;
       var host = document.getElementById("team-codes");
       host.innerHTML = "";
@@ -297,9 +337,9 @@
         || (today.getFullYear() === team.current_season_year && today.getMonth() >= 5); // past ~June 1
       if (!due) { banner.hidden = true; return; }
       banner.hidden = false;
-      banner.textContent = Team.isMentor()
+      banner.textContent = Team.isAdmin()
         ? "Looks like this season has wrapped up — start a new one to archive completed grants and progress for next year (below)."
-        : "Looks like this season has wrapped up — ask a mentor to start the new season when they're ready.";
+        : "Looks like this season has wrapped up — ask a team admin to start the new season when they're ready.";
     }
 
     function captainCheckboxes(selected, disabled) {
@@ -345,15 +385,19 @@
             left.innerHTML =
               '<span class="roster-row-name">' + name + (isSelf ? " (you)" : "") + "</span> " +
               '<span class="role-badge' + (r.role === "mentor" ? " role-mentor" : "") + '">' + (r.role === "mentor" ? "Mentor" : "Student") + "</span>" +
+              (r.role === "mentor" && r.is_admin ? ' <span class="captain-badge">Admin</span>' : "") +
               (r.subteam && r.subteam !== "cross-team" ? ' <span class="role-badge">' + (SUBTEAM_LABELS[r.subteam] || r.subteam) + "</span>" : "") +
               (r.captain_roles || []).map(function (c) { return ' <span class="captain-badge">' + (CAPTAIN_LABELS[c] || c) + "</span>"; }).join("");
             top.appendChild(left);
             card.appendChild(top);
 
-            // A team_captain can edit student rows but never a mentor's;
-            // a mentor can edit anyone. Nobody edits their own row here
-            // (use "Leave team" / the mentor-promote button for that).
-            var rowEditable = canEdit && !isSelf && (Team.isMentor() || r.role === "student");
+            // A team_captain can edit student rows but never a mentor's.
+            // Editing a mentor's row (promoting/removing/granting admin)
+            // takes being an admin yourself, not just any mentor -- a
+            // freshly-joined co-mentor can't touch other mentors. Nobody
+            // edits their own row here (use "Leave team" for that).
+            var targetIsMentor = r.role === "mentor";
+            var rowEditable = canEdit && !isSelf && (targetIsMentor ? Team.isAdmin() : true);
             if (rowEditable) {
               var editRow = document.createElement("div");
               editRow.className = "roster-row-edit";
@@ -392,10 +436,21 @@
                 promoteBtn.className = "submit-btn-sm submit-btn-ghost";
                 promoteBtn.textContent = "Promote to mentor";
                 promoteBtn.addEventListener("click", function () {
-                  if (!confirm("Promote " + name + " to mentor? This gives them full admin permissions.")) return;
+                  if (!confirm("Promote " + name + " to mentor? They won't get admin rights -- grant those separately once they've joined.")) return;
                   Team.promoteToMentor(r.user_id).then(function () { renderRoster(); }).catch(function (err) { showTeamError(err.message); });
                 });
                 actions.appendChild(promoteBtn);
+              }
+              if (Team.isAdmin() && targetIsMentor && !r.is_admin) {
+                var grantAdminBtn = document.createElement("button");
+                grantAdminBtn.type = "button";
+                grantAdminBtn.className = "submit-btn-sm submit-btn-ghost";
+                grantAdminBtn.textContent = "Make admin";
+                grantAdminBtn.addEventListener("click", function () {
+                  if (!confirm("Give " + name + " admin rights? They'll be able to manage join codes, remove other mentors, and delete the team.")) return;
+                  Team.grantAdmin(r.user_id).then(function () { renderRoster(); }).catch(function (err) { showTeamError(err.message); });
+                });
+                actions.appendChild(grantAdminBtn);
               }
               var removeBtn = document.createElement("button");
               removeBtn.type = "button";
@@ -418,10 +473,14 @@
 
     function renderTeamSection() {
       var team = Team.state.team;
-      document.getElementById("no-team-cards").hidden = !!team;
       document.getElementById("has-team-card").hidden = !team;
       document.getElementById("team-profile-card").hidden = !!team;
-      if (!team) return;
+      if (!team) {
+        renderOnboarding();
+        return;
+      }
+      document.getElementById("role-prompt-card").hidden = true;
+      document.getElementById("no-team-cards").hidden = true;
 
       autoSyncProfileFromTeam();
 
@@ -429,13 +488,14 @@
       header.innerHTML =
         '<div class="team-header-row"><span class="team-header-name">' +
         (team.team_name ? team.team_name + " — Team " + team.team_number : "Team " + team.team_number) +
-        '</span><span class="role-badge' + (Team.isMentor() ? " role-mentor" : "") + '">' + (Team.isMentor() ? "Mentor" : "Student") + "</span></div>" +
+        '</span><span class="role-badge' + (Team.isMentor() ? " role-mentor" : "") + '">' + (Team.isMentor() ? "Mentor" : "Student") +
+        (Team.isAdmin() ? " · Admin" : "") + "</span></div>" +
         (team.district ? '<div class="team-header-sub">' + team.district + "</div>" : "");
 
       renderResetBanner();
       renderCodes();
       renderRoster();
-      document.getElementById("team-admin-actions").hidden = !Team.isMentor();
+      document.getElementById("team-admin-actions").hidden = !Team.isAdmin();
     }
 
     Team.onChange(renderTeamSection);
