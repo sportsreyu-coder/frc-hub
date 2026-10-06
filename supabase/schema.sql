@@ -704,3 +704,75 @@ grant execute on function public.remove_member(uuid) to authenticated;
 grant execute on function public.promote_to_mentor(uuid) to authenticated;
 grant execute on function public.grant_admin(uuid) to authenticated;
 grant execute on function public.start_new_season(uuid) to authenticated;
+
+-- ---- Forum safety (E4) ----
+--
+-- site_admins is deliberately not reachable through the API at all --
+-- no select/insert/update policy or grant, for anyone, including
+-- authenticated. The site owner manages it directly in the Supabase
+-- table editor (or SQL editor) by adding their own email as a row.
+-- is_site_admin() below is security definer, so it can still read this
+-- table from inside a policy despite that -- the standard pattern this
+-- file already uses for my_team_id()/is_admin_of() above.
+create table if not exists public.site_admins (
+  email text primary key
+);
+alter table public.site_admins enable row level security;
+
+create or replace function public.is_site_admin()
+returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.site_admins where email = auth.jwt() ->> 'email');
+$$;
+grant execute on function public.is_site_admin() to authenticated;
+
+-- A report always points at exactly one post or reply (never both) --
+-- enforced below rather than needing two nullable FKs to be reasoned
+-- about separately everywhere a report is read.
+create table if not exists public.forum_reports (
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid references public.forum_posts (id) on delete cascade,
+  reply_id uuid references public.forum_replies (id) on delete cascade,
+  reporter_id uuid not null references public.profiles (id) on delete cascade,
+  reason text not null,
+  created_at timestamptz not null default now(),
+  resolved boolean not null default false,
+  constraint forum_reports_one_target check (
+    (post_id is not null and reply_id is null) or (post_id is null and reply_id is not null)
+  )
+);
+
+alter table public.forum_reports enable row level security;
+
+drop policy if exists "Users can file their own reports" on public.forum_reports;
+create policy "Users can file their own reports"
+  on public.forum_reports for insert
+  with check (auth.uid() = reporter_id);
+
+drop policy if exists "Site admins can view reports" on public.forum_reports;
+create policy "Site admins can view reports"
+  on public.forum_reports for select
+  using (public.is_site_admin());
+
+drop policy if exists "Site admins can resolve reports" on public.forum_reports;
+create policy "Site admins can resolve reports"
+  on public.forum_reports for update
+  using (public.is_site_admin());
+
+grant select, insert, update on public.forum_reports to authenticated;
+
+create index if not exists forum_reports_created_idx on public.forum_reports (created_at desc) where not resolved;
+
+-- Lets the moderation queue's "Delete" action actually remove a
+-- reported post/reply, not just mark the report resolved. Additive to
+-- the author-only delete policies already on these tables above (a
+-- row is deletable by its author OR a site admin).
+drop policy if exists "Site admins can delete any forum post" on public.forum_posts;
+create policy "Site admins can delete any forum post"
+  on public.forum_posts for delete
+  using (public.is_site_admin());
+
+drop policy if exists "Site admins can delete any forum reply" on public.forum_replies;
+create policy "Site admins can delete any forum reply"
+  on public.forum_replies for delete
+  using (public.is_site_admin());
