@@ -404,9 +404,57 @@
         state.limit = PAGE_SIZE;
         syncFilterButtons();
         render();
+        syncUrl();
       });
       row.appendChild(btn);
     });
+  }
+
+  // F5: mirror filter/search/sort state into the URL (replaceState, not
+  // pushState -- these change on every keystroke/click, so pushing would
+  // flood Back with useless steps) so a copied or reloaded URL restores
+  // the same view. Read back once on load, below.
+  function syncUrl() {
+    var params = new URLSearchParams();
+    if (state.search) params.set("q", state.search);
+    if (state.statusOpen) params.set("status", "open");
+    if (state.savedOnly) params.set("saved", "1");
+    if (state.c3) params.set("c3", state.c3);
+    if (state.stateFilter) params.set("state", state.stateFilter);
+    if (state.boosts.size) params.set("boost", Array.from(state.boosts).join(","));
+    if (state.sort !== "deadline") params.set("sort", state.sort);
+    var qs = params.toString();
+    history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+  }
+
+  function applyUrlToState() {
+    var params = new URLSearchParams(location.search);
+    if (params.has("q")) { state.search = params.get("q").toLowerCase(); document.getElementById("search-input").value = params.get("q"); }
+    if (params.get("status") === "open") {
+      state.statusOpen = true;
+      document.querySelectorAll('[data-filter="status"]').forEach(function (b) { b.classList.add("active"); });
+    }
+    if (params.get("saved") === "1") {
+      state.savedOnly = true;
+      document.querySelectorAll('[data-filter="saved"]').forEach(function (b) { b.classList.add("active"); });
+    }
+    if (params.has("c3")) {
+      state.c3 = params.get("c3");
+      document.querySelectorAll('[data-filter="c3"]').forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-value") === state.c3); });
+    }
+    if (params.has("state")) {
+      state.stateFilter = params.get("state");
+      document.getElementById("state-select").value = state.stateFilter;
+    }
+    if (params.has("boost")) {
+      params.get("boost").split(",").forEach(function (b) { if (b) state.boosts.add(b); });
+      document.querySelectorAll('[data-filter="boost"]').forEach(function (b) { b.classList.toggle("active", state.boosts.has(b.getAttribute("data-value"))); });
+    }
+    if (params.has("sort")) {
+      state.sort = params.get("sort");
+      document.getElementById("sort-select").value = state.sort;
+    }
+    if (activeFilterCount()) document.getElementById("filter-panel").hidden = false;
   }
 
   function render() {
@@ -432,6 +480,7 @@
         clearAllFilters();
         syncFilterButtons();
         render();
+        syncUrl();
       });
       grid.appendChild(el("div", { class: "empty-state" }, [
         el("div", { class: "es-title" }, ["No grants match these filters"]),
@@ -505,6 +554,7 @@
         state.limit = PAGE_SIZE;
         btn.classList.toggle("active", state.statusOpen);
         render();
+        syncUrl();
       });
     });
 
@@ -514,6 +564,7 @@
         state.limit = PAGE_SIZE;
         btn.classList.toggle("active", state.savedOnly);
         render();
+        syncUrl();
       });
     });
 
@@ -525,6 +576,7 @@
       state.stateFilter = e.target.value;
       state.limit = PAGE_SIZE;
       render();
+      syncUrl();
     });
 
     document.querySelectorAll('[data-filter="boost"]').forEach(function (btn) {
@@ -538,6 +590,7 @@
           btn.classList.add("active");
         }
         render();
+        syncUrl();
       });
     });
 
@@ -550,6 +603,7 @@
         if (!already) btn.classList.add("active");
         state.limit = PAGE_SIZE;
         render();
+        syncUrl();
       });
     });
 
@@ -557,11 +611,13 @@
       state.search = e.target.value.trim().toLowerCase();
       state.limit = PAGE_SIZE;
       render();
+      syncUrl();
     });
 
     document.getElementById("sort-select").addEventListener("change", function (e) {
       state.sort = e.target.value;
       render();
+      syncUrl();
     });
 
     document.getElementById("show-more-btn").addEventListener("click", function () {
@@ -572,6 +628,7 @@
     document.getElementById("reset-filters").addEventListener("click", function () {
       clearAllFilters();
       render();
+      syncUrl();
     });
   }
 
@@ -581,6 +638,7 @@
       renderStats();
       renderFeatured();
       setupFinder();
+      applyUrlToState();
       render();
       if (window.SavedGrants) window.SavedGrants.onChange(render);
     })

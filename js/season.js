@@ -2042,16 +2042,30 @@
     btn.hidden = !!(Team && Team.state.team && !Team.isMentor());
   }
 
+  // F5: keep the URL in sync with viewMode/checklistSub, via pushState
+  // (not replaceState) so Back actually steps between tabs -- these are
+  // discrete, infrequent switches, not something like a search box where
+  // every keystroke would flood history.
+  function syncUrl() {
+    var params = new URLSearchParams();
+    if (viewMode === "calendar") params.set("view", "calendar");
+    else if (checklistSub === "grants") params.set("sub", "grants");
+    var qs = params.toString();
+    history.pushState({ viewMode: viewMode, checklistSub: checklistSub }, "", location.pathname + (qs ? "?" + qs : ""));
+  }
+
   document.getElementById("view-tab-checklist").addEventListener("click", function () {
     viewMode = "checklist";
     document.getElementById("view-tab-checklist").classList.add("active");
     document.getElementById("view-tab-calendar").classList.remove("active");
+    syncUrl();
     render();
   });
   document.getElementById("view-tab-calendar").addEventListener("click", function () {
     viewMode = "calendar";
     document.getElementById("view-tab-calendar").classList.add("active");
     document.getElementById("view-tab-checklist").classList.remove("active");
+    syncUrl();
     render();
   });
 
@@ -2060,6 +2074,16 @@
     document.getElementById("view-tab-calendar").classList.add("active");
     document.getElementById("view-tab-checklist").classList.remove("active");
     calendarMonth = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+    syncUrl();
+    render();
+  });
+
+  window.addEventListener("popstate", function () {
+    var params = new URLSearchParams(location.search);
+    viewMode = params.get("view") === "calendar" ? "calendar" : "checklist";
+    checklistSub = params.get("sub") === "grants" ? "grants" : "technical";
+    document.getElementById("view-tab-checklist").classList.toggle("active", viewMode === "checklist");
+    document.getElementById("view-tab-calendar").classList.toggle("active", viewMode === "calendar");
     render();
   });
 
@@ -2217,10 +2241,12 @@
 
   document.getElementById("subnav-technical").addEventListener("click", function () {
     checklistSub = "technical";
+    syncUrl();
     render();
   });
   document.getElementById("subnav-grants").addEventListener("click", function () {
     checklistSub = "grants";
+    syncUrl();
     render();
   });
   document.getElementById("mine-filter-toggle").addEventListener("click", function () {
