@@ -905,3 +905,42 @@ begin
 end;
 $$;
 grant execute on function public.set_fundraising_goal(uuid, numeric) to authenticated;
+
+-- ---- Grant pipeline (G3) ----
+--
+-- grant_id is a text id from data/grants.json, not a foreign key --
+-- that file is static site content, not a database table, so there's
+-- nothing in Postgres to reference. One row per (team, grant) a team
+-- has ever saved; open to every team member to manage (not mentor-
+-- only), same as task assignment elsewhere in the app -- tracking an
+-- application is collaborative, not an approval workflow like
+-- budget_entries above.
+create table if not exists public.saved_grants (
+  id uuid primary key default gen_random_uuid(),
+  team_id uuid not null references public.teams (id) on delete cascade,
+  grant_id text not null,
+  stage text not null default 'interested' check (stage in ('interested', 'drafting', 'submitted', 'awarded', 'declined')),
+  owner_user_id uuid references auth.users (id) on delete set null,
+  notes text,
+  submitted_at date,
+  outcome text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (team_id, grant_id)
+);
+
+alter table public.saved_grants enable row level security;
+
+drop policy if exists "Team members can view their saved grants" on public.saved_grants;
+create policy "Team members can view their saved grants"
+  on public.saved_grants for select
+  using (team_id = public.my_team_id());
+
+drop policy if exists "Team members can manage their saved grants" on public.saved_grants;
+create policy "Team members can manage their saved grants"
+  on public.saved_grants for all
+  using (team_id = public.my_team_id())
+  with check (team_id = public.my_team_id());
+
+grant select, insert, update, delete on public.saved_grants to authenticated;
+create index if not exists saved_grants_team_idx on public.saved_grants (team_id);

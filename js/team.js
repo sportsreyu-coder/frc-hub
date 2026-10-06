@@ -266,6 +266,34 @@
         if (res.error) throw new Error(res.error.message);
       });
     },
+
+    // ---- G3: grant pipeline ----
+    loadSavedGrants: function () {
+      if (!state.team) return Promise.resolve([]);
+      return sb.from("saved_grants").select("*").eq("team_id", state.team.id).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+        return res.data || [];
+      });
+    },
+    saveGrantToPipeline: function (grantId) {
+      if (!state.team) return Promise.resolve();
+      return sb.from("saved_grants").upsert({ team_id: state.team.id, grant_id: grantId }, { onConflict: "team_id,grant_id" }).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
+    unsaveGrantFromPipeline: function (grantId) {
+      if (!state.team) return Promise.resolve();
+      return sb.from("saved_grants").delete().eq("team_id", state.team.id).eq("grant_id", grantId).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
+    updatePipelineEntry: function (grantId, patch) {
+      if (!state.team) return Promise.resolve();
+      var row = Object.assign({ updated_at: new Date().toISOString() }, patch);
+      return sb.from("saved_grants").update(row).eq("team_id", state.team.id).eq("grant_id", grantId).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
   };
 
   init();

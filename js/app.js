@@ -34,6 +34,7 @@
   var PAGE_SIZE = 24;
   var grants = [];
   var completedGrants = {}; // populated from the signed-in user's team, if any (see loadCompletedGrants below)
+  var rosterNames = {}; // user_id -> display name, for pipeline owner display (G3)
 
   var TAG_LABELS = {
     "corporate-employee": "Employee/mentor connection helps",
@@ -244,6 +245,48 @@
     return bits.join(" · ");
   }
 
+  var PIPELINE_STAGES = ["interested", "drafting", "submitted", "awarded", "declined"];
+  var STAGE_LABELS = { interested: "Interested", drafting: "Drafting", submitted: "Submitted", awarded: "Awarded", declined: "Declined" };
+
+  // G3: stage/owner/notes controls for a saved grant, shown only once a
+  // team is actually tracking it (saved_grants row exists) -- a solo/
+  // no-team save is just a bookmark, nothing to manage here.
+  function pipelineControl(g) {
+    if (!window.FRCTeam || !window.FRCTeam.state.team) return null;
+    var entry = window.SavedGrants.getPipelineEntry(g.id);
+    if (!entry) return null;
+
+    var stageSelect = el("select", { "aria-label": "Pipeline stage for " + g.name, class: "pipeline-stage-select" },
+      PIPELINE_STAGES.map(function (s) { return el("option", { value: s }, [STAGE_LABELS[s]]); })
+    );
+    stageSelect.value = entry.stage;
+    stageSelect.addEventListener("click", function (e) { e.preventDefault(); });
+    stageSelect.addEventListener("change", function (e) {
+      e.stopPropagation();
+      var patch = { stage: stageSelect.value };
+      if (stageSelect.value === "submitted" && !entry.submitted_at) patch.submitted_at = new Date().toISOString().slice(0, 10);
+      window.FRCTeam.updatePipelineEntry(g.id, patch).then(function () {
+        window.SavedGrants.refresh().then(render);
+      });
+    });
+
+    var ownerUid = window.FRCTeam.state.user && window.FRCTeam.state.user.id;
+    var ownerName = entry.owner_user_id ? (rosterNames[entry.owner_user_id] || "Teammate") : null;
+    var ownerBtn = el("button", { type: "button", class: "ms-expand-toggle" }, [
+      entry.owner_user_id === ownerUid ? "Assigned to you" : (ownerName ? "Assigned to " + ownerName : "Assign to me"),
+    ]);
+    ownerBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var next = entry.owner_user_id === ownerUid ? null : ownerUid;
+      window.FRCTeam.updatePipelineEntry(g.id, { owner_user_id: next }).then(function () {
+        window.SavedGrants.refresh().then(render);
+      });
+    });
+
+    return el("div", { class: "gc-pipeline" }, [stageSelect, ownerBtn]);
+  }
+
   function grantCard(g) {
     var p = pillClass(g);
     var visibleTags = TAG_ORDER.filter(function (t) { return g.tags.indexOf(t) !== -1; });
@@ -291,6 +334,7 @@
         el("a", { class: "gc-link", href: g.link || "#", target: "_blank", rel: "noopener" }, [g.link ? "View & apply →" : "No link yet"]),
       ]),
       el("div", { class: "gc-verified" + (verifiedText ? "" : " gc-needs-verification") }, [verifiedText || "Needs verification"]),
+      pipelineControl(g),
     ]);
   }
 
@@ -660,6 +704,11 @@
     if (!window.FRCTeam.state.team) { completedGrants = {}; render(); return; }
     window.FRCTeam.loadTeamData().then(function (data) {
       completedGrants = (data && data.completedGrants) || {};
+      render();
+    });
+    window.FRCTeam.loadRoster().then(function (rows) {
+      rosterNames = {};
+      rows.forEach(function (r) { rosterNames[r.user_id] = (r.profile && r.profile.display_name) || "Teammate"; });
       render();
     });
   }

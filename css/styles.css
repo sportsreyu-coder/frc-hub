@@ -1035,6 +1035,25 @@ main.site-main {
 .gc-verified { margin-top: 10px; font-size: 11px; color: var(--text-faint); }
 .gc-verified.gc-needs-verification { color: var(--amber); }
 
+.gc-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-strong);
+}
+.pipeline-stage-select {
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  color: var(--text);
+}
+
 .empty-state {
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius);

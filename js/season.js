@@ -1211,6 +1211,11 @@
     container.appendChild(customSection);
   }
 
+  // G3: labels for the pipeline-stage badge on a saved grant's deadline
+  // row -- the actual stage picker lives on grants.html; this is just a
+  // read-only reflection of it on the season calendar.
+  var PIPELINE_STAGE_LABELS = { interested: "Interested", drafting: "Drafting", submitted: "Submitted", awarded: "Awarded", declined: "Declined" };
+
   function renderGrantChecklist() {
     var container = document.getElementById("grant-checklist-view");
     container.hidden = !(viewMode === "checklist" && checklistSub === "grants");
@@ -1250,6 +1255,11 @@
         done ? ("Completed" + (byName ? " by " + byName : "")) : "Mark completed",
       ]);
 
+      var pipelineEntry = window.SavedGrants && window.SavedGrants.getPipelineEntry(g.id);
+      var pipelineBadge = pipelineEntry
+        ? el("span", { class: "pill pill-unknown" }, ["Pipeline: " + (PIPELINE_STAGE_LABELS[pipelineEntry.stage] || pipelineEntry.stage)])
+        : null;
+
       table.appendChild(el("div", { class: "dates-row" }, [
         el("span", { class: "dcode" }, [g.closeDateText]),
         el("span", {}, [
@@ -1258,6 +1268,7 @@
         ]),
         el("div", { class: "grant-complete-row" }, [
           el("span", { class: "pill " + p.cls }, [p.label]),
+          pipelineBadge,
           checkLabel,
         ]),
       ]));
@@ -2274,5 +2285,6 @@
   render();
   initCloudSync();
   initTeamSync();
+  if (window.SavedGrants) window.SavedGrants.onChange(render);
   loadGrantDeadlines();
 })();
