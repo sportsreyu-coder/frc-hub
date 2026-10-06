@@ -294,6 +294,32 @@
         if (res.error) throw new Error(res.error.message);
       });
     },
+
+    // ---- G4: deadline reminders + calendar feed ----
+    //
+    // Full replace rather than an incremental diff: js/season.js already
+    // recomputes the whole set (assigned tasks + tracked grants) on every
+    // call, so a completed/unassigned item just stops being included and
+    // falls out here instead of needing an explicit delete at the caller.
+    syncDeadlines: function (rows) {
+      if (!state.team) return Promise.resolve();
+      var teamId = state.team.id;
+      return sb.from("team_deadlines").delete().eq("team_id", teamId).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+        if (!rows.length) return;
+        var payload = rows.map(function (r) { return Object.assign({ team_id: teamId }, r); });
+        return sb.from("team_deadlines").insert(payload).then(function (res2) {
+          if (res2.error) throw new Error(res2.error.message);
+        });
+      });
+    },
+    // null until the owner deploys supabase/functions/calendar-feed (see
+    // its README) -- calendar_feed_token only exists once that migration
+    // has run, so this degrades to "no link yet" rather than a broken one.
+    calendarFeedUrl: function () {
+      if (!state.team || !state.team.calendar_feed_token || !window.SUPABASE_URL) return null;
+      return window.SUPABASE_URL + "/functions/v1/calendar-feed?team=" + state.team.id + "&token=" + state.team.calendar_feed_token;
+    },
   };
 
   init();

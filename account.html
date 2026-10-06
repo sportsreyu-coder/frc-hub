@@ -143,6 +143,16 @@
           <h3 class="team-subhead">Join codes</h3>
           <div id="team-codes"></div>
         </div>
+        <div id="calendar-feed-section" hidden>
+          <h3 class="team-subhead">Calendar feed</h3>
+          <p class="small">Subscribe once in Google or Apple Calendar and your assigned tasks and tracked grant deadlines stay current on their own — no re-exporting.</p>
+          <div class="team-code-box">
+            <div class="team-code-value" id="calendar-feed-url" style="word-break:break-all; font-size:0.85em; letter-spacing:normal;"></div>
+            <div class="team-code-actions">
+              <button type="button" id="copy-feed-link-btn">Copy link</button>
+            </div>
+          </div>
+        </div>
         <h3 class="team-subhead">Roster</h3>
         <div id="team-roster"></div>
         <div class="team-admin-actions" id="team-admin-actions" hidden>
@@ -189,6 +199,10 @@
             <label for="customize-signature">Signature (optional)</label>
             <input type="text" id="customize-signature" maxlength="120" placeholder="A short line shown under your forum posts">
           </div>
+          <label style="display:flex; align-items:center; gap:8px; font-weight:normal;">
+            <input type="checkbox" id="customize-reminders-checkbox" checked style="width:auto;">
+            Email me deadline reminders (14, 7, and 1 day before a task or grant you're on is due)
+          </label>
           <button type="submit" class="submit-btn">Save</button>
         </form>
       </div>

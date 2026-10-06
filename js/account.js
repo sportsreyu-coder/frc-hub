@@ -128,6 +128,7 @@
       display_name: document.getElementById("customize-display-name").value.trim() || null,
       avatar_color: selectedAvatarColor || null,
       signature: document.getElementById("customize-signature").value.trim() || null,
+      reminder_emails_opt_out: !document.getElementById("customize-reminders-checkbox").checked,
       updated_at: new Date().toISOString(),
     };
   }
@@ -160,6 +161,7 @@
       districtSelect.value = profile.district || "";
       document.getElementById("customize-display-name").value = profile.display_name || "";
       document.getElementById("customize-signature").value = profile.signature || "";
+      document.getElementById("customize-reminders-checkbox").checked = !profile.reminder_emails_opt_out;
       selectedAvatarColor = profile.avatar_color || "";
       renderSwatches();
     }
@@ -384,6 +386,21 @@
       host.appendChild(grid);
     }
 
+    // null until the owner deploys supabase/functions/calendar-feed (see
+    // its README) and reruns schema.sql -- calendar_feed_token won't
+    // exist on the team row before that, so this just stays hidden.
+    function renderCalendarFeed() {
+      var section = document.getElementById("calendar-feed-section");
+      var feedUrl = Team.calendarFeedUrl();
+      section.hidden = !feedUrl;
+      if (!feedUrl) return;
+      document.getElementById("calendar-feed-url").textContent = feedUrl;
+      document.getElementById("copy-feed-link-btn").onclick = function () {
+        copyText(feedUrl);
+        showTeamInfo("Calendar feed link copied.");
+      };
+    }
+
     function renderResetBanner() {
       var banner = document.getElementById("team-reset-banner");
       var team = Team.state.team;
@@ -549,6 +566,7 @@
 
       renderResetBanner();
       renderCodes();
+      renderCalendarFeed();
       renderRoster();
       document.getElementById("team-admin-actions").hidden = !Team.isAdmin();
     }

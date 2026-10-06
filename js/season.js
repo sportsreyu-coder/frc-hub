@@ -229,6 +229,7 @@
   // `season_data` path unchanged.
   var cloudUserId = null;
   var cloudSaveTimer = null;
+  var deadlineSyncTimer = null;
   var teamRoster = []; // real accounts, loaded from FRCTeam when on a team
 
   function cloudSnapshot() {
@@ -279,6 +280,44 @@
         .then(function (res) {
           if (res.error) console.warn("Season Tracker cloud save failed:", res.error.message);
         });
+    }, 1200);
+  }
+
+  // G4: keeps team_deadlines (read by the calendar-feed and
+  // send-reminders Edge Functions, see supabase/functions/README.md) in
+  // sync with whatever this tab just computed. Scoped to items someone
+  // would actually want a reminder for -- an assigned task (milestone,
+  // subtask, custom task, or fine-grained goal with at least one
+  // assignee) or a tracked grant deadline -- not every one of the
+  // hundreds of daily/weekly calendar entries buildCalendarItems() can
+  // produce. No-op off-team, same as the cloud save above.
+  function buildDeadlineRows() {
+    var todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var rows = [];
+    buildCalendarItems().forEach(function (item) {
+      if (item.date < todayStart) return;
+      if (item.isDone && item.isDone()) return;
+      var isGrant = item.kind === "grant";
+      var assignees = assignments[item.id] || [];
+      if (!isGrant && !assignees.length) return;
+      rows.push({
+        item_key: item.id,
+        title: item.title,
+        due_date: item.date.getFullYear() + "-" + pad2(item.date.getMonth() + 1) + "-" + pad2(item.date.getDate()),
+        kind: isGrant ? "grant" : "task",
+        assignee_user_ids: assignees,
+      });
+    });
+    return rows;
+  }
+
+  function scheduleDeadlineSync() {
+    if (!Team || !Team.state.team) return;
+    clearTimeout(deadlineSyncTimer);
+    deadlineSyncTimer = setTimeout(function () {
+      Team.syncDeadlines(buildDeadlineRows()).catch(function (err) {
+        console.warn("Deadline sync failed:", err.message);
+      });
     }, 1200);
   }
 
@@ -910,6 +949,7 @@
     renderDeleteAllTasksUI();
     if (msPanelItem) renderMsPanel();
     scheduleCloudSave();
+    scheduleDeadlineSync();
   }
 
   function renderPace() {

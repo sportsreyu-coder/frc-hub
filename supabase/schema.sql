@@ -944,3 +944,90 @@ create policy "Team members can manage their saved grants"
 
 grant select, insert, update, delete on public.saved_grants to authenticated;
 create index if not exists saved_grants_team_idx on public.saved_grants (team_id);
+
+-- ---- Reminders + calendar subscription feed (G4) ----
+--
+-- Both features need something running outside anyone's browser: the
+-- feed has to answer a plain GET from Google/Apple Calendar even when
+-- no one's signed in, and reminders have to fire on a schedule, not on
+-- page load. Postgres/PostgREST alone can't do either, so this is
+-- backed by two Supabase Edge Functions (supabase/functions/
+-- calendar-feed and supabase/functions/send-reminders) that the site
+-- owner deploys and schedules separately -- see
+-- supabase/functions/README.md. Until that's done these tables fill up
+-- but nothing reads them.
+--
+-- The tables below are deliberately dumb: js/season.js already knows
+-- how to compute every assigned task's and tracked grant's real due
+-- date (milestone pacing, custom tasks, Open Alliance, the grant
+-- pipeline...), so rather than re-deriving all of that in a second
+-- language on the server, the client just upserts the flattened result
+-- here whenever it changes (see Team.syncDeadlines in js/team.js). The
+-- Edge Functions then only ever read plain (team, item, date,
+-- assignees) rows -- no calendar math lives in two places.
+create extension if not exists pgcrypto;
+
+-- One row per upcoming assigned task or tracked grant deadline. Full
+-- replace per team on every client sync (not an incremental diff), so
+-- a completed/removed/unassigned item just stops being upserted and
+-- falls out on the next sync rather than needing an explicit delete.
+create table if not exists public.team_deadlines (
+  team_id uuid not null references public.teams (id) on delete cascade,
+  item_key text not null,
+  title text not null,
+  due_date date not null,
+  kind text not null check (kind in ('task', 'grant')),
+  assignee_user_ids uuid[] not null default '{}',
+  updated_at timestamptz not null default now(),
+  primary key (team_id, item_key)
+);
+
+create index if not exists team_deadlines_due_date_idx on public.team_deadlines (due_date);
+
+alter table public.team_deadlines enable row level security;
+
+drop policy if exists "Team members can view their team's deadlines" on public.team_deadlines;
+create policy "Team members can view their team's deadlines"
+  on public.team_deadlines for select
+  using (team_id = public.my_team_id());
+
+-- Open to every team member, same reasoning as saved_grants above --
+-- assigning yourself a task is routine, not an approval workflow.
+drop policy if exists "Team members can sync their team's deadlines" on public.team_deadlines;
+create policy "Team members can sync their team's deadlines"
+  on public.team_deadlines for all
+  using (team_id = public.my_team_id())
+  with check (team_id = public.my_team_id());
+
+grant select, insert, update, delete on public.team_deadlines to authenticated;
+
+-- A stable, unguessable token per team so the calendar-feed Edge
+-- Function can authenticate a plain GET from a calendar app (which
+-- sends no auth header at all) by URL alone, without exposing the
+-- team's real primary key as the only thing standing in the way.
+alter table public.teams add column if not exists calendar_feed_token text;
+update public.teams set calendar_feed_token = encode(gen_random_bytes(16), 'hex') where calendar_feed_token is null;
+alter table public.teams alter column calendar_feed_token set default encode(gen_random_bytes(16), 'hex');
+alter table public.teams alter column calendar_feed_token set not null;
+create unique index if not exists teams_calendar_feed_token_idx on public.teams (calendar_feed_token);
+
+-- Per-user opt-out for the 14/7/1-day-before reminder emails
+-- send-reminders sends -- default false (reminders on) per the spec,
+-- so this only ever becomes true for someone who turned it off in
+-- Account > Profile customization.
+alter table public.profiles add column if not exists reminder_emails_opt_out boolean not null default false;
+
+-- Bookkeeping for send-reminders only, so the same (user, item,
+-- days-before) reminder is never emailed twice even if the function
+-- runs more than once on the same day. No RLS policies on purpose --
+-- this table is never read or written through the anon/authenticated
+-- API, only by the Edge Function's service-role key, which bypasses
+-- RLS entirely.
+create table if not exists public.reminder_sent (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  item_key text not null,
+  days_before int not null,
+  sent_at timestamptz not null default now(),
+  primary key (user_id, item_key, days_before)
+);
+alter table public.reminder_sent enable row level security;
