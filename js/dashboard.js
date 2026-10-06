@@ -65,37 +65,16 @@
 
   // ---- Grants closing soon widget ----
 
-  var MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
-
-  function dayOfYear(str) {
-    if (!str) return 9999;
-    var m = String(str).toLowerCase().match(/([a-z]+)\s*(\d+)?/);
-    if (!m) return 9999;
-    var mi = -1;
-    for (var i = 0; i < MONTHS.length; i++) {
-      if (MONTHS[i].indexOf(m[1].slice(0, 3)) === 0) { mi = i; break; }
-    }
-    if (mi < 0) return 9999;
-    return mi * 31 + (parseInt(m[2] || "1", 10) || 1);
-  }
-
-  function untilNext(str, todayIdx) {
-    var d = dayOfYear(str);
-    if (d === 9999) return 9999;
-    return d >= todayIdx ? d - todayIdx : d - todayIdx + 372;
-  }
-
   function renderGrantsWidget() {
     var body = document.getElementById("dash-grants-body");
     fetch("data/grants.json")
       .then(function (r) { return r.json(); })
       .then(function (grants) {
-        var today = new Date();
-        var todayIdx = today.getMonth() * 31 + today.getDate();
-
         var soon = grants
-          .filter(function (g) { return g.status === "open" && g.closeDate; })
-          .sort(function (a, b) { return untilNext(a.closeDate, todayIdx) - untilNext(b.closeDate, todayIdx); })
+          .filter(function (g) { return window.GrantStatus.isCurrentlyOpen(g) && g.closeDate; })
+          .sort(function (a, b) {
+            return window.GrantStatus.parseDate(a.closeDate) - window.GrantStatus.parseDate(b.closeDate);
+          })
           .slice(0, 4);
 
         body.innerHTML = "";

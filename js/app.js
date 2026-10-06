@@ -51,26 +51,12 @@
     "demographics", "sustainability", "501c3-required", "school-or-501c3", "no-501c3-required",
   ];
 
-  var MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+  var GrantStatus = window.GrantStatus;
 
-  function dayOfYear(str) {
-    if (!str) return 9999;
-    var m = String(str).toLowerCase().match(/([a-z]+)\s*(\d+)?/);
-    if (!m) return 9999;
-    var mi = -1;
-    for (var i = 0; i < MONTHS.length; i++) {
-      if (MONTHS[i].indexOf(m[1].slice(0, 3)) === 0) { mi = i; break; }
-    }
-    if (mi < 0) return 9999;
-    return mi * 31 + (parseInt(m[2] || "1", 10) || 1);
-  }
-
-  function untilNext(str) {
-    var d = dayOfYear(str);
-    if (d === 9999) return 9999;
-    var today = new Date();
-    var todayIdx = today.getMonth() * 31 + today.getDate();
-    return d >= todayIdx ? d - todayIdx : d - todayIdx + 372;
+  // Sorts by actual close date (grants without a parseable one sort last).
+  function closeTimestamp(g) {
+    var d = GrantStatus.parseDate(g.closeDate);
+    return d ? d.getTime() : Infinity;
   }
 
   function el(tag, attrs, children) {
@@ -88,10 +74,18 @@
     return node;
   }
 
-  function pillClass(status) {
-    if (status === "open") return { cls: "pill-open", label: "Open" };
-    if (status === "closed") return { cls: "pill-closed", label: "Closed" };
-    return { cls: "pill-unsure", label: "Unsure" };
+  // Maps the 6 GrantStatus categories down to the 3 pill styles that
+  // exist today; B3 gives each category its own label/color.
+  var PILL_BY_KEY = {
+    open: { cls: "pill-open", label: "Open" },
+    "closing-soon": { cls: "pill-open", label: "Open" },
+    rolling: { cls: "pill-open", label: "Open" },
+    closed: { cls: "pill-closed", label: "Closed" },
+    upcoming: { cls: "pill-unsure", label: "Unsure" },
+    unknown: { cls: "pill-unsure", label: "Unsure" },
+  };
+  function pillClass(g) {
+    return PILL_BY_KEY[GrantStatus.getGrantStatus(g)];
   }
 
   function fetchJSON(path) {
@@ -103,19 +97,25 @@
 
   function renderStats() {
     var total = grants.length;
-    var open = grants.filter(function (g) { return g.status === "open"; }).length;
+    var open = grants.filter(function (g) { return GrantStatus.isCurrentlyOpen(g); }).length;
+    var rolling = grants.filter(function (g) { return GrantStatus.getGrantStatus(g) === "rolling"; }).length;
+    var unknown = grants.filter(function (g) { return GrantStatus.getGrantStatus(g) === "unknown"; }).length;
     var geo = grants.filter(function (g) { return g.tags.indexOf("no-geo-restrictions") !== -1; }).length;
     var no501 = grants.filter(function (g) { return g.tags.indexOf("no-501c3-required") !== -1; }).length;
     document.getElementById("stat-total").textContent = total || "—";
     document.getElementById("stat-open").textContent = open || "—";
     document.getElementById("stat-geo").textContent = geo || "—";
     document.getElementById("stat-no501").textContent = no501 || "—";
+    var note = document.getElementById("stat-undated-note");
+    if (note) {
+      note.textContent = rolling + " with no fixed deadline (rolling) · " + unknown + " with dates not yet published";
+    }
   }
 
   function renderFeatured() {
     var openWithDates = grants
-      .filter(function (g) { return g.status === "open" && g.closeDate; })
-      .sort(function (a, b) { return untilNext(a.closeDate) - untilNext(b.closeDate); });
+      .filter(function (g) { return GrantStatus.isCurrentlyOpen(g) && g.closeDate; })
+      .sort(function (a, b) { return closeTimestamp(a) - closeTimestamp(b); });
     var feat = openWithDates[0] || grants[0];
     var card = document.getElementById("featured-card");
     card.innerHTML = "";
@@ -146,7 +146,7 @@
     var datesTable = document.getElementById("dates-table");
     datesTable.innerHTML = "";
     openWithDates.slice(0, 6).forEach(function (g) {
-      var p = pillClass(g.status);
+      var p = pillClass(g);
       var sub = g.notes || (g.tags.indexOf("no-geo-restrictions") !== -1 ? "No location restrictions" : "See grantor site for criteria");
       datesTable.appendChild(el("div", { class: "dates-row" }, [
         el("span", { class: "dcode" }, [g.closeDate]),
@@ -174,7 +174,7 @@
   // it was excluded -- that reason is what powers the "excluded, see why"
   // panel instead of just letting grants disappear silently.
   function exclusionReason(g) {
-    if (state.statusOpen && g.status !== "open") return "Not currently open";
+    if (state.statusOpen && !GrantStatus.isCurrentlyOpen(g)) return "Not currently open";
 
     if (state.c3 === "school" && g.require501c3 === "required") return "Requires a 501(c)(3)";
     if (state.c3 === "neither") {
@@ -212,10 +212,10 @@
     if (state.sort === "az") {
       cmp = function (a, b) { return a.name.localeCompare(b.name); };
     } else if (state.sort === "deadline") {
-      cmp = function (a, b) { return dayOfYear(a.closeDate) - dayOfYear(b.closeDate) || a.name.localeCompare(b.name); };
+      cmp = function (a, b) { return closeTimestamp(a) - closeTimestamp(b) || a.name.localeCompare(b.name); };
     } else {
-      var rank = { open: 0, unsure: 1, closed: 2 };
-      cmp = function (a, b) { return (rank[a.status] - rank[b.status]) || a.name.localeCompare(b.name); };
+      var rank = { open: 0, "closing-soon": 0, rolling: 1, upcoming: 1, unknown: 1, closed: 2 };
+      cmp = function (a, b) { return (rank[GrantStatus.getGrantStatus(a)] - rank[GrantStatus.getGrantStatus(b)]) || a.name.localeCompare(b.name); };
     }
     if (state.boosts.size > 0) {
       copy.sort(function (a, b) {
@@ -233,7 +233,7 @@
     var dateBits = [];
     if (g.openDate) dateBits.push("Opens " + g.openDate);
     if (g.closeDate) dateBits.push("Closes " + g.closeDate);
-    var p = pillClass(g.status);
+    var p = pillClass(g);
     var visibleTags = TAG_ORDER.filter(function (t) { return g.tags.indexOf(t) !== -1; });
     var boosted = matchedBoosts(g);
     var badge = boosted.length

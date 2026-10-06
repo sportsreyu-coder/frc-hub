@@ -3,6 +3,7 @@
 
   var Core = window.SeasonCore;
   var Team = window.FRCTeam;
+  var GrantStatus = window.GrantStatus;
   var daysBetween = Core.daysBetween;
   var formatDate = Core.formatDate;
   var saveProgress = Core.saveProgress;
@@ -412,23 +413,6 @@
 
   // ---- Grant deadlines (from data/grants.json) ----
   var grantDeadlines = [];
-  var GRANT_MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
-
-  function parseGrantDate(str) {
-    if (!str) return null;
-    var m = String(str).toLowerCase().match(/([a-z]+)\s*(\d+)?/);
-    if (!m) return null;
-    var mi = -1;
-    for (var i = 0; i < GRANT_MONTHS.length; i++) {
-      if (GRANT_MONTHS[i].indexOf(m[1].slice(0, 3)) === 0) { mi = i; break; }
-    }
-    if (mi < 0) return null;
-    var day = parseInt(m[2] || "1", 10) || 1;
-    // Sept-Dec deadlines fall in preseason, before Kickoff -- anchor them to
-    // the year before Kickoff; Jan-Aug deadlines anchor to Kickoff's year.
-    var year = mi >= 8 ? anchor.getFullYear() - 1 : anchor.getFullYear();
-    return new Date(year, mi, day);
-  }
 
   function loadGrantDeadlines() {
     fetch("data/grants.json")
@@ -441,9 +425,9 @@
               id: "grant-" + g.id,
               name: g.name,
               link: g.link,
-              date: parseGrantDate(g.closeDate),
+              date: GrantStatus.parseDate(g.closeDate),
               closeDateText: g.closeDate,
-              status: g.status,
+              status: GrantStatus.getGrantStatus(g),
               notes: g.notes,
             };
           })
@@ -1058,11 +1042,19 @@
       ]));
     }
 
+    // g.status here is already a GrantStatus category (see loadGrantDeadlines),
+    // collapsed to the 3 pill styles the same way app.js does on grants.html.
+    var PILL_BY_KEY = {
+      open: { cls: "pill-open", label: "Open" },
+      "closing-soon": { cls: "pill-open", label: "Open" },
+      rolling: { cls: "pill-open", label: "Open" },
+      closed: { cls: "pill-closed", label: "Closed" },
+      upcoming: { cls: "pill-unsure", label: "Unsure" },
+      unknown: { cls: "pill-unsure", label: "Unsure" },
+    };
     var table = el("div", { class: "dates-table" });
     grantDeadlines.forEach(function (g) {
-      var p = g.status === "open" ? { cls: "pill-open", label: "Open" }
-        : g.status === "closed" ? { cls: "pill-closed", label: "Closed" }
-        : { cls: "pill-unsure", label: "Unsure" };
+      var p = PILL_BY_KEY[g.status];
       var nameLink = el("a", { class: "dname", href: g.link || "#", target: "_blank", rel: "noopener", style: "color:inherit;" }, [g.name]);
 
       var done = !!completedGrants[g.id];
@@ -1230,7 +1222,7 @@
         id: g.id,
         date: g.date, team: "business", kind: "grant", category: "grant",
         short: "💰 " + g.name, title: g.name + " — grant deadline",
-        detail: (g.notes ? g.notes + " " : "") + "Status: " + (g.status || "unknown") + ". Always confirm on the grantor's own site.",
+        detail: (g.notes ? g.notes + " " : "") + "Status: " + g.status.replace("-", " ") + ". Always confirm on the grantor's own site.",
         isDone: function () { return !!progress[g.id]; },
         toggle: function () { toggleGeneric(g.id); },
       });
