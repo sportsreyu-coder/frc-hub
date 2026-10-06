@@ -217,6 +217,36 @@
     load();
   }
 
+  // ---- Budget widget (G2/D3): team-only, funds raised vs goal ----
+
+  function renderBudgetWidget() {
+    if (!window.FRCTeam) return;
+    window.FRCTeam.ready.then(function () {
+      if (!window.FRCTeam.state.team) return;
+      document.getElementById("dash-budget-row").hidden = false;
+      var body = document.getElementById("dash-budget-body");
+      window.FRCTeam.loadBudgetEntries().then(function (entries) {
+        body.innerHTML = "";
+        var approved = entries.filter(function (e) { return e.status === "approved"; });
+        var income = approved.filter(function (e) { return e.type === "income"; }).reduce(function (s, e) { return s + Number(e.amount); }, 0);
+        var goal = window.FRCTeam.state.team.fundraising_goal;
+        var money = function (n) { return "$" + (Number(n) || 0).toLocaleString(undefined, { maximumFractionDigits: 0 }); };
+
+        body.appendChild(el("div", { class: "dash-headline" }, [money(income) + (goal ? " of " + money(goal) : "")]));
+        body.appendChild(el("p", { class: "dash-sub" }, [goal ? "raised toward your season goal" : "raised this season — no goal set yet"]));
+        if (goal) {
+          var pct = Math.min(100, Math.round((income / goal) * 100));
+          body.appendChild(el("div", { class: "progress-track", style: "margin-top:10px;" }, [
+            el("div", { class: "progress-fill", style: "width:" + pct + "%" }),
+          ]));
+        }
+      }).catch(function () {
+        body.innerHTML = "";
+        body.appendChild(el("p", { class: "dash-sub" }, ["Couldn't load budget data."]));
+      });
+    });
+  }
+
   // ---- Personalized hero (D1): signed-out keeps the plain welcome;
   // signed-in gets next deadlines (tasks + saved grants), overdue count,
   // and saved-grants-closing-soon, instead of a static headline. ----
@@ -290,6 +320,7 @@
   renderGrantsWidget();
   renderSavedWidget();
   renderForumWidget();
+  renderBudgetWidget();
 
   if (window.__frcHubSupabase) {
     window.__frcHubSupabase.auth.getSession().then(function (res) {

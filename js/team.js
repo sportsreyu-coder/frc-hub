@@ -203,6 +203,69 @@
         if (res.error) throw new Error(res.error.message);
       });
     },
+
+    // ---- G2: budget + sponsor tracker ----
+    loadBudgetEntries: function () {
+      if (!state.team) return Promise.resolve([]);
+      return sb.from("budget_entries").select("*").eq("team_id", state.team.id).order("entry_date", { ascending: false }).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+        return res.data || [];
+      });
+    },
+    // Mentors record a direct, already-approved entry; anyone else's
+    // insert is pinned to "pending" by the DB policy regardless of
+    // what's passed here (see budget_entries' insert policy).
+    addBudgetEntry: function (entry) {
+      if (!state.team) return Promise.resolve();
+      var row = {
+        team_id: state.team.id,
+        entry_date: entry.date,
+        type: entry.type,
+        category: entry.category,
+        amount: entry.amount,
+        note: entry.note || null,
+        status: isMentor() ? "approved" : "pending",
+        created_by: state.user.id,
+      };
+      return sb.from("budget_entries").insert(row).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
+    approveBudgetEntry: function (id) {
+      return sb.from("budget_entries").update({ status: "approved" }).eq("id", id).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
+    deleteBudgetEntry: function (id) {
+      return sb.from("budget_entries").delete().eq("id", id).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
+    setFundraisingGoal: function (goal) {
+      return rpc("set_fundraising_goal", { p_team_id: state.team.id, p_goal: goal }).then(function () {
+        return loadMembership();
+      });
+    },
+
+    loadSponsors: function () {
+      if (!state.team) return Promise.resolve([]);
+      return sb.from("sponsors").select("*").eq("team_id", state.team.id).order("created_at", { ascending: false }).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+        return res.data || [];
+      });
+    },
+    upsertSponsor: function (sponsor) {
+      if (!state.team) return Promise.resolve();
+      var row = Object.assign({ team_id: state.team.id, updated_at: new Date().toISOString() }, sponsor);
+      return sb.from("sponsors").upsert(row).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
+    deleteSponsor: function (id) {
+      return sb.from("sponsors").delete().eq("id", id).then(function (res) {
+        if (res.error) throw new Error(res.error.message);
+      });
+    },
   };
 
   init();

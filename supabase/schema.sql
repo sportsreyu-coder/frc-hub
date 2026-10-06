@@ -799,3 +799,109 @@ begin
 end;
 $$;
 grant execute on function public.delete_my_data() to authenticated;
+
+-- ---- Budget and sponsor tracker (G2) ----
+--
+-- A team's fundraising goal for the season -- shown as a progress bar
+-- against approved income. Lives on teams rather than a separate
+-- row-per-team settings table since it's a single value, same
+-- reasoning as team_data's "one JSONB column" comment above but even
+-- more so here (one number).
+alter table public.teams add column if not exists fundraising_goal numeric(10,2);
+
+-- One row per income/expense entry. `status` drives the mentor-
+-- approval workflow (G2: "students can view totals and propose
+-- entries (mentor approves)") -- a pending entry is visible to the
+-- whole team but excluded from totals until a mentor approves it, so
+-- a student's rough guess can't silently skew the number everyone is
+-- looking at.
+create table if not exists public.budget_entries (
+  id uuid primary key default gen_random_uuid(),
+  team_id uuid not null references public.teams (id) on delete cascade,
+  entry_date date not null default current_date,
+  type text not null check (type in ('income', 'expense')),
+  category text not null,
+  amount numeric(10,2) not null check (amount > 0),
+  note text,
+  status text not null default 'approved' check (status in ('pending', 'approved')),
+  created_by uuid not null references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+alter table public.budget_entries enable row level security;
+
+drop policy if exists "Team members can view their budget entries" on public.budget_entries;
+create policy "Team members can view their budget entries"
+  on public.budget_entries for select
+  using (team_id = public.my_team_id());
+
+-- A mentor's own insert always lands as "approved"; anyone else's
+-- (a student) is only accepted as "pending" -- never a status they
+-- chose themselves, so there's no client-side way to self-approve.
+drop policy if exists "Team members can propose or record budget entries" on public.budget_entries;
+create policy "Team members can propose or record budget entries"
+  on public.budget_entries for insert
+  with check (
+    team_id = public.my_team_id()
+    and created_by = auth.uid()
+    and (status = 'pending' or public.is_mentor_of(team_id))
+  );
+
+drop policy if exists "Mentors can update budget entries" on public.budget_entries;
+create policy "Mentors can update budget entries"
+  on public.budget_entries for update
+  using (public.is_mentor_of(team_id));
+
+drop policy if exists "Mentors can delete budget entries" on public.budget_entries;
+create policy "Mentors can delete budget entries"
+  on public.budget_entries for delete
+  using (public.is_mentor_of(team_id));
+
+grant select, insert, update, delete on public.budget_entries to authenticated;
+create index if not exists budget_entries_team_idx on public.budget_entries (team_id, entry_date desc);
+
+-- Sponsor pipeline. Visible to the whole team (so students can see who
+-- the team has already asked); only mentors edit it -- unlike budget
+-- entries, there's no propose/approve path here (a sponsor ask is a
+-- relationship a mentor owns, not a number a student estimates).
+create table if not exists public.sponsors (
+  id uuid primary key default gen_random_uuid(),
+  team_id uuid not null references public.teams (id) on delete cascade,
+  name text not null,
+  contact text,
+  ask_amount numeric(10,2),
+  status text not null default 'prospect' check (status in ('prospect', 'asked', 'committed', 'received', 'thanked')),
+  next_step_date date,
+  renewal_date date,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.sponsors enable row level security;
+
+drop policy if exists "Team members can view their sponsors" on public.sponsors;
+create policy "Team members can view their sponsors"
+  on public.sponsors for select
+  using (team_id = public.my_team_id());
+
+drop policy if exists "Mentors can manage sponsors" on public.sponsors;
+create policy "Mentors can manage sponsors"
+  on public.sponsors for all
+  using (public.is_mentor_of(team_id))
+  with check (public.is_mentor_of(team_id));
+
+grant select, insert, update, delete on public.sponsors to authenticated;
+create index if not exists sponsors_team_idx on public.sponsors (team_id, status);
+
+create or replace function public.set_fundraising_goal(p_team_id uuid, p_goal numeric)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_mentor_of(p_team_id) then
+    raise exception 'Only a mentor can set the fundraising goal.';
+  end if;
+  update public.teams set fundraising_goal = p_goal, updated_at = now() where id = p_team_id;
+end;
+$$;
+grant execute on function public.set_fundraising_goal(uuid, numeric) to authenticated;
