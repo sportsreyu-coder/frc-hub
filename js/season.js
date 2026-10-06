@@ -439,6 +439,77 @@
     });
   }
   var progress = Core.loadProgress();
+
+  // A7: first-visit onboarding. A truly brand-new team (no progress ever
+  // saved, never answered this before) gets asked once whether they're
+  // starting now or already underway -- "starting now" rebases preseason
+  // dates forward (see season-core.js's preseason shift); either way, we
+  // snapshot which milestones are already overdue *right now* so they
+  // render as a neutral "Catch up" instead of alarming red (see statusOf)
+  // instead of shaming a team for being behind on a tracker they just
+  // opened for the first time. A returning team (pre-existing progress,
+  // from before this feature existed) is marked answered without ever
+  // showing the banner or softening anything -- this is only for new teams.
+  var ONBOARD_KEY = "frcgrants_season_onboard_answer_v1";
+  var CATCHUP_KEY = "frcgrants_season_catchup_v1";
+  var onboardAnswer = localStorage.getItem(ONBOARD_KEY) || "";
+  var catchUpIds = [];
+  try { catchUpIds = JSON.parse(localStorage.getItem(CATCHUP_KEY) || "[]"); } catch (e) { catchUpIds = []; }
+  var showOnboardBanner = false;
+  if (!onboardAnswer) {
+    if (Object.keys(progress).length === 0) {
+      showOnboardBanner = true;
+    } else {
+      localStorage.setItem(ONBOARD_KEY, "underway"); // pre-existing user; treat as already answered, no banner, no softening
+      onboardAnswer = "underway";
+    }
+  }
+  function answerOnboarding(choice) {
+    onboardAnswer = choice;
+    try { localStorage.setItem(ONBOARD_KEY, choice); } catch (e) { /* ignore */ }
+
+    catchUpIds = milestones.filter(function (m) { return !isDone(m) && daysBetween(today, m.date) < 0; }).map(function (m) { return m.id; });
+    try { localStorage.setItem(CATCHUP_KEY, JSON.stringify(catchUpIds)); } catch (e) { /* ignore */ }
+
+    if (choice === "starting") {
+      var earliest = milestones.filter(function (m) { return m.offset < 0; }).sort(function (a, b) { return a.offset - b.offset; })[0];
+      if (earliest) {
+        var shiftDays = daysBetween(earliest.date, today);
+        if (shiftDays > 0) {
+          Core.savePreseasonShift(shiftDays);
+          milestones = Core.getMilestonesWithDates().map(function (m) {
+            m.recommendedDate = m.date;
+            var ov = milestoneOverrides[m.id];
+            if (ov) {
+              if (ov.label) m.label = ov.label;
+              if (ov.team) m.team = ov.team;
+              if (ov.date) m.date = new Date(ov.date + "T00:00:00");
+            }
+            return m;
+          });
+          // Dates moved forward, so nothing's actually overdue anymore --
+          // the catch-up snapshot above (taken pre-shift) would be stale.
+          catchUpIds = [];
+          try { localStorage.setItem(CATCHUP_KEY, "[]"); } catch (e) { /* ignore */ }
+        }
+      }
+    }
+
+    document.getElementById("onboard-banner").hidden = true;
+    render();
+  }
+  document.getElementById("onboard-start-btn").addEventListener("click", function () { answerOnboarding("starting"); });
+  document.getElementById("onboard-underway-btn").addEventListener("click", function () { answerOnboarding("underway"); });
+  if (!showOnboardBanner) {
+    document.getElementById("onboard-banner").hidden = true;
+  } else {
+    document.getElementById("onboard-banner").hidden = false;
+    // Not yet answered -- snapshot what's overdue right now so a visitor
+    // who leaves the banner up (or eventually answers "underway") still
+    // gets today's backlog softened instead of only going forward.
+    catchUpIds = milestones.filter(function (m) { return !isDone(m) && daysBetween(today, m.date) < 0; }).map(function (m) { return m.id; });
+  }
+
   var calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   var customEvents = loadCustomEvents();
   var oaSettings = loadOASettings();
@@ -821,13 +892,18 @@
     document.getElementById("progress-fill").style.width = pct + "%";
   }
 
-  function statusOf(done, date) {
+  // A7: an item that was already overdue the first time this team ever
+  // opened the tracker (see catchUpIds below) reads as a neutral "Catch
+  // up" instead of an alarming red "Overdue" -- it's backlog from before
+  // they started using this, not something they just missed.
+  function statusOf(done, date, id) {
     var overdue = !done && daysBetween(today, date) < 0;
+    var catchUp = overdue && id && catchUpIds.indexOf(id) !== -1;
     return {
       done: done,
       overdue: overdue,
-      label: done ? "Done" : overdue ? "Overdue" : "Upcoming",
-      cls: done ? "ms-done" : overdue ? "ms-overdue" : "ms-upcoming",
+      label: done ? "Done" : catchUp ? "Catch up" : overdue ? "Overdue" : "Upcoming",
+      cls: done ? "ms-done" : catchUp ? "ms-catchup" : overdue ? "ms-overdue" : "ms-upcoming",
     };
   }
 
@@ -854,7 +930,7 @@
 
       var list = el("div", { class: "milestone-list" });
       items.forEach(function (m) {
-        var status = statusOf(isDone(m), m.date);
+        var status = statusOf(isDone(m), m.date, m.id);
 
         var checkbox = el("input", { type: "checkbox", id: "chk-" + m.id, "aria-label": m.label });
         checkbox.checked = status.done;
@@ -1338,7 +1414,7 @@
         var chipTitle = item.title + (assignSummary ? " — assigned to " + assignSummary : "");
 
         var done = item.isDone();
-        var status = statusOf(done, item.date);
+        var status = statusOf(done, item.date, item.id);
         var chip = el("button", {
           type: "button",
           class: "cal-chip " + status.cls + " team-edge team-edge-" + item.team,
@@ -1548,7 +1624,7 @@
     var itemDate = isCustom ? (m.dueDate ? new Date(m.dueDate + "T00:00:00") : null) : m.date;
     var done = isDone(m);
     var status = itemDate
-      ? statusOf(done, itemDate)
+      ? statusOf(done, itemDate, m.id)
       : { done: done, label: done ? "Done" : "No due date", cls: done ? "ms-done" : "ms-upcoming" };
     var msTeam = m.team || "cross-team";
 

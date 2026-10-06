@@ -413,6 +413,7 @@ main.site-main {
 }
 
 .dash-mini-date.dash-overdue { color: var(--red-fg); font-weight: 700; }
+.dash-mini-date.dash-catchup { color: var(--amber); font-weight: 700; }
 
 .dash-more {
   margin-top: 20px;
@@ -1862,6 +1863,7 @@ main.site-main {
 .ms-done { background: var(--green-bg); color: var(--green); }
 .ms-overdue { background: var(--red-bg); color: var(--red-fg); }
 .ms-upcoming { background: var(--gray-bg); color: var(--gray-fg); }
+.ms-catchup { background: var(--amber-bg); color: var(--amber); }
 
 .cal-chip-big {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
@@ -2554,6 +2556,21 @@ main.site-main {
 .captain-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; background: var(--amber-bg); color: var(--amber); margin-left: 6px; }
 
 .team-reset-banner { margin: 10px 0 18px; padding: 12px 14px; border-radius: 10px; background: var(--amber-bg); border: 1px solid rgba(154,107,14,0.3); color: var(--amber); font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+.onboard-banner {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.onboard-banner strong { font-size: 0.95rem; }
+.onboard-banner-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .undo-toast {
   position: fixed;

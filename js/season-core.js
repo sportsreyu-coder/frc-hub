@@ -9,6 +9,25 @@ window.SeasonCore = (function () {
   var HIDDEN_MILESTONES_KEY = "frcgrants_season_hidden_milestones_v1";
   var COMP_WEEK_KEY = "frcgrants_season_comp_week_v1";
   var DEFAULT_COMP_WEEK = 1;
+  var PRESEASON_SHIFT_KEY = "frcgrants_season_preseason_shift_v1";
+
+  // A7: when a brand-new team says they're "starting now" rather than
+  // already underway, preseason milestones (offset < 0, i.e. before
+  // Kickoff) get pushed forward by this many days so the earliest one
+  // lands around today instead of showing weeks overdue on first visit.
+  // Build-season-and-later dates (offset >= 0) never use this -- they
+  // stay anchored to the real Kickoff regardless.
+  function loadPreseasonShift() {
+    try {
+      var v = JSON.parse(localStorage.getItem(PRESEASON_SHIFT_KEY) || "0");
+      return typeof v === "number" ? v : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+  function savePreseasonShift(days) {
+    try { localStorage.setItem(PRESEASON_SHIFT_KEY, JSON.stringify(Math.round(days) || 0)); } catch (e) { /* ignore */ }
+  }
 
   // The whole Build Season schedule (season-data.js's SEASON_MILESTONES,
   // SEASON_FINE_GOALS, etc.) is authored for a team whose first event lands
@@ -135,10 +154,12 @@ window.SeasonCore = (function () {
     var compDay = resolveCompDay(loadCompWeek());
     var overrides = loadMilestoneOverrides();
     var hidden = loadHiddenMilestones();
+    var preseasonShift = loadPreseasonShift();
     return (window.SEASON_MILESTONES || [])
       .filter(function (m) { return hidden.indexOf(m.id) === -1; })
       .map(function (m) {
         var offset = remapBuildDay(m.offset, compDay);
+        if (offset < 0 && preseasonShift) offset = Math.min(0, offset + preseasonShift);
         var merged = Object.assign({}, m, { offset: offset, date: addDays(anchor, offset) });
         var ov = overrides[m.id];
         if (ov) {
@@ -169,5 +190,7 @@ window.SeasonCore = (function () {
     saveCompWeek: saveCompWeek,
     resolveCompDay: resolveCompDay,
     remapBuildDay: remapBuildDay,
+    loadPreseasonShift: loadPreseasonShift,
+    savePreseasonShift: savePreseasonShift,
   };
 })();

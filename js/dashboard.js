@@ -26,6 +26,8 @@
     var today = Core.startOfDay(new Date());
     var milestones = Core.getMilestonesWithDates();
     var progress = Core.loadProgress();
+    var catchUpIds = [];
+    try { catchUpIds = JSON.parse(localStorage.getItem("frcgrants_season_catchup_v1") || "[]"); } catch (e) { catchUpIds = []; }
 
     function isDone(m) { return !!progress[m.id]; }
 
@@ -54,9 +56,10 @@
       var list = el("div", { class: "dash-mini-list" });
       upcoming.forEach(function (m) {
         var overdue = Core.daysBetween(today, m.date) < 0;
+        var catchUp = overdue && catchUpIds.indexOf(m.id) !== -1;
         list.appendChild(el("div", { class: "dash-mini-row" }, [
           el("span", { class: "dash-mini-label" }, [m.label]),
-          el("span", { class: "dash-mini-date" + (overdue ? " dash-overdue" : "") }, [overdue ? "Overdue" : Core.formatDate(m.date)]),
+          el("span", { class: "dash-mini-date" + (catchUp ? " dash-catchup" : overdue ? " dash-overdue" : "") }, [catchUp ? "Catch up" : overdue ? "Overdue" : Core.formatDate(m.date)]),
         ]));
       });
       body.appendChild(list);
