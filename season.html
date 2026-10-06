@@ -50,7 +50,6 @@
   <section class="season-progress">
     <div class="season-progress-head">
       <span class="eyebrow" id="progress-label">0 of 0 milestones complete</span>
-      <button class="reset-btn" id="season-reset">Reset progress</button>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     <p class="finder-hint">
@@ -64,7 +63,6 @@
     <button type="button" class="view-tab" id="view-tab-calendar">Calendar</button>
     <button type="button" class="ics-export-btn" id="ics-export-btn">⬇ Export to Google/Apple Calendar</button>
     <button type="button" class="settings-toggle" id="settings-toggle">⚙ Team settings</button>
-    <button type="button" class="reset-btn" id="delete-all-tasks-btn" hidden>🗑 Delete all tasks</button>
   </div>
 
   <section class="team-settings" id="team-settings" hidden>
@@ -153,6 +151,15 @@
         <button type="button" class="submit-btn-sm submit-btn-ghost" id="quick-add-reveal">+ Robot Reveal</button>
       </form>
       <div id="custom-event-list" class="custom-event-list"></div>
+    </div>
+
+    <div class="settings-row danger-zone">
+      <span class="eyebrow">Danger zone</span>
+      <p class="finder-hint" style="margin-top:0">These clear real progress. Each asks you to confirm first and says exactly what it's about to remove.</p>
+      <div class="danger-zone-row">
+        <button class="reset-btn" id="season-reset">Reset progress</button>
+        <button type="button" class="reset-btn" id="delete-all-tasks-btn" hidden>🗑 Delete all tasks</button>
+      </div>
     </div>
   </section>
 

@@ -50,6 +50,29 @@
 
   var PENCIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 
+  // A 10-second "Undo" toast for destructive actions (C1) -- onUndo restores
+  // whatever the caller already snapshotted before mutating. Only one toast
+  // at a time; a new one replaces whatever's showing.
+  var undoToastTimer = null;
+  function showUndoToast(message, onUndo) {
+    var existing = document.getElementById("undo-toast");
+    if (existing) existing.remove();
+    if (undoToastTimer) clearTimeout(undoToastTimer);
+
+    var btn = el("button", { type: "button" }, ["Undo"]);
+    btn.addEventListener("click", function () {
+      clearTimeout(undoToastTimer);
+      toast.remove();
+      onUndo();
+    });
+    var toast = el("div", { class: "undo-toast", id: "undo-toast", role: "status" }, [
+      el("span", {}, [message]),
+      btn,
+    ]);
+    document.body.appendChild(toast);
+    undoToastTimer = setTimeout(function () { toast.remove(); }, 10000);
+  }
+
   function toISODate(d) {
     var y = d.getFullYear(), m = ("0" + (d.getMonth() + 1)).slice(-2), day = ("0" + d.getDate()).slice(-2);
     return y + "-" + m + "-" + day;
@@ -383,7 +406,11 @@
     if (Team && Team.state.team && !Team.isMentor()) return;
     var visibleCount = visibleMilestones().length + customTasks.length;
     if (!visibleCount) return;
-    if (!confirm("Delete all " + visibleCount + " tasks from the Technical Checklist? Built-in milestones will be hidden (restorable later) and custom tasks will be permanently removed. This can't be undone for custom tasks.")) return;
+    if (!confirm("This will delete all " + visibleCount + " tasks from the Technical Checklist: built-in milestones will be hidden (restorable from here for 10 seconds, or one at a time later) and custom tasks will be permanently removed. This cannot be undone after that.")) return;
+    var prevHidden = hiddenMilestones.slice();
+    var prevProgress = progress;
+    var prevCustomTasks = customTasks;
+    var prevAssignments = assignments;
     milestones.forEach(function (m) {
       if (hiddenMilestones.indexOf(m.id) === -1) hiddenMilestones.push(m.id);
       delete progress[m.id];
@@ -399,6 +426,17 @@
     saveProgress(progress);
     saveAssignments(assignments);
     render();
+    showUndoToast("Deleted " + visibleCount + (visibleCount === 1 ? " task." : " tasks."), function () {
+      hiddenMilestones = prevHidden;
+      progress = prevProgress;
+      customTasks = prevCustomTasks;
+      assignments = prevAssignments;
+      saveHiddenMilestones(hiddenMilestones);
+      saveProgress(progress);
+      saveCustomTasks(customTasks);
+      saveAssignments(assignments);
+      render();
+    });
   }
   var progress = Core.loadProgress();
   var calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -1783,10 +1821,17 @@
       }).catch(function (err) { alert(err.message); });
       return;
     }
-    if (!confirm("Clear all season progress? This also clears your synced copy if you're signed in.")) return;
+    var doneCount = milestones.filter(isDone).length + customTasks.filter(function (t) { return !!progress[t.id]; }).length;
+    if (!confirm("This will clear " + doneCount + (doneCount === 1 ? " completed milestone" : " completed milestones") + ". This cannot be undone here, but you'll have 10 seconds to undo it below.")) return;
+    var prevProgress = progress;
     progress = {};
     saveProgress(progress);
     render();
+    showUndoToast("Cleared " + doneCount + (doneCount === 1 ? " completed milestone." : " completed milestones."), function () {
+      progress = prevProgress;
+      saveProgress(progress);
+      render();
+    });
   });
 
   function renderSeasonResetUI() {

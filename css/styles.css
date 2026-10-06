@@ -2552,6 +2552,29 @@ main.site-main {
 
 .team-reset-banner { margin: 10px 0 18px; padding: 12px 14px; border-radius: 10px; background: var(--amber-bg); border: 1px solid rgba(154,107,14,0.3); color: var(--amber); font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
+.undo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 18px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg-card);
+  font-size: 0.85rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  z-index: 500;
+  max-width: calc(100vw - 32px);
+}
+.undo-toast button { background: none; border: none; color: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; padding: 0; font-size: inherit; white-space: nowrap; }
+
+.danger-zone { margin-top: 10px; padding-top: 18px; border-top: 1px solid var(--border); }
+.danger-zone .eyebrow { color: var(--red-fg); }
+.danger-zone-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+
 .team-codes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 6px; }
 .team-code-box { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
 .team-code-box .eyebrow { margin-bottom: 4px; }
