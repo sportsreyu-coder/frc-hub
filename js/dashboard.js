@@ -75,11 +75,11 @@
           .sort(function (a, b) {
             return window.GrantStatus.parseDate(a.closeDate) - window.GrantStatus.parseDate(b.closeDate);
           })
-          .slice(0, 4);
+          .slice(0, 5);
 
         body.innerHTML = "";
-        if (!soon.length) {
-          body.appendChild(el("p", { class: "dash-sub" }, ["No published deadlines right now."]));
+        if (soon.length < 3) {
+          body.appendChild(el("p", { class: "dash-sub" }, ["No upcoming deadlines published right now."]));
           return;
         }
 
@@ -87,7 +87,7 @@
         soon.forEach(function (g) {
           list.appendChild(el("div", { class: "dash-mini-row" }, [
             el("span", { class: "dash-mini-label" }, [g.name]),
-            el("span", { class: "dash-mini-date" }, [g.closeDate]),
+            el("span", { class: "dash-mini-date" }, [window.GrantStatus.formatDeadline(window.GrantStatus.parseDate(g.closeDate))]),
           ]));
         });
         body.appendChild(list);

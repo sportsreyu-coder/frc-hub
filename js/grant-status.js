@@ -84,9 +84,20 @@
     return s === "open" || s === "closing-soon";
   }
 
+  var MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // "Oct 17" when `date` falls in the same year as `today`, else "Oct 17, 2026".
+  function formatDeadline(date, today) {
+    today = today instanceof Date ? today : new Date();
+    var out = MONTH_SHORT[date.getMonth()] + " " + date.getDate();
+    if (date.getFullYear() !== today.getFullYear()) out += ", " + date.getFullYear();
+    return out;
+  }
+
   window.GrantStatus = {
     getGrantStatus: getGrantStatus,
     parseDate: parseDate,
     isCurrentlyOpen: isCurrentlyOpen,
+    formatDeadline: formatDeadline,
   };
 })();

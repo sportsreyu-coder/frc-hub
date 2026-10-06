@@ -145,11 +145,17 @@
 
     var datesTable = document.getElementById("dates-table");
     datesTable.innerHTML = "";
-    openWithDates.slice(0, 6).forEach(function (g) {
+    if (openWithDates.length < 3) {
+      datesTable.appendChild(el("p", { class: "finder-hint" }, [
+        "No upcoming deadlines published right now — check back soon.",
+      ]));
+      return;
+    }
+    openWithDates.slice(0, 5).forEach(function (g) {
       var p = pillClass(g);
       var sub = g.notes || (g.tags.indexOf("no-geo-restrictions") !== -1 ? "No location restrictions" : "See grantor site for criteria");
       datesTable.appendChild(el("div", { class: "dates-row" }, [
-        el("span", { class: "dcode" }, [g.closeDate]),
+        el("span", { class: "dcode" }, [GrantStatus.formatDeadline(GrantStatus.parseDate(g.closeDate))]),
         el("span", {}, [
           el("span", { class: "dname" }, [g.name]),
           el("span", { class: "dsub" }, [sub]),
