@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <script>(function(){try{if(localStorage.getItem('frcgrants_theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — FRC Hub</title>
-<meta name="description" content="Your FRC team's home base: season pace, grants closing soon, and everything else in one place.">
+<title>Roadmap — FRC Hub</title>
+<meta name="description" content="What's built in FRC Hub today, and what's coming next.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
       <a href="forum.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg><span>Forum</span></a>
       <a href="resources.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Resources</span></a>
     </nav>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" hidden><path fill-rule="evenodd" clip-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"></path></svg>
     </button>
@@ -38,67 +38,26 @@
 </header>
 
 <main class="site-main">
-  <section class="hero" id="hero-signed-out">
-    <div class="hero-grid">
-      <h1>Everything your<br>season needs, in one place.</h1>
-      <p class="lead">Season pace, grants closing soon, and the rest of the toolkit — all in one dashboard. Sign in to save grants, sync your season tracker across devices, and join your team.</p>
-      <div class="hero-cta-row">
-        <a href="account.html" class="nav-cta">Sign in</a>
-        <a href="grants.html" class="hero-secondary-btn">Browse grants</a>
-      </div>
-    </div>
-    <div class="hr-divider"></div>
+  <section class="page-head">
+    <h1>Roadmap</h1>
+    <p>What's built today, and what's coming next.</p>
   </section>
 
-  <section class="hero hero-personal" id="hero-signed-in" hidden>
-    <div class="hero-grid">
-      <h1 id="hero-personal-greeting">Welcome back.</h1>
-      <div id="hero-personal-body"></div>
-    </div>
-    <div class="hr-divider"></div>
+  <section class="featured-card" style="margin: 24px 0;">
+    <div class="eyebrow">Built so far</div>
+    <p style="margin:10px 0 0; max-width:60ch;">A grant finder with eligibility filtering and saved grants, a season tracker with a shared team checklist and calendar, fundraising and scholarship directories, sponsorship resources, a district forum, and team accounts with mentor/student roles.</p>
   </section>
 
-  <section class="dash-grid">
-    <a href="season.html" class="dash-card dash-season" id="dash-season">
-      <div class="dash-card-head">
-        <span class="eyebrow">Season Tracker</span>
-        <span class="dash-arrow">→</span>
-      </div>
-      <div id="dash-season-body">Loading…</div>
-    </a>
-
-    <a href="grants.html#grants" class="dash-card dash-grants" id="dash-grants">
-      <div class="dash-card-head">
-        <span class="eyebrow">Grants closing soon</span>
-        <span class="dash-arrow">→</span>
-      </div>
-      <div id="dash-grants-body">Loading…</div>
-    </a>
-  </section>
-
-  <section class="dash-grid">
-    <a href="grants.html" class="dash-card dash-saved" id="dash-saved">
-      <div class="dash-card-head">
-        <span class="eyebrow">Saved grants</span>
-        <span class="dash-arrow">→</span>
-      </div>
-      <div id="dash-saved-body">Loading…</div>
-    </a>
-
-    <a href="forum.html" class="dash-card dash-forum" id="dash-forum">
-      <div class="dash-card-head">
-        <span class="eyebrow">Recent forum activity</span>
-        <span class="dash-arrow">→</span>
-      </div>
-      <div id="dash-forum-body">Loading…</div>
-    </a>
+  <section style="margin: 24px 0;">
+    <div class="eyebrow">Next up</div>
+    <p style="margin:10px 0 0; max-width:60ch; color:var(--text-dim);">Sponsor and budget tracking, a grant application pipeline (move a saved grant through Interested → Drafting → Submitted → Awarded), and deadline reminders. This dashboard is where they'll show up once they land.</p>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
     <span>FRC Hub — a community-maintained toolkit for FIRST Robotics Competition teams.</span>
-    <span>Not affiliated with FIRST®. <a href="roadmap.html">What's next</a></span>
+    <span>Not affiliated with FIRST®.</span>
   </div>
 </footer>
 
@@ -106,13 +65,6 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
-<script src="js/team.js"></script>
 <script src="js/theme.js"></script>
-<script src="js/season-core.js"></script>
-<script src="js/season-data.js"></script>
-<script src="js/grant-status.js"></script>
-<script src="js/saved-grants.js"></script>
-<script src="js/forum-data.js"></script>
-<script src="js/dashboard.js"></script>
 </body>
 </html>
