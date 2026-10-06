@@ -129,7 +129,7 @@
     "id": "groupraise",
     "name": "Groupraise",
     "link": "https://www.groupraise.com/",
-    "type": "Restaurant Giveback",
+    "type": "Other Fundraiser",
     "notes": "Help find local fundraising opportunities"
   },
   {
@@ -165,7 +165,7 @@
     "name": "Krispy Kreme",
     "link": "https://www.krispykreme.com/fundraising/home",
     "type": "Food/Item Sale",
-    "notes": "50% back?"
+    "notes": "Varies by store, confirm locally"
   },
   {
     "id": "little-caesars",

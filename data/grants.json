@@ -112,7 +112,7 @@
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "Not sure if different from the Honda Grant",
+    "notes": "A philanthropic foundation funded by American Honda Motor Co. -- a separate program from Honda's own corporate giving page (see the Honda entry).",
     "tags": [
       "currently-open"
     ],
@@ -802,22 +802,6 @@
       "corporate-employee",
       "no-501c3-required",
       "no-geo-restrictions"
-    ],
-    "lastVerified": ""
-  },
-  {
-    "id": "grants-gov",
-    "name": "Grants.gov",
-    "link": "https://www.grants.gov/",
-    "status": "open",
-    "openDate": "",
-    "closeDate": "",
-    "employeeConnection": "unsure",
-    "geoRestricted": "unsure",
-    "require501c3": "unsure",
-    "notes": "Database of Government Grants",
-    "tags": [
-      "currently-open"
     ],
     "lastVerified": ""
   },

@@ -45,7 +45,7 @@
     "id": "77-donation-opportunities",
     "name": "77+ Donation Opportunities",
     "link": "https://nonprofitmegaphone.com/corporate-donation-opportunities/",
-    "notes": "Some were included already"
+    "notes": "A curated list of corporate donation and sponsorship programs for nonprofits -- check for overlap with grants already tracked here."
   },
   {
     "id": "first-fundraising-guide",
@@ -106,5 +106,11 @@
     "name": "Yes Funding for STEM Educator",
     "link": "https://drive.google.com/file/d/11nDgav_r1ULT43r97FDvPS2uvnloVij8/view?usp=drive_link",
     "notes": ""
+  },
+  {
+    "id": "grants-gov",
+    "name": "Grants.gov",
+    "link": "https://www.grants.gov/",
+    "notes": "Search tool for federal government grants -- not FRC-specific, but worth searching directly."
   }
 ]
