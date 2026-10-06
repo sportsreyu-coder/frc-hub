@@ -1285,7 +1285,10 @@ main.site-main {
 .post-meta { font-size: 12px; color: var(--text-faint); font-family: var(--font-mono); margin-bottom: 8px; }
 .post-title { margin: 0 0 12px; font-family: var(--font-serif); font-weight: 400; font-size: 26px; }
 .post-body { margin: 0; color: var(--text-dim); font-size: 14.5px; line-height: 1.6; white-space: pre-wrap; }
-.post-actions { margin-top: 14px; }
+.post-actions { margin-top: 14px; display: flex; gap: 16px; }
+
+.board-activity { margin: 6px 0 0; font-size: 12px; color: var(--text-faint); font-family: var(--font-mono); }
+.board-activity-empty { font-style: italic; }
 
 /* ---------- Season Tracker ---------- */
 
@@ -2583,6 +2586,16 @@ main.site-main {
 .account-card p.small { margin: 0 0 20px; color: var(--text-faint); font-size: 0.85rem; }
 
 .account-card-signin { max-width: 380px; margin-left: auto; margin-right: auto; text-align: center; }
+
+.signin-benefits {
+  text-align: left;
+  margin: 0 0 18px;
+  padding: 0 0 0 20px;
+  color: var(--text-dim);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.signin-note { font-style: italic; }
 
 .google-signin-btn {
   display: inline-flex;
