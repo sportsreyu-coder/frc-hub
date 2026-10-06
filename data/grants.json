@@ -66,7 +66,7 @@
   },
   {
     "id": "aiaa",
-    "name": "AiAA",
+    "name": "AIAA",
     "link": "https://aiaa.org/get-involved/educators/Classroom-Grants/",
     "status": "closed",
     "openDate": "",
@@ -74,7 +74,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Must be k-12 Teacher and a AiAA Member",
+    "notes": "Must be k-12 Teacher and a AIAA Member",
     "tags": [
       "geo-restricted",
       "no-501c3-required"
@@ -154,7 +154,7 @@
     "employeeConnection": "yes",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Invitation Only (Usuaully means having an employee helping out)",
+    "notes": "Invitation Only (Usually means having an employee helping out)",
     "tags": [
       "corporate-employee",
       "geo-restricted"
@@ -315,7 +315,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "nderserved communities in Boston, Hartford, New York, Washington, D.C., Orange County or London",
+    "notes": "Underserved communities in Boston, Hartford, New York, Washington, D.C., Orange County or London",
     "tags": [
       "currently-open",
       "demographics",
@@ -367,7 +367,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Invitation Only (Usuaully means having an employee)",
+    "notes": "Invitation Only (Usually means having an employee)",
     "tags": [
       "corporate-employee",
       "geo-restricted"
@@ -494,7 +494,7 @@
     "name": "Dr. Scholl Foundation",
     "link": "https://www.drschollfoundation.com/application-procedures/preferences-limitations/",
     "status": "closed",
-    "openDate": "Janurary 1, 2027",
+    "openDate": "January 1, 2027",
     "closeDate": "January 31, 2027",
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
@@ -667,7 +667,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Cash Credit is Restricted to Hoodies, Jerseys, and Jackets. All items are priced far lower then other services out there. More info about us at our website, and on https://www.chiefdelphi.com/t/frctees-2025-2026-updates-and-info/505172 contact: beckett@frctees.com",
+    "notes": "Cash Credit is Restricted to Hoodies, Jerseys, and Jackets. All items are priced far lower than other services out there. More info about us at our website, and on https://www.chiefdelphi.com/t/frctees-2025-2026-updates-and-info/505172 contact: beckett@frctees.com",
     "tags": [
       "currently-open",
       "geo-restricted",
@@ -699,7 +699,7 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "school-or-501c3",
-    "notes": "OPEN FOR 2027 Applications after September 1st will recieve funding in January",
+    "notes": "OPEN FOR 2027 Applications after September 1st will receive funding in January",
     "tags": [
       "currently-open",
       "no-geo-restrictions",
@@ -832,7 +832,7 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "US Only (seperate page for Canada), only available in select states",
+    "notes": "US Only (separate page for Canada), only available in select states",
     "tags": [
       "geo-restricted",
       "school-or-501c3"
@@ -840,7 +840,7 @@
   },
   {
     "id": "idaho-national-labratory",
-    "name": "Idaho National Labratory",
+    "name": "Idaho National Laboratory",
     "link": "https://inl.gov/community-engagement/community-grants/",
     "status": "unsure",
     "openDate": "",
@@ -1174,7 +1174,7 @@
   },
   {
     "id": "msc",
-    "name": "Msc",
+    "name": "MSC",
     "link": "https://www.mscdirect.com/corporate/community-relations-partners",
     "status": "closed",
     "openDate": "March 1, 2026",
@@ -1327,7 +1327,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Invitation Only (Usuaully means having an employee)",
+    "notes": "Invitation Only (Usually means having an employee)",
     "tags": [
       "501c3-required",
       "corporate-employee",
@@ -1471,7 +1471,7 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Invitation Only (Usuaully means having an employee)",
+    "notes": "Invitation Only (Usually means having an employee)",
     "tags": [
       "501c3-required",
       "corporate-employee",
@@ -1556,7 +1556,7 @@
     "employeeConnection": "yes",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "Invitation Only (Usuaully means having an employee)",
+    "notes": "Invitation Only (Usually means having an employee)",
     "tags": [
       "corporate-employee",
       "currently-open"
@@ -1731,7 +1731,7 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "Invitation Only (Usuaully means having an employee)",
+    "notes": "Invitation Only (Usually means having an employee)",
     "tags": [
       "corporate-employee",
       "currently-open",
@@ -1864,7 +1864,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Foe 6-12 teachers",
+    "notes": "For 6-12 teachers",
     "tags": [
       "currently-open",
       "geo-restricted",
@@ -1955,7 +1955,7 @@
   },
   {
     "id": "w-k-kellog-foundation",
-    "name": "W.K Kellog Foundation",
+    "name": "W.K. Kellogg Foundation",
     "link": "https://www.wkkf.org/grantseekers/",
     "status": "open",
     "openDate": "",
@@ -2013,7 +2013,7 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Invitation Only (Usuaully means having an employee)",
+    "notes": "Invitation Only (Usually means having an employee)",
     "tags": [
       "corporate-employee",
       "currently-open",
@@ -2079,7 +2079,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "Eastern Massachussetts and Georgetown County South Carolina",
+    "notes": "Eastern Massachusetts and Georgetown County South Carolina",
     "tags": [
       "currently-open",
       "geo-restricted",

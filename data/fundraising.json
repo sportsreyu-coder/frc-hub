@@ -1,14 +1,14 @@
 [
   {
     "id": "applebees",
-    "name": "Applebees",
+    "name": "Applebee's",
     "link": "https://www.flapjackfunds.com/program.php?id=1",
     "type": "Other Fundraiser",
     "notes": "Sell tickets to a meal (costs about $6 per ticket sold) Set your own prices and keep the rest"
   },
   {
     "id": "barnes-and-nobles",
-    "name": "Barnes and Nobles",
+    "name": "Barnes & Noble",
     "link": "https://www.barnesandnobleinc.com/about-bn/sponsorships-charitable-donations/",
     "type": "Other Fundraiser",
     "notes": ""
@@ -43,7 +43,7 @@
   },
   {
     "id": "brusters",
-    "name": "Brusters",
+    "name": "Bruster's",
     "link": "https://brusters.com/fundraising/",
     "type": "Food/Item Sale",
     "notes": ""
@@ -78,7 +78,7 @@
   },
   {
     "id": "chick-fil-a",
-    "name": "Chick-fil-a",
+    "name": "Chick-fil-A",
     "link": "https://www.chick-fil-a.com/customer-support/who-we-are/giving-back/does-chick-fil-a-offer-fundraising-opportunities-to-help-organizations-raise-money",
     "type": "Restaurant Giveback",
     "notes": "15% back - Need to talk to local locations"
@@ -92,7 +92,7 @@
   },
   {
     "id": "dave-and-busters",
-    "name": "Dave and Busters",
+    "name": "Dave & Buster's",
     "link": "https://www.groupraise.com/offers/power-card",
     "type": "Other Fundraiser",
     "notes": "50% back"
@@ -148,14 +148,14 @@
   },
   {
     "id": "in-and-out",
-    "name": "In and Out",
+    "name": "In-N-Out",
     "link": "https://www.in-n-out.com/community",
     "type": "Other Fundraiser",
-    "notes": "Sell tickets  at $8 each (you keep $6 per) to host a cookout truck (Minimumn 200 tickets sold)"
+    "notes": "Sell tickets  at $8 each (you keep $6 per) to host a cookout truck (Minimum 200 tickets sold)"
   },
   {
     "id": "jersey-mikes",
-    "name": "Jersey Mikes",
+    "name": "Jersey Mike's",
     "link": "https://jerseymikes.force4good.com/",
     "type": "Restaurant Giveback",
     "notes": "20% back"
@@ -225,7 +225,7 @@
   },
   {
     "id": "rasing-canes",
-    "name": "Rasing Canes",
+    "name": "Raising Cane's",
     "link": "https://raisingcanes.com/community-partnerships/",
     "type": "Restaurant Giveback",
     "notes": "15% back"
@@ -260,7 +260,7 @@
   },
   {
     "id": "skyzone",
-    "name": "Skyzone",
+    "name": "Sky Zone",
     "link": "https://www.skyzone.com/deerpark/fundraising/",
     "type": "Other Fundraiser",
     "notes": "20% of ticket sales"
