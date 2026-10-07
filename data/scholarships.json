@@ -329,5 +329,98 @@
     ],
     "notes": "For a high school senior who participated in FIRST, VEX, or the National Robotics League.",
     "lastVerified": ""
+  },
+  {
+    "id": "sae-dawson-technical-scholarship",
+    "name": "TMC SAE Donald D. Dawson Technical Scholarship",
+    "provider": "SAE International",
+    "link": "https://www.sae.org/participate/scholarships/tmc-sae-donald-d-dawson-technical-scholarship",
+    "amount": "$4,500",
+    "deadline": "February 1 – February 28",
+    "category": "stem-general",
+    "tags": [
+      "merit-based",
+      "national"
+    ],
+    "notes": "For students pursuing an engineering or related science degree through an ABET-accredited program who can show hands-on technical experience — SAE explicitly lists FIRST or VEX robotics competition participation as qualifying activity alongside things like engine work or coding projects.",
+    "lastVerified": ""
+  },
+  {
+    "id": "ieee-presidents-scholarship",
+    "name": "IEEE Presidents' Scholarship",
+    "provider": "IEEE Foundation",
+    "link": "https://www.ieee.org/education/preuniversity/scholarship",
+    "amount": "$10,000 (1st place, payable over 4 years); $600 (2nd); $400 (3rd)",
+    "deadline": "No separate application — awarded to finalists at the Regeneron International Science and Engineering Fair (ISEF), typically held in May",
+    "category": "stem-general",
+    "tags": [
+      "merit-based",
+      "national"
+    ],
+    "notes": "Recognizes an outstanding ISEF finalist project in electrical engineering, electronics, computer science, or another IEEE field — robotics and automation builds are a recurring winning project category. Students qualify by reaching ISEF with their project, not by a direct application.",
+    "lastVerified": ""
+  },
+  {
+    "id": "shpe-scholarshpe",
+    "name": "ScholarSHPE",
+    "provider": "Society of Hispanic Professional Engineers (SHPE)",
+    "link": "https://shpe.org/engage/programs/scholarshpe/",
+    "amount": "Individual awards vary; SHPE distributes over $1 million annually across its scholarship portfolio",
+    "deadline": "Typically opens early February and closes mid-February for the main cycle; check current dates on SHPE's site",
+    "category": "stem-general",
+    "tags": [
+      "multiple-awards",
+      "merit-or-need",
+      "national"
+    ],
+    "notes": "Requires active SHPE membership (free/low-cost to join) and enrollment in a STEM degree program; one common application considers students for all eligible named awards. SHPE chapters frequently mentor and sponsor FIRST/VEX robotics teams, so robotics experience is a strong fit for applicant essays.",
+    "lastVerified": ""
+  },
+  {
+    "id": "asme-inspire-clarke-scholarship",
+    "name": "ASME INSPIRE/Charles W.E. Clarke Scholarship",
+    "provider": "ASME Foundation",
+    "link": "https://www.asme.org/asme-programs/students-and-faculty/scholarships/available-high-school-scholarships",
+    "amount": "$2,000 (25 awards)",
+    "deadline": "Applications open December 1; due March 15",
+    "category": "stem-general",
+    "tags": [
+      "multiple-awards",
+      "merit-based",
+      "national"
+    ],
+    "notes": "For graduating high school seniors planning to enroll in an ABET-accredited mechanical engineering or mechanical engineering technology program. ASME is a longtime FIRST Robotics sponsor and judge partner, and reviewers favor applicants who can point to hands-on project experience like robotics build season.",
+    "lastVerified": ""
+  },
+  {
+    "id": "astronaut-scholarship",
+    "name": "Astronaut Scholarship",
+    "provider": "Astronaut Scholarship Foundation",
+    "link": "https://www.astronautscholarship.org/programs/astronaut-scholarship/",
+    "amount": "Up to $15,000",
+    "deadline": "Nomination-only — partner-university liaisons submit nominations by late March each year",
+    "category": "stem-general",
+    "tags": [
+      "merit-based",
+      "national",
+      "nomination-required"
+    ],
+    "notes": "Awarded to STEM sophomores/juniors doing hands-on research or engineering work, through faculty nomination at ~45 partner universities only (no direct student application). FRC alumni heading into autonomous systems, aerospace, or robotics research are well-positioned if their university is a partner — ask an engineering advisor about nomination early in the fall term.",
+    "lastVerified": ""
+  },
+  {
+    "id": "tsa-elrod-memorial-scholarship",
+    "name": "William P. Elrod Memorial Scholarship",
+    "provider": "Technology Student Association (TSA)",
+    "link": "https://tsaweb.org/programs/awards-and-scholarships",
+    "amount": "$2,500",
+    "deadline": "May 1",
+    "category": "stem-general",
+    "tags": [
+      "merit-based",
+      "national"
+    ],
+    "notes": "For a TSA student member pursuing a STEM path. TSA's national competitive events include a Robotics and Automation category, and many FRC/VEX competitors already hold TSA membership through their school's CTE or STEM program.",
+    "lastVerified": ""
   }
 ]

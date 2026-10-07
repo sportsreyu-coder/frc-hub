@@ -86,12 +86,11 @@
 
   var MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  // "Oct 17" when `date` falls in the same year as `today`, else "Oct 17, 2026".
+  // Always "Oct 17, 2026" -- the year is never omitted, even when it matches
+  // the current year, so a short deadline can't be misread as referring to
+  // the wrong cycle (see the file header note above).
   function formatDeadline(date, today) {
-    today = today instanceof Date ? today : new Date();
-    var out = MONTH_SHORT[date.getMonth()] + " " + date.getDate();
-    if (date.getFullYear() !== today.getFullYear()) out += ", " + date.getFullYear();
-    return out;
+    return MONTH_SHORT[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
   }
 
   // Badge for a grant: { key, cls, label }. One pill class per status key

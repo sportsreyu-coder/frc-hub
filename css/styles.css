@@ -994,7 +994,6 @@ main.site-main {
   margin: 0;
   color: var(--text-dim);
   font-size: 14.5px;
-  flex: 1;
 }
 
 .gc-amount {
@@ -1024,6 +1023,7 @@ main.site-main {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-top: auto;
   border-top: 1px solid #ede8df;
   padding-top: 12px;
 }
