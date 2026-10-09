@@ -65,6 +65,17 @@
     return d ? d.getTime() : Infinity;
   }
 
+  // True if the grant's closeDate has already passed, regardless of the
+  // hand-entered status field (catches "unsure"-tagged grants with a stale
+  // date so they don't sort as if closing soonest -- see grant-status.js).
+  function isPastDeadline(g) {
+    var d = GrantStatus.parseDate(g.closeDate);
+    if (!d) return false;
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return d.getTime() < today.getTime();
+  }
+
   function el(tag, attrs, children) {
     var node = document.createElement(tag);
     if (attrs) {
@@ -218,7 +229,12 @@
     if (state.sort === "az") {
       cmp = function (a, b) { return a.name.localeCompare(b.name); };
     } else if (state.sort === "deadline") {
-      cmp = function (a, b) { return closeTimestamp(a) - closeTimestamp(b) || a.name.localeCompare(b.name); };
+      cmp = function (a, b) {
+        var aClosed = isPastDeadline(a) || GrantStatus.getGrantStatus(a) === "closed";
+        var bClosed = isPastDeadline(b) || GrantStatus.getGrantStatus(b) === "closed";
+        if (aClosed !== bClosed) return aClosed ? 1 : -1;
+        return closeTimestamp(a) - closeTimestamp(b) || a.name.localeCompare(b.name);
+      };
     } else {
       var rank = { open: 0, "closing-soon": 0, rolling: 1, upcoming: 1, unknown: 1, closed: 2 };
       cmp = function (a, b) { return (rank[GrantStatus.getGrantStatus(a)] - rank[GrantStatus.getGrantStatus(b)]) || a.name.localeCompare(b.name); };
@@ -405,6 +421,9 @@
     document.querySelectorAll('[data-filter="boost"]').forEach(function (b) {
       b.classList.toggle("active", state.boosts.has(b.getAttribute("data-value")));
     });
+    document.querySelectorAll('[data-filter="state"]').forEach(function (b) {
+      b.classList.toggle("active", state.stateFilter === b.getAttribute("data-value"));
+    });
   }
 
   function renderActiveChips() {
@@ -489,6 +508,7 @@
     if (params.has("state")) {
       state.stateFilter = params.get("state");
       document.getElementById("state-select").value = state.stateFilter;
+      document.querySelectorAll('[data-filter="state"]').forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-value") === state.stateFilter); });
     }
     if (params.has("boost")) {
       params.get("boost").split(",").forEach(function (b) { if (b) state.boosts.add(b); });
@@ -596,7 +616,7 @@
       btn.addEventListener("click", function () {
         state.statusOpen = !state.statusOpen;
         state.limit = PAGE_SIZE;
-        btn.classList.toggle("active", state.statusOpen);
+        syncFilterButtons();
         render();
         syncUrl();
       });
@@ -619,20 +639,30 @@
     stateSelect.addEventListener("change", function (e) {
       state.stateFilter = e.target.value;
       state.limit = PAGE_SIZE;
+      syncFilterButtons();
       render();
       syncUrl();
+    });
+
+    document.querySelectorAll('[data-filter="state"]').forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var val = btn.getAttribute("data-value");
+        var already = state.stateFilter === val;
+        state.stateFilter = already ? "" : val;
+        stateSelect.value = state.stateFilter;
+        state.limit = PAGE_SIZE;
+        syncFilterButtons();
+        render();
+        syncUrl();
+      });
     });
 
     document.querySelectorAll('[data-filter="boost"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
         var val = btn.getAttribute("data-value");
-        if (state.boosts.has(val)) {
-          state.boosts.delete(val);
-          btn.classList.remove("active");
-        } else {
-          state.boosts.add(val);
-          btn.classList.add("active");
-        }
+        if (state.boosts.has(val)) state.boosts.delete(val);
+        else state.boosts.add(val);
+        syncFilterButtons();
         render();
         syncUrl();
       });
@@ -642,10 +672,9 @@
       btn.addEventListener("click", function () {
         var val = btn.getAttribute("data-value");
         var already = state.c3 === val;
-        document.querySelectorAll('[data-filter="c3"]').forEach(function (b) { b.classList.remove("active"); });
         state.c3 = already ? null : val;
-        if (!already) btn.classList.add("active");
         state.limit = PAGE_SIZE;
+        syncFilterButtons();
         render();
         syncUrl();
       });
