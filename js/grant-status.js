@@ -97,9 +97,24 @@
   // (see css/styles.css) and never color-only -- label always says why.
   function describe(grant, today) {
     today = startOfDay(today instanceof Date ? today : new Date());
+
+    // Flagged during the 2026-10-07 audit as having no verifiable official
+    // source for its dates -- show that plainly instead of a firm-looking
+    // deadline we can't actually stand behind.
+    if (grant.unverified) return { key: "unverified", cls: "pill-unknown", label: "No date listed" };
+
     var key = getGrantStatus(grant, today);
     var openD = parseDate(grant.openDate);
     var closeD = parseDate(grant.closeDate);
+
+    // A date string that's present but didn't parse (e.g. "2026?",
+    // "December", "TBD") isn't the same as no date at all -- treating it
+    // as absent let these silently compute as "Rolling" or "Dates not
+    // published", hiding uncertainty the grantor itself stated.
+    if ((grant.openDate && !openD) || (grant.closeDate && !closeD)) {
+      var raw = (grant.closeDate && !closeD) ? grant.closeDate : grant.openDate;
+      return { key: "unclear-date", cls: "pill-unknown", label: "Check site: “" + raw + "”" };
+    }
 
     if (key === "closing-soon") {
       var days = Math.round((closeD - today) / 86400000);

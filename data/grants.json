@@ -78,7 +78,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Must be k-12 Teacher and a AIAA Member",
+    "notes": "Must be a K-12 teacher and an AIAA member.",
     "tags": [
       "geo-restricted",
       "no-501c3-required"
@@ -124,7 +124,7 @@
     "link": "https://usfirst.submittable.com/submit/6712a108-bfe6-4fc9-85a3-dd4d76a7b45c/2025-2026-arconic-foundation-grant-application",
     "status": "unsure",
     "openDate": "",
-    "closeDate": "October 31, 2025",
+    "closeDate": "October 31, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
@@ -133,7 +133,7 @@
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "argosy-new-team-grant",
@@ -206,7 +206,7 @@
   },
   {
     "id": "bauch",
-    "name": "Bauch",
+    "name": "Bausch Foundation",
     "link": "https://www.bauschfoundation.org/",
     "status": "unsure",
     "openDate": "",
@@ -304,7 +304,7 @@
     "tags": [
       "corporate-employee"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "boston-scientific-frc-grant",
@@ -322,7 +322,8 @@
       "demographics",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "brown-rudnick-center",
@@ -366,12 +367,12 @@
     "name": "Cisco",
     "link": "https://www.cisco.com/site/us/en/about/purpose/social-impact/investments/global-impact-cash-grants.html#~eligibility-requirements",
     "status": "open",
-    "openDate": "2026?",
+    "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Grantor lists the open date only as \"2026\" without a specific day -- check their site for the exact window.",
     "tags": [
       "501c3-required",
       "currently-open",
@@ -411,7 +412,8 @@
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "costco",
@@ -496,7 +498,7 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "FIRST Come FIRST Serve, Teams without a Dow Mentor won't be viewed until June 23rd",
+    "notes": "Reviewed first come, first served. Teams without a Dow mentor won’t be considered until June 23.",
     "tags": [
       "geo-restricted"
     ],
@@ -517,7 +519,8 @@
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "dr-scholl-foundation",
@@ -545,11 +548,12 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "St Paul is main, other locations include: Beloit, City of Industry, CA, Clearing, IL (southwest Chicago), Elk Grove Village, IL, Ellwood City, PA,  Garland, TX, Garyville, LA, Greensboro, NC,  Huntington, IN, Irving / Fort Worth, TX, Jacksonville, FL, Joliet, IL, Martinsburg, WV, McDonough, GA, Naperville, IL, Sugar Land / Fresno, TX (Fort Bend County only)",
+    "notes": "St Paul is main, other locations include: Beloit, City of Industry, CA, Clearing, IL (southwest Chicago), Elk Grove Village, IL, Ellwood City, PA, Garland, TX, Garyville, LA, Greensboro, NC, Huntington, IN, Irving / Fort Worth, TX, Jacksonville, FL, Joliet, IL, Martinsburg, WV, McDonough, GA, Naperville, IL, Sugar Land / Fresno, TX (Fort Bend County only)",
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "emc-insurance",
@@ -610,7 +614,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "Limited to FRC teams in Türkiye (see the linked application).",
     "tags": [
       "geo-restricted"
     ],
@@ -708,7 +712,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Cash Credit is Restricted to Hoodies, Jerseys, and Jackets. All items are priced far lower than other services out there. More info about us at our website, and on https://www.chiefdelphi.com/t/frctees-2025-2026-updates-and-info/505172 contact: beckett@frctees.com",
+    "notes": "Close date listed by the grantor as \"TBD\". Cash Credit is Restricted to Hoodies, Jerseys, and Jackets. All items are priced far lower than other services out there. More info about us at our website, and on https://www.chiefdelphi.com/t/frctees-2025-2026-updates-and-info/505172 contact: beckett@frctees.com",
     "tags": [
       "currently-open",
       "geo-restricted",
@@ -730,7 +734,8 @@
     "tags": [
       "501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "gene-haas",
@@ -797,7 +802,7 @@
     "employeeConnection": "yes",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "Available annually for sponsorship to teams with affiliated GM employees, can be a parent mentor etc. It's an internal thing so I unfortunately don't have a link to share but for anyone who works at GM and wants to know how to get sponsorship for their FRC team go to the GM FIRST Alliance Yammer page. The sponsorship covers one regional registration fee (idk how they cover districts), and if you qualify for world's you notify them ASAP and if funds are available they'll cover the registration fee for world's.",
+    "notes": "Available annually for sponsorship to teams with affiliated GM employees, can be a parent mentor etc. It's an internal thing so I unfortunately don't have a link to share but for anyone who works at GM and wants to know how to get sponsorship for their FRC team go to the GM FIRST Alliance Yammer page. The sponsorship covers one regional registration fee (unclear how District events are covered), and if you qualify for world's you notify them ASAP and if funds are available they'll cover the registration fee for world's.",
     "tags": [
       "corporate-employee",
       "no-501c3-required",
@@ -872,7 +877,7 @@
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "idaho-national-labratory",
@@ -893,7 +898,7 @@
   {
     "id": "indiana-first-grants",
     "name": "Indiana FIRST Grants",
-    "link": "https://indianafirst.submittable.com/submit/257192/2023-2024-first-indiana-robotics-grant-application/eligibility",
+    "link": "https://indianafirst.submittable.com/submit",
     "status": "closed",
     "openDate": "",
     "closeDate": "",
@@ -939,7 +944,8 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "investors-foundation",
@@ -969,7 +975,7 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "school-or-501c3",
-    "notes": "",
+    "notes": "Grantor lists the open date only as \"December\" without a day or year -- check their site for the exact window.",
     "tags": [
       "currently-open",
       "no-geo-restrictions",
@@ -987,12 +993,12 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "40 miles of a John Deere Inspire location. Having a mentor helps if you don't meet all eligibility requirements  For a list of locations",
+    "notes": "Within 40 miles of a John Deere Inspire location (see John Deere’s site for the full list). Having a mentor helps if you don’t meet all eligibility requirements.",
     "tags": [
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "johnson-controls",
@@ -1060,7 +1066,8 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "lockheed-martin",
@@ -1197,7 +1204,8 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "molex",
@@ -1227,7 +1235,7 @@
     "tags": [
       "corporate-employee"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "msc",
@@ -1244,7 +1252,8 @@
       "501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "msoe",
@@ -1261,7 +1270,8 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "nasa",
@@ -1364,7 +1374,7 @@
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "norfolk-southern-foundation",
@@ -1433,7 +1443,8 @@
     "require501c3": "unsure",
     "notes": "",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "optimum",
@@ -1450,7 +1461,8 @@
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "pershing-square-foundation",
@@ -1505,36 +1517,36 @@
   {
     "id": "ptc",
     "name": "PTC",
-    "link": "https://docs.google.com/forms/d/e/1FAIpQLScVmjnd6srr86qa9V5zz70Jsy0Plm2rBlqaYLlZ1uj59fxPOA/formResponse",
-    "status": "unsure",
+    "link": "https://docs.google.com/forms/d/e/1FAIpQLScVmjnd6srr86qa9V5zz70Jsy0Plm2rBlqaYLlZ1uj59fxPOA/viewform",
+    "status": "closed",
     "openDate": "July 10, 2026",
     "closeDate": "September 27, 2026",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "FTC Closes August 24",
+    "notes": "FRC window has closed for 2026-27; the grantor says to check back around July 2027 for the next round. FTC closed Aug 24, 2026.",
     "tags": [
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "raytheon",
     "name": "Raytheon",
-    "link": "https://rtx.sandbox.versaic.com/login",
+    "link": "https://rtx.versaic.com",
     "status": "closed",
     "openDate": "June 1, 2026",
-    "closeDate": "August 2, 2026",
+    "closeDate": "July 31, 2026",
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Unsolicited requests open annually June 1 - July 31; response by December.",
     "tags": [
       "501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "regeneron",
@@ -1606,7 +1618,7 @@
       "school-or-501c3",
       "sustainability"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "rockland-trust",
@@ -1792,7 +1804,7 @@
       "demographics",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "sony",
@@ -1862,7 +1874,8 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "target",
@@ -1880,7 +1893,8 @@
       "no-geo-restrictions",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "td-bank",
@@ -2092,7 +2106,7 @@
       "no-geo-restrictions",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-10-07"
   },
   {
     "id": "weinberg-foundation",
@@ -2104,7 +2118,7 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Israel,Baltimore, Northeastern Pennsylvania, New York City, San Francisco, or Hawaiʻi",
+    "notes": "Israel, Baltimore, Northeastern Pennsylvania, New York City, San Francisco, or Hawaiʻi",
     "tags": [
       "501c3-required",
       "geo-restricted"
@@ -2144,7 +2158,8 @@
       "currently-open",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   },
   {
     "id": "westinghouse",
@@ -2167,14 +2182,14 @@
   {
     "id": "wolfspeed-grant",
     "name": "Wolfspeed Grant",
-    "link": "https://usfirst.submittable.com/submit/310267/2025-wolfspeed-grant-application",
+    "link": "https://usfirst.submittable.com/submit",
     "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "unsure",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "",
+    "notes": "No 2026-27 cycle found listed as of this audit -- check usfirst.submittable.com directly.",
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
@@ -2211,6 +2226,7 @@
     "require501c3": "unsure",
     "notes": "",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "",
+    "unverified": true
   }
 ]
