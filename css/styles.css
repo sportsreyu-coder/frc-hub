@@ -1719,16 +1719,20 @@ main.site-main {
   margin: 0 0 16px;
 }
 
-.cal-filter-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text-dim);
+.cal-filter-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
+  min-height: 32px;
 }
 
-.cal-filter-toggle input { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+.cal-filter-chip:hover { color: var(--text-dim); }
+.cal-filter-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 .settings-toggle {
   margin-left: auto;
@@ -2912,7 +2916,7 @@ main.site-main {
   .theme-toggle, .nav-toggle { min-width: 44px; min-height: 44px; }
   .chip, .active-filter-chip, .scholarship-filter-chip { min-height: 44px; display: inline-flex; align-items: center; }
   .reset-btn, .settings-toggle, .ics-export-btn, .kickoff-jump-btn,
-  .view-tab, .subnav-tab, .mine-toggle, .filters-toggle-btn,
+  .view-tab, .subnav-tab, .mine-toggle, .filters-toggle-btn, .cal-filter-chip,
   .account-avatar-btn, .nav-cta, .submit-btn-sm {
     min-height: 44px;
   }

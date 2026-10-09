@@ -941,6 +941,8 @@
     document.getElementById("subnav-technical").classList.toggle("active", checklistSub === "technical");
     document.getElementById("subnav-grants").classList.toggle("active", checklistSub === "grants");
     document.getElementById("mine-filter-toggle").setAttribute("aria-pressed", String(mineOnly));
+    document.getElementById("cal-filter-technical").setAttribute("aria-pressed", String(calFilters.technical));
+    document.getElementById("cal-filter-grants").setAttribute("aria-pressed", String(calFilters.grants));
     renderPhases();
     renderGrantChecklist();
     renderCalendar();
@@ -2309,18 +2311,16 @@
     render();
   });
 
-  document.getElementById("cal-filter-technical").addEventListener("change", function (e) {
-    calFilters.technical = e.target.checked;
+  document.getElementById("cal-filter-technical").addEventListener("click", function () {
+    calFilters.technical = !calFilters.technical;
     saveCalFilters(calFilters);
-    renderCalendar();
+    render();
   });
-  document.getElementById("cal-filter-grants").addEventListener("change", function (e) {
-    calFilters.grants = e.target.checked;
+  document.getElementById("cal-filter-grants").addEventListener("click", function () {
+    calFilters.grants = !calFilters.grants;
     saveCalFilters(calFilters);
-    renderCalendar();
+    render();
   });
-  document.getElementById("cal-filter-technical").checked = calFilters.technical;
-  document.getElementById("cal-filter-grants").checked = calFilters.grants;
 
   render();
   initCloudSync();
