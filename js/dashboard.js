@@ -255,6 +255,72 @@
     });
   }
 
+  // ---- Today's assignments widget: team-only. Mirrors the "applies to
+  // me" + daily-progress-key logic in js/assignments.js -- see that
+  // file's header comment for why daily completions need a per-person
+  // key instead of the one-shared-flag `progress` pattern every other
+  // task on this site uses. ----
+
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function dailyProgressKey(templateId, userId) {
+    var d = new Date();
+    var dateISO = d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+    return "daily:" + templateId + ":" + dateISO + ":" + userId;
+  }
+  function appliesToMe(tpl, myId, mySubteam) {
+    if (!tpl.active) return false;
+    if (tpl.assignTo === "everyone") return true;
+    if (myId && tpl.assignTo === myId) return true;
+    if (mySubteam && tpl.assignTo === mySubteam) return true;
+    return false;
+  }
+
+  function renderAssignmentsWidget() {
+    if (!window.FRCTeam) return;
+    window.FRCTeam.ready.then(function () {
+      var Team = window.FRCTeam;
+      if (!Team.state.team || !Team.state.user) return;
+      var myId = Team.state.user.id;
+      var mySubteam = Team.state.membership && Team.state.membership.subteam;
+
+      Team.loadTeamData().then(function (data) {
+        var templates = (data && data.dailyTemplates) || [];
+        var progress = (data && data.progress) || {};
+        var mine = templates.filter(function (t) { return appliesToMe(t, myId, mySubteam); });
+
+        document.getElementById("dash-assignments").hidden = false;
+        var body = document.getElementById("dash-assignments-body");
+        body.innerHTML = "";
+
+        if (!mine.length) {
+          body.appendChild(el("div", { class: "dash-headline" }, ["All clear"]));
+          body.appendChild(el("p", { class: "dash-sub" }, ["Nothing assigned to you today."]));
+          return;
+        }
+
+        var doneCount = mine.filter(function (t) { return !!progress[dailyProgressKey(t.id, myId)]; }).length;
+        body.appendChild(el("div", { class: "dash-headline" }, [doneCount + " / " + mine.length]));
+        body.appendChild(el("p", { class: "dash-sub" }, ["done today"]));
+
+        var remaining = mine.filter(function (t) { return !progress[dailyProgressKey(t.id, myId)]; }).slice(0, 3);
+        if (remaining.length) {
+          var list = el("div", { class: "dash-mini-list" });
+          remaining.forEach(function (t) {
+            list.appendChild(el("div", { class: "dash-mini-row" }, [
+              el("span", { class: "dash-mini-label" }, [t.label]),
+            ]));
+          });
+          body.appendChild(list);
+        }
+      }).catch(function () {
+        document.getElementById("dash-assignments").hidden = false;
+        var body = document.getElementById("dash-assignments-body");
+        body.innerHTML = "";
+        body.appendChild(el("p", { class: "dash-sub" }, ["Couldn't load today's assignments."]));
+      });
+    });
+  }
+
   // ---- Budget widget (G2/D3): team-only, funds raised vs goal ----
 
   function renderBudgetWidget() {
@@ -360,6 +426,7 @@
   renderForumWidget();
   renderTeamWidget();
   renderBudgetWidget();
+  renderAssignmentsWidget();
 
   if (window.__frcHubSupabase) {
     window.__frcHubSupabase.auth.getSession().then(function (res) {

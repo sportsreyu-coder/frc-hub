@@ -1583,6 +1583,8 @@ main.site-main {
   color: var(--text-faint);
 }
 
+.ms-date.is-overdue { color: var(--red-fg); font-weight: 700; }
+
 .ms-assigned { font-size: 12px; color: var(--text-faint); }
 
 .ms-expand-toggle {
