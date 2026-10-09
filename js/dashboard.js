@@ -217,13 +217,51 @@
     load();
   }
 
+  // ---- Team widget: team-wide snapshot (name/number, district, roster,
+  // your role) alongside the personal widgets above. ----
+
+  function renderTeamWidget() {
+    if (!window.FRCTeam) return;
+    window.FRCTeam.ready.then(function () {
+      var team = window.FRCTeam.state.team;
+      if (!team) return;
+      document.getElementById("dash-team-row").hidden = false;
+      var body = document.getElementById("dash-team-body");
+      body.innerHTML = "";
+
+      var title = team.team_name ? team.team_name + " — Team " + team.team_number : "Team " + team.team_number;
+      body.appendChild(el("div", { class: "dash-headline" }, [title]));
+      body.appendChild(el("p", { class: "dash-sub" }, [team.district || "No district set"]));
+
+      window.FRCTeam.loadRoster().then(function (rows) {
+        var mentors = rows.filter(function (r) { return r.role === "mentor"; }).length;
+        var role = window.FRCTeam.isMentor() ? "Mentor" : (window.FRCTeam.isTeamCaptain() ? "Captain" : "Member");
+
+        var list = el("div", { class: "dash-mini-list" });
+        list.appendChild(el("div", { class: "dash-mini-row" }, [
+          el("span", { class: "dash-mini-label" }, ["Roster"]),
+          el("span", { class: "dash-mini-date" }, [rows.length + (rows.length === 1 ? " member" : " members")]),
+        ]));
+        list.appendChild(el("div", { class: "dash-mini-row" }, [
+          el("span", { class: "dash-mini-label" }, ["Mentors / students"]),
+          el("span", { class: "dash-mini-date" }, [mentors + " / " + (rows.length - mentors)]),
+        ]));
+        list.appendChild(el("div", { class: "dash-mini-row" }, [
+          el("span", { class: "dash-mini-label" }, ["Your role"]),
+          el("span", { class: "dash-mini-date" }, [role]),
+        ]));
+        body.appendChild(list);
+      }).catch(function () { /* headline above already rendered; roster is a bonus */ });
+    });
+  }
+
   // ---- Budget widget (G2/D3): team-only, funds raised vs goal ----
 
   function renderBudgetWidget() {
     if (!window.FRCTeam) return;
     window.FRCTeam.ready.then(function () {
       if (!window.FRCTeam.state.team) return;
-      document.getElementById("dash-budget-row").hidden = false;
+      document.getElementById("dash-team-row").hidden = false;
       var body = document.getElementById("dash-budget-body");
       window.FRCTeam.loadBudgetEntries().then(function (entries) {
         body.innerHTML = "";
@@ -320,6 +358,7 @@
   renderGrantsWidget();
   renderSavedWidget();
   renderForumWidget();
+  renderTeamWidget();
   renderBudgetWidget();
 
   if (window.__frcHubSupabase) {
