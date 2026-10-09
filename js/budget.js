@@ -48,6 +48,15 @@
     URL.revokeObjectURL(url);
   }
 
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  var CONFETTI_COLORS = ["#2e63c8", "#0d7558", "#8a600c", "#a3391f", "#16815b"];
+  var MILESTONE_STEPS = [
+    { frac: 0.25, label: "Quarter funded" },
+    { frac: 0.5, label: "Halfway there" },
+    { frac: 0.75, label: "Almost there" },
+    { frac: 1, label: "Goal reached" },
+  ];
+
   function renderGoalCard() {
     var card = document.getElementById("goal-card");
     card.innerHTML = "";
@@ -56,32 +65,103 @@
     var expense = approved.filter(function (e) { return e.type === "expense"; }).reduce(function (s, e) { return s + Number(e.amount); }, 0);
     var goal = Team.state.team.fundraising_goal;
 
-    card.appendChild(el("div", { class: "pace-eyebrow" }, ["Funds raised"]));
-    card.appendChild(el("div", { class: "pace-headline" }, [money(income)]));
-    card.appendChild(el("p", {}, [money(expense) + " spent · " + money(income - expense) + " net"]));
+    var header = el("div", {}, [
+      el("div", { class: "pace-eyebrow" }, ["Funds raised"]),
+      el("div", { class: "pace-headline" }, [money(income)]),
+      el("p", {}, [money(expense) + " spent · " + money(income - expense) + " net"]),
+    ]);
+    card.appendChild(header);
 
-    if (goal) {
-      var pct = Math.min(100, Math.round((income / goal) * 100));
-      card.appendChild(el("div", { class: "progress-track", style: "margin-top:10px;" }, [
-        el("div", { class: "progress-fill", style: "width:" + pct + "%" }),
-      ]));
-      card.appendChild(el("p", { style: "margin-top:8px;" }, [money(income) + " of " + money(goal) + " goal (" + pct + "%)"]));
-    } else {
-      card.appendChild(el("p", { style: "margin-top:8px; color:var(--text-faint);" }, ["No season goal set yet."]));
+    if (!goal) {
+      card.appendChild(el("p", { style: "margin-top:8px; color:var(--text-faint);" }, ["No season goal set yet. Set one below to start filling the thermometer."]));
+      appendGoalEditRow(card, null);
+      return;
     }
 
-    if (Team.isMentor()) {
-      var goalInput = el("input", { type: "number", min: "0", step: "1", placeholder: "Set season goal ($)", style: "max-width:200px; margin-top:10px;" });
-      if (goal) goalInput.value = goal;
-      var goalBtn = el("button", { type: "button", class: "submit-btn-sm", style: "margin-left:8px;" }, ["Save goal"]);
-      goalBtn.addEventListener("click", function () {
-        var v = parseFloat(goalInput.value);
-        if (isNaN(v) || v <= 0) return;
-        Team.setFundraisingGoal(v).then(render);
+    var pct = Math.max(0, income / goal);
+    var pctRounded = Math.min(100, Math.round(pct * 100));
+    var complete = income >= goal;
+
+    var inner = el("div", { class: "goal-card-inner", style: "margin-top:18px;" });
+
+    // ---- thermometer ----
+    var fillPct = Math.min(100, pctRounded);
+    var tube = el("div", { class: "thermo-tube" });
+    MILESTONE_STEPS.slice(0, 3).forEach(function (step) {
+      tube.appendChild(el("div", { class: "thermo-tick", style: "bottom:" + (step.frac * 100) + "%;" }));
+    });
+    var fill = el("div", { class: "thermo-fill", style: "height:" + fillPct + "%;" });
+    fill.appendChild(el("div", { class: "thermo-fill-sheen" }));
+    if (fillPct > 0 && !complete) {
+      [0, 0.9, 1.7].forEach(function (delay) {
+        fill.appendChild(el("div", { class: "thermo-bubble", style: "animation-delay:" + delay + "s; left:" + (35 + delay * 10) + "%;" }));
       });
-      var row = el("div", {}, [goalInput, goalBtn]);
-      card.appendChild(row);
     }
+    tube.appendChild(fill);
+
+    var bulb = el("div", { class: "thermo-bulb" + (income > 0 ? " is-filled" : "") });
+
+    var tubeWrap = el("div", { class: "thermo-tube-wrap" }, [tube, bulb]);
+    var thermoWrap = el("div", { class: "thermo-wrap" + (complete ? " is-complete" : ""), style: "position:relative;" }, [
+      el("div", { class: "thermo-block" }, [tubeWrap]),
+    ]);
+
+    if (complete) {
+      for (var i = 0; i < 16; i++) {
+        thermoWrap.appendChild(el("div", {
+          class: "confetti-piece",
+          style: "left:" + Math.round(Math.random() * 100) + "%; background:" + CONFETTI_COLORS[i % CONFETTI_COLORS.length] + "; animation-delay:" + (Math.random() * 0.6).toFixed(2) + "s; transform:rotate(" + Math.round(Math.random() * 360) + "deg);",
+        }));
+      }
+    }
+
+    inner.appendChild(thermoWrap);
+
+    // ---- stats + milestones ----
+    var stats = el("div", { class: "thermo-stats" });
+    stats.appendChild(el("p", { style: "margin:0;" }, [
+      money(income) + " of " + money(goal) + " goal — " + pctRounded + "%" + (income > goal ? " (" + money(income - goal) + " over!)" : ""),
+    ]));
+    if (complete) {
+      var badge = el("span", { class: "goal-reached-badge" });
+      badge.innerHTML = CHECK_SVG + "<span>Goal reached!</span>";
+      stats.appendChild(badge);
+    } else {
+      stats.appendChild(el("p", { style: "margin:6px 0 0; color:var(--text-faint); font-size:12.5px;" }, [
+        money(goal - income) + " to go",
+      ]));
+    }
+
+    var milestoneList = el("div", { class: "goal-milestones" });
+    MILESTONE_STEPS.forEach(function (step) {
+      var amount = goal * step.frac;
+      var reached = income >= amount;
+      var row = el("div", { class: "milestone-item" + (reached ? " is-reached" : "") });
+      var checkWrap = el("span", { class: "milestone-check" });
+      if (reached) checkWrap.innerHTML = CHECK_SVG;
+      row.appendChild(el("span", { class: "milestone-label" }, [checkWrap, step.label]));
+      row.appendChild(el("span", { class: "milestone-amount" }, [money(amount)]));
+      milestoneList.appendChild(row);
+    });
+    stats.appendChild(milestoneList);
+
+    inner.appendChild(stats);
+    card.appendChild(inner);
+
+    appendGoalEditRow(card, goal);
+  }
+
+  function appendGoalEditRow(card, goal) {
+    if (!Team.isMentor()) return;
+    var goalInput = el("input", { type: "number", min: "0", step: "1", placeholder: "Set season goal ($)" });
+    if (goal) goalInput.value = goal;
+    var goalBtn = el("button", { type: "button", class: "submit-btn-sm" }, [goal ? "Update goal" : "Save goal"]);
+    goalBtn.addEventListener("click", function () {
+      var v = parseFloat(goalInput.value);
+      if (isNaN(v) || v <= 0) return;
+      Team.setFundraisingGoal(v).then(render);
+    });
+    card.appendChild(el("div", { class: "goal-edit-row" }, [goalInput, goalBtn]));
   }
 
   function renderCategoryTotals() {

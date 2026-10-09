@@ -161,6 +161,48 @@ input::placeholder { color: var(--text-faint2); }
 .main-nav a:hover { color: var(--text); }
 .main-nav a.active { background: var(--bg-soft); color: var(--text); }
 
+/* Dashboard dropdown: hover (or focus-within, for keyboard tabbing)
+   reveals the subpages instead of listing them in the top bar directly. */
+.nav-dropdown-group { position: relative; }
+
+.nav-caret { width: 11px; height: 11px; margin-left: -1px; transition: transform 0.15s ease; }
+.nav-dropdown-group:hover .nav-caret,
+.nav-dropdown-group:focus-within .nav-caret,
+.nav-dropdown-group.open .nav-caret { transform: rotate(180deg); }
+
+.nav-dropdown-menu {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 8px;
+  min-width: 210px;
+  z-index: 50;
+}
+
+.nav-dropdown-group:hover .nav-dropdown-menu,
+.nav-dropdown-group:focus-within .nav-dropdown-menu,
+.nav-dropdown-group.open .nav-dropdown-menu {
+  display: flex;
+}
+
+.nav-dropdown-menu::before {
+  content: "";
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  position: absolute;
+  inset: 8px 0 0;
+  z-index: -1;
+}
+
+.nav-dropdown-menu a { padding: 8px 12px; margin: 5px 5px 0; }
+.nav-dropdown-menu a:first-child { margin-top: 5px; }
+
 .account-slot { display: flex; align-items: center; flex-shrink: 0; }
 
 .nav-cta {
@@ -2842,6 +2884,18 @@ main.site-main {
   }
   .main-nav.open a { padding: 12px 10px; font-size: 15px; min-height: 44px; }
   .nav-toggle { display: inline-flex; }
+
+  /* No hover on touch: once the hamburger menu is open, show the
+     Dashboard subpages as a plain expanded list instead of a hover menu. */
+  .nav-caret { display: none; }
+  .nav-dropdown-menu {
+    display: flex;
+    position: static;
+    padding-top: 0;
+    padding-left: 14px;
+  }
+  .nav-dropdown-menu::before { display: none; }
+  .nav-dropdown-menu a { margin: 0; }
   .category-bar { flex-direction: column; align-items: flex-start; }
   .dates-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .dates-row .dsub { white-space: normal; overflow: visible; text-overflow: clip; }
@@ -2878,6 +2932,231 @@ main.site-main {
 
 @media (max-width: 677px) {
   .grant-grid, .simple-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Budget goal thermometer (G?) ---------- */
+
+.goal-card-inner {
+  display: flex;
+  align-items: stretch;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.thermo-block {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  flex: 0 0 auto;
+}
+
+.thermo-tube-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+  flex: 0 0 auto;
+}
+
+.thermo-tube {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 999px 999px 6px 6px;
+  background: var(--bg-soft);
+  border: 2px solid var(--border-strong);
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.thermo-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0%;
+  background: linear-gradient(180deg, var(--accent-hover), var(--accent));
+  transition: height 0.6s cubic-bezier(.2,.9,.3,1);
+  overflow: hidden;
+}
+
+.thermo-wrap.is-complete .thermo-fill {
+  background: linear-gradient(180deg, var(--green), var(--green));
+}
+
+.thermo-fill-sheen {
+  position: absolute;
+  top: 0;
+  left: 6px;
+  width: 4px;
+  height: 100%;
+  background: rgba(255,255,255,0.35);
+  border-radius: 999px;
+}
+
+.thermo-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  animation: thermo-rise 2.6s ease-in infinite;
+}
+
+@keyframes thermo-rise {
+  0% { transform: translate(-50%, 0) scale(0.6); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translate(-50%, -210px) scale(1); opacity: 0; }
+}
+
+.thermo-tick {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  height: 0;
+  border-top: 1px dashed var(--border-strong);
+}
+
+.thermo-bulb {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  border: 2px solid var(--border-strong);
+  margin-top: -14px;
+  flex: 0 0 auto;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.thermo-bulb.is-filled {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.thermo-wrap.is-complete .thermo-bulb.is-filled {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.thermo-wrap.is-complete .thermo-tube {
+  border-color: rgba(14,124,93,0.4);
+  animation: thermo-glow 1.8s ease-in-out infinite;
+}
+
+@keyframes thermo-glow {
+  0%, 100% { box-shadow: inset 0 2px 6px rgba(0,0,0,0.06), 0 0 0 rgba(14,124,93,0); }
+  50% { box-shadow: inset 0 2px 6px rgba(0,0,0,0.06), 0 0 18px rgba(14,124,93,0.45); }
+}
+
+.thermo-stats {
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+.goal-reached-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--green-bg);
+  color: var(--green);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.goal-reached-badge svg { width: 14px; height: 14px; }
+
+.goal-milestones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.milestone-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.milestone-item.is-reached {
+  border-color: rgba(14,124,93,0.3);
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.milestone-item .milestone-label { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+
+.milestone-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.milestone-item.is-reached .milestone-check {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+
+.milestone-check svg { width: 11px; height: 11px; }
+
+.milestone-amount { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); }
+.milestone-item.is-reached .milestone-amount { color: var(--green); }
+
+.goal-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.goal-edit-row input {
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 13.5px;
+  max-width: 180px;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: 7px;
+  height: 11px;
+  opacity: 0.9;
+  border-radius: 1px;
+  animation: confetti-fall 2.4s ease-in forwards;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(240px) rotate(260deg); opacity: 0; }
+}
+
+@media (max-width: 560px) {
+  .goal-card-inner { flex-direction: column; }
+  .thermo-stats { min-width: 0; }
 }
 
 /* ---------- Team edge accents (kept last so they win cascade ties
