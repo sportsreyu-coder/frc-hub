@@ -165,7 +165,7 @@
     if (!currentUser) return;
     var errEl = document.getElementById("delete-account-error");
     if (window.FRCTeam && window.FRCTeam.state.team) {
-      showError(errEl, "Leave your team first (see the Your team card above), then come back to delete your account data.");
+      showError(errEl, "Leave your team first (see the Team tab), then come back to delete your account data.");
       return;
     }
     if (!confirm("Delete your FRC Hub profile, forum posts, and season progress? This can't be undone.")) return;
@@ -226,7 +226,30 @@
     if (error) return showError(customizeInfo, error.message);
     customizeInfo.textContent = "Saved.";
     customizeInfo.style.display = "block";
+    updateSettingsIdentity();
   });
+
+  // The reminders checkbox lives in its own Notifications tab, away from
+  // the rest of the profile form's Save button -- a toggle reads as
+  // immediate, so it saves itself on change rather than waiting for an
+  // unrelated button elsewhere to be clicked.
+  document.getElementById("customize-reminders-checkbox").addEventListener("change", async function () {
+    if (!currentUser) return;
+    await sb.from("profiles").upsert(buildCustomizePayload());
+  });
+
+  function updateSettingsIdentity() {
+    var nameEl = document.getElementById("settings-name");
+    var avatarEl = document.getElementById("settings-avatar");
+    if (!currentUser) return;
+    var displayName = document.getElementById("customize-display-name").value.trim();
+    var meta = currentUser.user_metadata || {};
+    var name = displayName || meta.full_name || meta.name || (currentUser.email || "").split("@")[0] || "Your account";
+    nameEl.textContent = name;
+    avatarEl.textContent = name.charAt(0).toUpperCase();
+    var hex = selectedAvatarColor && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[selectedAvatarColor];
+    avatarEl.style.background = hex || "";
+  }
 
   async function loadProfile() {
     var { data: profile } = await sb.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
@@ -237,6 +260,26 @@
       selectedAvatarColor = profile.avatar_color || "";
       renderSwatches();
     }
+    updateSettingsIdentity();
+  }
+
+  // ---- Settings sidebar: switch between Profile / Team / Notifications /
+  // Privacy & data panels ----
+  var settingsNav = document.getElementById("settings-nav");
+  if (settingsNav) {
+    settingsNav.addEventListener("click", function (e) {
+      var btn = e.target.closest(".settings-nav-btn");
+      if (!btn) return;
+      var panelName = btn.getAttribute("data-panel");
+      settingsNav.querySelectorAll(".settings-nav-btn").forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle("active", active);
+        b.setAttribute("aria-pressed", String(active));
+      });
+      document.querySelectorAll(".settings-panel").forEach(function (panel) {
+        panel.hidden = panel.getAttribute("data-panel") !== panelName;
+      });
+    });
   }
 
   // ---- Onboarding: mentor/student prompt, then create/join ----
@@ -261,7 +304,9 @@
     try { localStorage.setItem(roleStorageKey(), role); } catch (e) { /* ignore */ }
     document.getElementById("create-team-role-label").textContent = role === "student" ? "Student" : "Mentor";
     document.getElementById("no-team-cards").hidden = false;
-    openTeamModal("create");
+    // Students can only join an existing team with a code -- creating a
+    // team is mentor-only (enforced server-side in create_team() too).
+    openTeamModal(role === "student" ? "join" : "create");
   }
 
   document.getElementById("role-choice-mentor").addEventListener("click", function () { setChosenRole("mentor"); });
@@ -286,6 +331,7 @@
   function showAuthed() {
     document.getElementById("auth-section").hidden = true;
     document.getElementById("dashboard-section").hidden = false;
+    document.getElementById("app").classList.add("is-dashboard");
     document.getElementById("signed-in-email").textContent = currentUser.email || "";
     loadProfile();
   }
@@ -293,6 +339,7 @@
   function showSignedOut() {
     document.getElementById("auth-section").hidden = false;
     document.getElementById("dashboard-section").hidden = true;
+    document.getElementById("app").classList.remove("is-dashboard");
     setAuthMode("signin");
   }
 
@@ -340,7 +387,9 @@
   var teamModalJoinPane = document.getElementById("team-modal-join-pane");
 
   function setTeamModalTab(tab) {
-    var isCreate = tab !== "join";
+    var studentOnly = chosenRole === "student";
+    var isCreate = !studentOnly && tab !== "join";
+    teamModalTabCreate.hidden = studentOnly;
     teamModalTabCreate.classList.toggle("active", isCreate);
     teamModalTabJoin.classList.toggle("active", !isCreate);
     teamModalCreatePane.hidden = !isCreate;
@@ -363,9 +412,11 @@
   }
   function closeTeamModal() { teamModalOverlay.hidden = true; }
 
-  document.getElementById("open-team-modal-btn").addEventListener("click", function () { openTeamModal("create"); });
+  document.getElementById("open-team-modal-btn").addEventListener("click", function () {
+    openTeamModal(chosenRole === "student" ? "join" : "create");
+  });
   teamModalClose.addEventListener("click", closeTeamModal);
-  teamModalTabCreate.addEventListener("click", function () { setTeamModalTab("create"); });
+  teamModalTabCreate.addEventListener("click", function () { if (chosenRole !== "student") setTeamModalTab("create"); });
   teamModalTabJoin.addEventListener("click", function () { setTeamModalTab("join"); });
   teamModalOverlay.addEventListener("click", function (e) {
     if (e.target !== teamModalOverlay) return;
@@ -423,23 +474,12 @@
       var number = document.getElementById("create-team-number").value.trim();
       var name = document.getElementById("create-team-name").value.trim();
       var district = createTeamDistrict.value;
-      var role = chosenRole || "mentor";
-      Team.createTeam(number, name, district, role).then(function (team) {
+      // Only mentors can create a team (students join an existing one with
+      // a code) -- enforced again server-side in create_team().
+      Team.createTeam(number, name, district, "mentor").then(function () {
         createTeamForm.reset();
         closeTeamModal();
         renderTeamSection();
-        // Only an admin can see join codes afterward (team.html's codes
-        // section is admin-only), and a student creator never becomes admin
-        // (the first mentor to join does -- see join_team() in schema.sql),
-        // so this is a student creator's only chance to get both codes out:
-        // the mentor code to an actual mentor, and the student code to
-        // teammates.
-        if (role === "student" && team) {
-          showTeamInfo(
-            "Team created! Save these now -- as a student you won't see them again here. " +
-            "Mentor join code: " + team.join_code_mentor + ". Student join code: " + team.join_code_student + "."
-          );
-        }
       }).catch(function (err) { showCreateTeamError(err.message); });
     });
 
@@ -458,6 +498,23 @@
       if (!confirm("Leave this team? You'll need a new join code to come back.")) return;
       showTeamError("");
       Team.leaveTeam().then(function () { renderTeamSection(); }).catch(function (err) { showTeamError(err.message); });
+    });
+
+    // Self-service role switch -- same mentor/student choice as onboarding,
+    // but after the fact. Warned heavily rather than blocked outright:
+    // the only hard stop is the server-side "don't strand the team"
+    // guard in switch_my_role() (surfaced here as a plain error) for a
+    // sole mentor/admin stepping down.
+    document.getElementById("switch-role-btn").addEventListener("click", function () {
+      var toMentor = !Team.isMentor();
+      var msg = toMentor
+        ? "Switch to a mentor role? This immediately grants full team-management permissions: editing the roster, team settings, and grants. Only do this if you're actually an adult mentor for this team -- this isn't meant to be toggled back and forth."
+        : "Switch to a student role? You'll immediately lose mentor permissions, including team management. Only do this if your role on the team has genuinely changed -- this isn't meant to be toggled back and forth.";
+      if (!confirm(msg)) return;
+      showTeamError("");
+      Team.switchRole(toMentor ? "mentor" : "student")
+        .then(function () { renderTeamSection(); })
+        .catch(function (err) { showTeamError(err.message); });
     });
 
     function copyText(text) {
@@ -547,6 +604,7 @@
         (team.district ? '<div class="team-header-sub">' + team.district + "</div>" : "");
 
       document.getElementById("manage-team-link").hidden = !Team.isMentor();
+      document.getElementById("switch-role-btn").textContent = Team.isMentor() ? "Switch to student role" : "Switch to mentor role";
 
       renderResetBanner();
       renderCalendarFeed();

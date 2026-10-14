@@ -157,6 +157,9 @@
     promoteToMentor: function (userId) {
       return rpc("promote_to_mentor", { p_user_id: userId });
     },
+    switchRole: function (newRole) {
+      return refreshAfter(rpc("switch_my_role", { p_new_role: newRole }));
+    },
     grantAdmin: function (userId) {
       return rpc("grant_admin", { p_user_id: userId });
     },

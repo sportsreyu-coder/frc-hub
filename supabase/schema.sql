@@ -387,8 +387,8 @@ declare
   v_mentor_code text;
 begin
   p_role := coalesce(nullif(trim(p_role), ''), 'mentor');
-  if p_role not in ('mentor', 'student') then
-    raise exception 'Role must be mentor or student.';
+  if p_role <> 'mentor' then
+    raise exception 'Only mentors can create a team. Students should join an existing team with a join code.';
   end if;
 
   if exists (select 1 from public.team_members where user_id = auth.uid()) then
@@ -410,11 +410,9 @@ begin
   returning * into v_team;
 
   -- The creator is the one case that starts as admin outright -- there's
-  -- no one else yet to have granted it. Only applies if they created it
-  -- as a mentor; a student creator (bootstrapping a team before any
-  -- mentor has signed up) stays a plain student, and the first mentor to
-  -- join below becomes admin instead.
-  insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, p_role, p_role = 'mentor');
+  -- no one else yet to have granted it. Only mentors can create a team
+  -- (students must join with a code), so this is always true.
+  insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, p_role, true);
   insert into public.team_data (team_id, data) values (v_team.id, '{}'::jsonb);
 
   return v_team;
@@ -447,10 +445,9 @@ begin
 
   -- A mentor joining via the mentor code never arrives with admin rights
   -- already -- an existing admin has to grant that explicitly afterward
-  -- (see grant_admin()) -- EXCEPT when the team has no admin yet (e.g. a
-  -- student bootstrapped the team, or every admin has since left); then
-  -- the first mentor through the door becomes it, so the team is never
-  -- left permanently unownable.
+  -- (see grant_admin()) -- EXCEPT when the team has no admin yet (e.g.
+  -- every admin has since left); then the first mentor through the door
+  -- becomes it, so the team is never left permanently unownable.
   if v_role = 'mentor' then
     v_is_admin := not exists (select 1 from public.team_members where team_id = v_team.id and role = 'mentor' and is_admin);
   end if;
@@ -632,6 +629,59 @@ begin
 end;
 $$;
 
+-- Lets a member flip their own role between mentor and student. RLS
+-- blocks editing team_members.role directly (see the comment above),
+-- so this is the one sanctioned way to self-service it. Stepping down
+-- from mentor reuses leave_team()'s "don't strand the team" guards,
+-- since it frees the same mentor seat; stepping up to mentor reuses
+-- join_team()'s admin-bootstrap rule, so a team is never left without
+-- an admin just because everyone switched roles around.
+create or replace function public.switch_my_role(p_new_role text)
+returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  v_team_id uuid;
+  v_role text;
+  v_is_admin boolean;
+  v_other_mentors int;
+  v_other_admins int;
+begin
+  if p_new_role not in ('mentor', 'student') then
+    raise exception 'Unknown role.';
+  end if;
+
+  select team_id, role, is_admin into v_team_id, v_role, v_is_admin from public.team_members where user_id = auth.uid();
+  if v_team_id is null then
+    raise exception 'You are not on a team.';
+  end if;
+  if v_role = p_new_role then
+    return;
+  end if;
+
+  if v_role = 'mentor' then
+    select count(*) into v_other_mentors from public.team_members
+      where team_id = v_team_id and role = 'mentor' and user_id <> auth.uid();
+    if v_other_mentors = 0 then
+      raise exception 'You are the only mentor on this team -- promote a co-mentor first, or delete the team instead.';
+    end if;
+    if v_is_admin then
+      select count(*) into v_other_admins from public.team_members
+        where team_id = v_team_id and role = 'mentor' and is_admin and user_id <> auth.uid();
+      if v_other_admins = 0 then
+        raise exception 'You are the only admin on this team -- grant admin to a co-mentor first, or delete the team instead.';
+      end if;
+    end if;
+    update public.team_members set role = 'student', is_admin = false where user_id = auth.uid();
+  else
+    update public.team_members
+      set role = 'mentor',
+          captain_roles = '{}',
+          is_admin = not exists (select 1 from public.team_members where team_id = v_team_id and role = 'mentor' and is_admin)
+      where user_id = auth.uid();
+  end if;
+end;
+$$;
+
 -- How a co-mentor actually gets admin/ownership rights -- join_team()
 -- never grants it to anyone but the first mentor on a team (see its
 -- comment), so every mentor after that has to be handed it explicitly
@@ -700,6 +750,7 @@ grant execute on function public.delete_team() to authenticated;
 grant execute on function public.regenerate_join_code(uuid, text) to authenticated;
 grant execute on function public.update_team_info(uuid, text, text, text) to authenticated;
 grant execute on function public.set_member_roles(uuid, text, text[]) to authenticated;
+grant execute on function public.switch_my_role(text) to authenticated;
 grant execute on function public.remove_member(uuid) to authenticated;
 grant execute on function public.promote_to_mentor(uuid) to authenticated;
 grant execute on function public.grant_admin(uuid) to authenticated;
