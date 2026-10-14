@@ -271,9 +271,6 @@
     try { localStorage.removeItem(roleStorageKey()); } catch (e) { /* ignore */ }
     renderOnboarding();
   });
-  document.getElementById("onboarding-signout-btn").addEventListener("click", async function () {
-    await sb.auth.signOut();
-  });
 
   function renderOnboarding() {
     loadChosenRole();

@@ -141,9 +141,9 @@
       </div>
 
       <!-- Onboarding: forces a mentor/student choice right after sign-up
-           (no close button, can only sign out instead), then prompts for
-           a team -- that second step is dismissible; "Add a team" above
-           reopens it straight to the create/join tabs. -->
+           (no close button -- must pick one), then prompts for a team --
+           that second step is dismissible; "Add a team" above reopens it
+           straight to the create/join tabs. -->
       <div class="modal-overlay" id="team-modal-overlay" hidden>
         <div class="modal" role="dialog" aria-modal="true">
           <button type="button" class="modal-close" id="team-modal-close" aria-label="Close">&times;</button>
@@ -161,7 +161,6 @@
                 <span>Team members building the robot.</span>
               </button>
             </div>
-            <button type="button" class="auth-link-btn" id="onboarding-signout-btn">Sign out instead</button>
           </div>
 
           <div id="team-modal-tabs-pane" hidden>
