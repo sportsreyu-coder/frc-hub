@@ -2698,6 +2698,36 @@ main.site-main {
 .google-signin-btn:hover { border-color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 .google-signin-btn svg { flex-shrink: 0; }
 
+.auth-mode-switch, .auth-method-switch { margin: 18px 0; justify-content: center; }
+.auth-method-switch { margin: 0 0 16px; }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  margin: 18px 0;
+}
+.auth-divider::before, .auth-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+}
+.auth-divider span { padding: 0 10px; }
+
+.auth-link-btn {
+  display: block;
+  width: 100%;
+  margin: 10px 0 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
 .error-msg { background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red-fg); padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 14px; display: none; }
 .info-msg { background: var(--green-bg); border: 1px solid rgba(14,124,93,0.3); color: var(--green); padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 14px; display: none; }
 
@@ -2847,6 +2877,89 @@ main.site-main {
 .captain-checks label { display: inline-flex; align-items: center; gap: 4px; }
 .roster-row-actions { display: flex; gap: 10px; margin-top: 8px; }
 .roster-row-actions button { font-size: 0.78rem; }
+
+.manage-team-link { display: inline-block; margin: -4px 0 14px; font-size: 0.85rem; font-weight: 600; }
+
+/* ---------- Classroom-style "add a team" modal ---------- */
+
+.add-team-card { text-align: center; }
+.add-team-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+.add-team-btn:hover { background: var(--accent-hover); }
+.add-team-btn svg { width: 16px; height: 16px; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+.modal-overlay[hidden] { display: none; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+.modal h2 { margin: 0 0 6px; font-family: var(--font-serif); font-weight: 500; font-size: 1.2rem; }
+.modal p.small { margin: 0 0 20px; color: var(--text-faint); font-size: 0.85rem; }
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+.modal-close:hover { color: var(--text); }
+.modal-tabs { display: flex; gap: 6px; background: var(--bg-soft); border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+.modal-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+.modal-tab.active { background: var(--bg-card); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+.danger-btn {
+  padding: 9px 16px;
+  border: 1px solid var(--red-border);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--red-fg);
+  font-size: 14px;
+  cursor: pointer;
+}
+.danger-btn:hover { background: var(--red-bg); }
 
 .grant-complete-row { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .grant-complete-check { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-faint); white-space: nowrap; }

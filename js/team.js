@@ -32,6 +32,8 @@
   };
 
   function notify() {
+    var navLink = document.getElementById("nav-team-link");
+    if (navLink) navLink.hidden = !isMentor();
     listeners.forEach(function (fn) { fn(state); });
   }
 

@@ -26,6 +26,96 @@
     if (error) showError(authError, error.message);
   });
 
+  // ---- Sign in/up with email: tabs (sign in vs sign up) and, within
+  // sign up, a choice between email-only (magic link) and email+password.
+  var authInfo = document.getElementById("auth-info");
+  function showInfo(msg) { showError(authInfo, msg); }
+
+  var authTabSignin = document.getElementById("auth-tab-signin");
+  var authTabSignup = document.getElementById("auth-tab-signup");
+  var signinEmailPanel = document.getElementById("signin-email-panel");
+  var signupEmailPanel = document.getElementById("signup-email-panel");
+  var authHeading = document.getElementById("auth-heading");
+  var authSubhead = document.getElementById("auth-subhead");
+
+  function setAuthMode(mode) {
+    showError(authError, "");
+    showInfo("");
+    var isSignup = mode === "signup";
+    authTabSignin.classList.toggle("active", !isSignup);
+    authTabSignin.setAttribute("aria-pressed", String(!isSignup));
+    authTabSignup.classList.toggle("active", isSignup);
+    authTabSignup.setAttribute("aria-pressed", String(isSignup));
+    signinEmailPanel.hidden = isSignup;
+    signupEmailPanel.hidden = !isSignup;
+    authHeading.textContent = isSignup ? "Create your account" : "Sign in";
+    authSubhead.textContent = isSignup
+      ? "Sign up with Google, or with just your email."
+      : "One click, no account or password to manage.";
+  }
+  authTabSignin.addEventListener("click", function () { setAuthMode("signin"); });
+  authTabSignup.addEventListener("click", function () { setAuthMode("signup"); });
+
+  var signupMethodEmail = document.getElementById("signup-method-email");
+  var signupMethodPassword = document.getElementById("signup-method-password");
+  var signupPasswordField = document.getElementById("signup-password-field");
+  var signupPasswordInput = document.getElementById("signup-password");
+  var signupSubmitBtn = document.getElementById("signup-submit-btn");
+
+  function setSignupMethod(method) {
+    var usePassword = method === "password";
+    signupMethodEmail.classList.toggle("active", !usePassword);
+    signupMethodEmail.setAttribute("aria-pressed", String(!usePassword));
+    signupMethodPassword.classList.toggle("active", usePassword);
+    signupMethodPassword.setAttribute("aria-pressed", String(usePassword));
+    signupPasswordField.hidden = !usePassword;
+    signupPasswordInput.required = usePassword;
+    signupSubmitBtn.textContent = usePassword ? "Create account" : "Email me a sign-up link";
+  }
+  signupMethodEmail.addEventListener("click", function () { setSignupMethod("email"); });
+  signupMethodPassword.addEventListener("click", function () { setSignupMethod("password"); });
+
+  document.getElementById("signup-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    showError(authError, "");
+    showInfo("");
+    var email = document.getElementById("signup-email").value.trim();
+    var redirectTo = window.location.origin + window.location.pathname;
+    if (signupMethodPassword.classList.contains("active")) {
+      var password = signupPasswordInput.value;
+      var signUpRes = await sb.auth.signUp({ email: email, password: password, options: { emailRedirectTo: redirectTo } });
+      if (signUpRes.error) return showError(authError, signUpRes.error.message);
+      if (!(signUpRes.data && signUpRes.data.session)) {
+        showInfo("Check " + email + " for a confirmation link to finish creating your account.");
+      }
+    } else {
+      var otpRes = await sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectTo, shouldCreateUser: true } });
+      if (otpRes.error) return showError(authError, otpRes.error.message);
+      showInfo("Check " + email + " for a sign-up link.");
+    }
+  });
+
+  document.getElementById("signin-password-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    showError(authError, "");
+    showInfo("");
+    var email = document.getElementById("signin-email").value.trim();
+    var password = document.getElementById("signin-password").value;
+    var { error } = await sb.auth.signInWithPassword({ email: email, password: password });
+    if (error) showError(authError, error.message);
+  });
+
+  document.getElementById("signin-magic-link-btn").addEventListener("click", async function () {
+    showError(authError, "");
+    showInfo("");
+    var email = document.getElementById("signin-email").value.trim();
+    if (!email) return showError(authError, "Enter your email above first.");
+    var redirectTo = window.location.origin + window.location.pathname;
+    var { error } = await sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectTo, shouldCreateUser: false } });
+    if (error) return showError(authError, error.message);
+    showInfo("Check " + email + " for a sign-in link.");
+  });
+
   document.getElementById("signout-btn").addEventListener("click", async function () {
     await sb.auth.signOut();
   });
@@ -85,14 +175,6 @@
     location.href = "index.html";
   });
 
-  var districtSelect = document.getElementById("profile-district");
-  (window.FRC_DISTRICTS || []).forEach(function (d) {
-    var opt = document.createElement("option");
-    opt.value = d.value;
-    opt.textContent = d.label;
-    districtSelect.appendChild(opt);
-  });
-
   var selectedAvatarColor = "";
   var swatchRow = document.getElementById("color-swatch-row");
 
@@ -114,40 +196,33 @@
   }
   renderSwatches();
 
-  // Both forms below write to the same `profiles` row, so each submit
-  // sends the full set of fields (read live from both forms' inputs)
-  // rather than a partial upsert -- otherwise saving one form's fields
-  // could look fine while silently depending on the other form having
-  // already run once to populate the row.
-  function buildProfilePayload() {
-    return {
+  // `profiles.team_number` is NOT NULL, but team fields no longer have
+  // their own edit form (team membership drives them via
+  // autoSyncProfileFromTeam below) -- fall back to the current team's
+  // values so this upsert never violates that constraint for a member
+  // whose profiles row doesn't exist yet.
+  function buildCustomizePayload() {
+    var payload = {
       id: currentUser.id,
-      team_number: document.getElementById("profile-team-number").value.trim(),
-      team_name: document.getElementById("profile-team-name").value.trim() || null,
-      district: districtSelect.value || null,
       display_name: document.getElementById("customize-display-name").value.trim() || null,
       avatar_color: selectedAvatarColor || null,
       signature: document.getElementById("customize-signature").value.trim() || null,
       reminder_emails_opt_out: !document.getElementById("customize-reminders-checkbox").checked,
       updated_at: new Date().toISOString(),
     };
+    if (window.FRCTeam && window.FRCTeam.state.team) {
+      payload.team_number = window.FRCTeam.state.team.team_number;
+      payload.team_name = window.FRCTeam.state.team.team_name || null;
+      payload.district = window.FRCTeam.state.team.district || null;
+    }
+    return payload;
   }
-
-  document.getElementById("profile-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    var profileInfo = document.getElementById("profile-info");
-    showError(profileInfo, "");
-    var { error } = await sb.from("profiles").upsert(buildProfilePayload());
-    if (error) return showError(profileInfo, error.message);
-    profileInfo.textContent = "Saved.";
-    profileInfo.style.display = "block";
-  });
 
   document.getElementById("customize-form").addEventListener("submit", async function (e) {
     e.preventDefault();
     var customizeInfo = document.getElementById("customize-info");
     showError(customizeInfo, "");
-    var { error } = await sb.from("profiles").upsert(buildProfilePayload());
+    var { error } = await sb.from("profiles").upsert(buildCustomizePayload());
     if (error) return showError(customizeInfo, error.message);
     customizeInfo.textContent = "Saved.";
     customizeInfo.style.display = "block";
@@ -156,9 +231,6 @@
   async function loadProfile() {
     var { data: profile } = await sb.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
     if (profile) {
-      document.getElementById("profile-team-number").value = profile.team_number || "";
-      document.getElementById("profile-team-name").value = profile.team_name || "";
-      districtSelect.value = profile.district || "";
       document.getElementById("customize-display-name").value = profile.display_name || "";
       document.getElementById("customize-signature").value = profile.signature || "";
       document.getElementById("customize-reminders-checkbox").checked = !profile.reminder_emails_opt_out;
@@ -167,14 +239,17 @@
     }
   }
 
-  // ---- Mentor/student prompt ----
+  // ---- Onboarding: mentor/student prompt, then create/join ----
   //
-  // Gates "no-team-cards" (create/join) the first time someone signs in
-  // with no team yet -- the actual role is only binding once they create
-  // or join a team (team_members.role), this is just so "Create a team"
-  // doesn't make them hunt for a role dropdown buried in the form.
-  // Stored per-browser/per-user since it's purely a UI convenience, not
-  // something any RPC reads.
+  // Forces a role choice the first time someone signs in with no team yet
+  // (the onboarding modal's role pane has no close button -- see
+  // openOnboardingRolePane below), then prompts them straight into the
+  // create/join modal. The actual role is only binding once they create
+  // or join a team (team_members.role); this choice just decides what
+  // "Create a team" submits as the creator's own role and saves them
+  // hunting for a role dropdown buried in that form. Stored per-browser/
+  // per-user since it's purely a UI convenience, not something any RPC
+  // reads.
   var chosenRole = null;
 
   function roleStorageKey() { return "frcgrants_role_" + (currentUser ? currentUser.id : "anon"); }
@@ -184,7 +259,9 @@
   function setChosenRole(role) {
     chosenRole = role;
     try { localStorage.setItem(roleStorageKey(), role); } catch (e) { /* ignore */ }
-    renderOnboarding();
+    document.getElementById("create-team-role-label").textContent = role === "student" ? "Student" : "Mentor";
+    document.getElementById("no-team-cards").hidden = false;
+    openTeamModal("create");
   }
 
   document.getElementById("role-choice-mentor").addEventListener("click", function () { setChosenRole("mentor"); });
@@ -194,15 +271,19 @@
     try { localStorage.removeItem(roleStorageKey()); } catch (e) { /* ignore */ }
     renderOnboarding();
   });
+  document.getElementById("onboarding-signout-btn").addEventListener("click", async function () {
+    await sb.auth.signOut();
+  });
 
   function renderOnboarding() {
     loadChosenRole();
-    var showPrompt = !chosenRole;
-    document.getElementById("role-prompt-card").hidden = !showPrompt;
-    document.getElementById("no-team-cards").hidden = showPrompt;
-    if (!showPrompt) {
-      document.getElementById("create-team-role-label").textContent = chosenRole === "student" ? "Student" : "Mentor";
+    if (!chosenRole) {
+      openOnboardingRolePane();
+      document.getElementById("no-team-cards").hidden = true;
+      return;
     }
+    document.getElementById("create-team-role-label").textContent = chosenRole === "student" ? "Student" : "Mentor";
+    document.getElementById("no-team-cards").hidden = false;
   }
 
   function showAuthed() {
@@ -215,6 +296,7 @@
   function showSignedOut() {
     document.getElementById("auth-section").hidden = false;
     document.getElementById("dashboard-section").hidden = true;
+    setAuthMode("signin");
   }
 
   sb.auth.onAuthStateChange(function (_event, session) {
@@ -246,14 +328,55 @@
     programming_captain: "Programming Captain",
     business_captain: "Business/Outreach Captain",
   };
-  var CAPTAIN_ROLE_ORDER = Object.keys(CAPTAIN_LABELS);
   var SUBTEAM_LABELS = { design: "Design", mechanical: "Mechanical", electrical: "Electrical", programming: "Programming", business: "Business/Outreach", "cross-team": "Cross-team" };
 
-  if (!Team) {
-    // js/team.js failed to load (e.g. Supabase not configured) -- degrade
-    // to the pre-teams experience rather than throwing on every call below.
-    document.getElementById("team-profile-card").hidden = false;
-  } else {
+  // ---- Onboarding modal: forced role pane, then classroom-style
+  // create/join tabs (the latter dismissible -- see module comment above
+  // renderOnboarding) ----
+  var teamModalOverlay = document.getElementById("team-modal-overlay");
+  var teamModalClose = document.getElementById("team-modal-close");
+  var onboardingRolePane = document.getElementById("onboarding-role-pane");
+  var teamModalTabsPane = document.getElementById("team-modal-tabs-pane");
+  var teamModalTabCreate = document.getElementById("team-modal-tab-create");
+  var teamModalTabJoin = document.getElementById("team-modal-tab-join");
+  var teamModalCreatePane = document.getElementById("team-modal-create-pane");
+  var teamModalJoinPane = document.getElementById("team-modal-join-pane");
+
+  function setTeamModalTab(tab) {
+    var isCreate = tab !== "join";
+    teamModalTabCreate.classList.toggle("active", isCreate);
+    teamModalTabJoin.classList.toggle("active", !isCreate);
+    teamModalCreatePane.hidden = !isCreate;
+    teamModalJoinPane.hidden = isCreate;
+  }
+  // Unskippable: no close button, and the backdrop-click handler below
+  // leaves it alone while this pane is showing.
+  function openOnboardingRolePane() {
+    teamModalOverlay.hidden = false;
+    onboardingRolePane.hidden = false;
+    teamModalTabsPane.hidden = true;
+    teamModalClose.hidden = true;
+  }
+  function openTeamModal(tab) {
+    teamModalOverlay.hidden = false;
+    onboardingRolePane.hidden = true;
+    teamModalTabsPane.hidden = false;
+    teamModalClose.hidden = false;
+    setTeamModalTab(tab);
+  }
+  function closeTeamModal() { teamModalOverlay.hidden = true; }
+
+  document.getElementById("open-team-modal-btn").addEventListener("click", function () { openTeamModal("create"); });
+  teamModalClose.addEventListener("click", closeTeamModal);
+  teamModalTabCreate.addEventListener("click", function () { setTeamModalTab("create"); });
+  teamModalTabJoin.addEventListener("click", function () { setTeamModalTab("join"); });
+  teamModalOverlay.addEventListener("click", function (e) {
+    if (e.target !== teamModalOverlay) return;
+    if (!onboardingRolePane.hidden) return; // forced step, no dismiss
+    closeTeamModal();
+  });
+
+  if (Team) {
     var createTeamForm = document.getElementById("create-team-form");
     var joinTeamForm = document.getElementById("join-team-form");
     var createTeamDistrict = document.getElementById("create-team-district");
@@ -306,12 +429,14 @@
       var role = chosenRole || "mentor";
       Team.createTeam(number, name, district, role).then(function (team) {
         createTeamForm.reset();
+        closeTeamModal();
         renderTeamSection();
-        // Only an admin can see join codes afterward (team-codes-section is
-        // admin-only), and a student creator never becomes admin (the first
-        // mentor to join does -- see join_team() in schema.sql), so this is
-        // a student creator's only chance to get both codes out: the mentor
-        // code to an actual mentor, and the student code to teammates.
+        // Only an admin can see join codes afterward (team.html's codes
+        // section is admin-only), and a student creator never becomes admin
+        // (the first mentor to join does -- see join_team() in schema.sql),
+        // so this is a student creator's only chance to get both codes out:
+        // the mentor code to an actual mentor, and the student code to
+        // teammates.
         if (role === "student" && team) {
           showTeamInfo(
             "Team created! Save these now -- as a student you won't see them again here. " +
@@ -327,6 +452,7 @@
       var code = document.getElementById("join-team-code").value.trim();
       Team.joinTeam(code).then(function () {
         joinTeamForm.reset();
+        closeTeamModal();
         renderTeamSection();
       }).catch(function (err) { showJoinTeamError(err.message); });
     });
@@ -337,53 +463,8 @@
       Team.leaveTeam().then(function () { renderTeamSection(); }).catch(function (err) { showTeamError(err.message); });
     });
 
-    document.getElementById("team-start-season-btn").addEventListener("click", function () {
-      if (!confirm("Start a new season? This archives and clears your team's completed grants, checklist/calendar progress, and task assignments. Roster, mechanisms, and settings carry over.")) return;
-      showTeamError("");
-      Team.startNewSeason().then(function () {
-        showTeamInfo("New season started.");
-        renderTeamSection();
-      }).catch(function (err) { showTeamError(err.message); });
-    });
-
     function copyText(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
-    }
-
-    function renderCodes() {
-      var section = document.getElementById("team-codes-section");
-      section.hidden = !Team.isAdmin();
-      if (!Team.isAdmin()) return;
-      var team = Team.state.team;
-      var host = document.getElementById("team-codes");
-      host.innerHTML = "";
-
-      function codeBox(label, code, which) {
-        var box = document.createElement("div");
-        box.className = "team-code-box";
-        var joinUrl = window.location.origin + window.location.pathname + "?join=" + code;
-        box.innerHTML =
-          '<div class="eyebrow">' + label + '</div>' +
-          '<div class="team-code-value">' + code + '</div>' +
-          '<div class="team-code-actions">' +
-          '<button type="button" data-action="copy-code">Copy code</button>' +
-          '<button type="button" data-action="copy-link">Copy link</button>' +
-          '<button type="button" data-action="regen">Regenerate</button>' +
-          "</div>";
-        box.querySelector('[data-action="copy-code"]').addEventListener("click", function () { copyText(code); showTeamInfo("Code copied."); });
-        box.querySelector('[data-action="copy-link"]').addEventListener("click", function () { copyText(joinUrl); showTeamInfo("Link copied."); });
-        box.querySelector('[data-action="regen"]').addEventListener("click", function () {
-          if (!confirm("Regenerate this code? The old one will stop working immediately.")) return;
-          Team.regenerateCode(which).then(function () { renderTeamSection(); }).catch(function (err) { showTeamError(err.message); });
-        });
-        return box;
-      }
-
-      var grid = document.createElement("div");
-      grid.className = "team-codes-grid";
-      grid.appendChild(codeBox("Student join code", team.join_code_student, "student"));
-      grid.appendChild(codeBox("Mentor (co-mentor) join code", team.join_code_mentor, "mentor"));
-      host.appendChild(grid);
     }
 
     // null until the owner deploys supabase/functions/calendar-feed (see
@@ -414,25 +495,9 @@
         : "Looks like this season has wrapped up — ask a team admin to start the new season when they're ready.";
     }
 
-    function captainCheckboxes(selected, disabled) {
-      var wrap = document.createElement("div");
-      wrap.className = "captain-checks";
-      CAPTAIN_ROLE_ORDER.forEach(function (role) {
-        var id = "cap-" + role + "-" + Math.random().toString(36).slice(2);
-        var label = document.createElement("label");
-        var chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.id = id;
-        chk.value = role;
-        chk.checked = selected.indexOf(role) !== -1;
-        chk.disabled = !!disabled;
-        label.appendChild(chk);
-        label.appendChild(document.createTextNode(CAPTAIN_LABELS[role]));
-        wrap.appendChild(label);
-      });
-      return wrap;
-    }
-
+    // Read-only roster view -- editing (subteam/captain roles, promote,
+    // grant admin, remove) lives on team.html (js/team-manage.js), which
+    // mentors reach via the "Manage team" link rendered below.
     function renderRoster() {
       var host = document.getElementById("team-roster");
       host.innerHTML = '<p class="small">Loading roster…</p>';
@@ -440,7 +505,6 @@
         host.innerHTML = "";
         var table = document.createElement("div");
         table.className = "roster-table";
-        var canEdit = Team.canEditRoster();
 
         rows
           .slice()
@@ -450,92 +514,14 @@
             var name = (r.profile && r.profile.display_name) || "Member";
             var card = document.createElement("div");
             card.className = "roster-row-card";
-
-            var top = document.createElement("div");
-            top.className = "roster-row-top";
-            var left = document.createElement("div");
-            left.innerHTML =
+            card.innerHTML =
+              '<div class="roster-row-top"><div>' +
               '<span class="roster-row-name">' + name + (isSelf ? " (you)" : "") + "</span> " +
               '<span class="role-badge' + (r.role === "mentor" ? " role-mentor" : "") + '">' + (r.role === "mentor" ? "Mentor" : "Student") + "</span>" +
               (r.role === "mentor" && r.is_admin ? ' <span class="captain-badge">Admin</span>' : "") +
               (r.subteam && r.subteam !== "cross-team" ? ' <span class="role-badge">' + (SUBTEAM_LABELS[r.subteam] || r.subteam) + "</span>" : "") +
-              (r.captain_roles || []).map(function (c) { return ' <span class="captain-badge">' + (CAPTAIN_LABELS[c] || c) + "</span>"; }).join("");
-            top.appendChild(left);
-            card.appendChild(top);
-
-            // A team_captain can edit student rows but never a mentor's.
-            // Editing a mentor's row (promoting/removing/granting admin)
-            // takes being an admin yourself, not just any mentor -- a
-            // freshly-joined co-mentor can't touch other mentors. Nobody
-            // edits their own row here (use "Leave team" for that).
-            var targetIsMentor = r.role === "mentor";
-            var rowEditable = canEdit && !isSelf && (targetIsMentor ? Team.isAdmin() : true);
-            if (rowEditable) {
-              var editRow = document.createElement("div");
-              editRow.className = "roster-row-edit";
-              var subteamSelect = document.createElement("select");
-              Object.keys(SUBTEAM_LABELS).forEach(function (key) {
-                var opt = document.createElement("option");
-                opt.value = key;
-                opt.textContent = SUBTEAM_LABELS[key];
-                if (key === r.subteam) opt.selected = true;
-                subteamSelect.appendChild(opt);
-              });
-              if (r.role !== "student") subteamSelect.disabled = true;
-              editRow.appendChild(subteamSelect);
-              var checks = captainCheckboxes(r.captain_roles || [], false);
-              editRow.appendChild(checks);
-
-              var saveBtn = document.createElement("button");
-              saveBtn.type = "button";
-              saveBtn.className = "submit-btn-sm";
-              saveBtn.textContent = "Save";
-              saveBtn.addEventListener("click", function () {
-                var roles = Array.prototype.slice.call(checks.querySelectorAll("input:checked")).map(function (c) { return c.value; });
-                Team.setMemberRoles(r.user_id, subteamSelect.value, roles).then(function () {
-                  showTeamInfo("Updated " + name + ".");
-                  renderRoster();
-                }).catch(function (err) { showTeamError(err.message); });
-              });
-              card.appendChild(editRow);
-
-              var actions = document.createElement("div");
-              actions.className = "roster-row-actions";
-              actions.appendChild(saveBtn);
-              if (Team.isMentor() && r.role === "student") {
-                var promoteBtn = document.createElement("button");
-                promoteBtn.type = "button";
-                promoteBtn.className = "submit-btn-sm submit-btn-ghost";
-                promoteBtn.textContent = "Promote to mentor";
-                promoteBtn.addEventListener("click", function () {
-                  if (!confirm("Promote " + name + " to mentor? They won't get admin rights -- grant those separately once they've joined.")) return;
-                  Team.promoteToMentor(r.user_id).then(function () { renderRoster(); }).catch(function (err) { showTeamError(err.message); });
-                });
-                actions.appendChild(promoteBtn);
-              }
-              if (Team.isAdmin() && targetIsMentor && !r.is_admin) {
-                var grantAdminBtn = document.createElement("button");
-                grantAdminBtn.type = "button";
-                grantAdminBtn.className = "submit-btn-sm submit-btn-ghost";
-                grantAdminBtn.textContent = "Make admin";
-                grantAdminBtn.addEventListener("click", function () {
-                  if (!confirm("Give " + name + " admin rights? They'll be able to manage join codes, remove other mentors, and delete the team.")) return;
-                  Team.grantAdmin(r.user_id).then(function () { renderRoster(); }).catch(function (err) { showTeamError(err.message); });
-                });
-                actions.appendChild(grantAdminBtn);
-              }
-              var removeBtn = document.createElement("button");
-              removeBtn.type = "button";
-              removeBtn.className = "submit-btn-sm submit-btn-ghost";
-              removeBtn.textContent = "Remove";
-              removeBtn.addEventListener("click", function () {
-                if (!confirm("Remove " + name + " from the team?")) return;
-                Team.removeMember(r.user_id).then(function () { renderRoster(); }).catch(function (err) { showTeamError(err.message); });
-              });
-              actions.appendChild(removeBtn);
-              card.appendChild(actions);
-            }
-
+              (r.captain_roles || []).map(function (c) { return ' <span class="captain-badge">' + (CAPTAIN_LABELS[c] || c) + "</span>"; }).join("") +
+              "</div></div>";
             table.appendChild(card);
           });
 
@@ -546,12 +532,11 @@
     function renderTeamSection() {
       var team = Team.state.team;
       document.getElementById("has-team-card").hidden = !team;
-      document.getElementById("team-profile-card").hidden = !!team;
       if (!team) {
         renderOnboarding();
         return;
       }
-      document.getElementById("role-prompt-card").hidden = true;
+      closeTeamModal();
       document.getElementById("no-team-cards").hidden = true;
 
       autoSyncProfileFromTeam();
@@ -564,14 +549,17 @@
         (Team.isAdmin() ? " · Admin" : "") + "</span></div>" +
         (team.district ? '<div class="team-header-sub">' + team.district + "</div>" : "");
 
+      document.getElementById("manage-team-link").hidden = !Team.isMentor();
+
       renderResetBanner();
-      renderCodes();
       renderCalendarFeed();
       renderRoster();
-      document.getElementById("team-admin-actions").hidden = !Team.isAdmin();
     }
 
     Team.onChange(renderTeamSection);
-    Team.ready.then(renderTeamSection);
+    Team.ready.then(function () {
+      renderTeamSection();
+      if (joinParam && !Team.state.team) openTeamModal("join");
+    });
   }
 })();
