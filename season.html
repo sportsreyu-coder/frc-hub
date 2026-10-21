@@ -49,7 +49,13 @@
   <section class="page-head">
     <h1>Season Tracker</h1>
     <p>A recommended pace for the whole year — preseason training, build season, competition season, and postseason — built from FIRST's own build season timeline and community-tested preseason plans. Check off what your team has actually finished and see whether you're ahead or behind.</p>
+    <span class="sample-tag">Sample plan — fully editable</span>
   </section>
+
+  <aside class="sample-banner" role="note">
+    <strong>This is a sample plan, not a rulebook.</strong>
+    <p>Everything below is a starting point we built so your team doesn't begin from a blank page. <strong>Use it as-is, or make it yours:</strong> add your own tasks and dates, delete any item that doesn't fit, edit dates, and add your robot's mechanisms. Open <em>Team settings</em> to customize, or open any item and choose <em>Delete this task</em>. Deleted built-in tasks can be restored from the Technical Checklist at any time.</p>
+  </aside>
 
   <div class="onboard-banner" id="onboard-banner" hidden>
     <div>
@@ -105,6 +111,8 @@
         <label class="roster-field"><span class="team-dot team-business"></span>Business/Outreach <input type="number" min="0" max="30" id="roster-business"></label>
       </div>
     </div>
+
+    <p class="finder-hint settings-sample-note"><strong>Make it yours:</strong> the schedule is a sample. Change anything here and the checklist and calendar will update to match your team.</p>
 
     <div class="settings-row mechanism-row">
       <span class="eyebrow">What's on your robot this year?</span>
@@ -260,7 +268,9 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
+<script src="js/forum-data.js"></script>
 <script src="js/team.js"></script>
+<script src="js/auth-modal.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/mobile-nav.js"></script>
 <script src="js/nav-dropdown.js"></script>

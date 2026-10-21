@@ -321,6 +321,30 @@ grant execute on function public.is_mentor_of(uuid) to authenticated;
 grant execute on function public.is_team_captain_of(uuid) to authenticated;
 grant execute on function public.is_admin_of(uuid) to authenticated;
 
+-- Role-preset student invites. A mentor creates one (create_student_invite)
+-- with a subteam and/or captain roles already chosen; whoever redeems the
+-- code via join_team() lands on the team with those roles applied, so the
+-- mentor doesn't have to edit the roster afterward. Single-use. Always
+-- joins as a student -- mentors are added with the mentor join code.
+-- No direct grants: written/read only through the RPCs below.
+create table if not exists public.team_invites (
+  id uuid primary key default gen_random_uuid(),
+  team_id uuid not null references public.teams (id) on delete cascade,
+  code text not null unique,
+  label text,
+  subteam text not null default 'cross-team'
+    check (subteam in ('design', 'mechanical', 'electrical', 'programming', 'business', 'cross-team')),
+  captain_roles text[] not null default '{}'
+    check (captain_roles <@ array['team_captain','technical_captain','nontechnical_captain','design_captain','mechanical_captain','electrical_captain','programming_captain','business_captain']::text[]),
+  created_by uuid references auth.users (id) on delete set null,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null default now() + interval '14 days',
+  used_by uuid references auth.users (id) on delete set null,
+  used_at timestamptz
+);
+create index if not exists team_invites_team_idx on public.team_invites (team_id);
+alter table public.team_invites enable row level security;
+
 -- ---- RLS ----
 --
 -- teams/team_members get NO insert/update/delete grant to authenticated
@@ -426,17 +450,26 @@ declare
   v_team public.teams;
   v_role text;
   v_is_admin boolean := false;
+  v_invite public.team_invites;
 begin
   if exists (select 1 from public.team_members where user_id = auth.uid()) then
     raise exception 'You are already on a team.';
   end if;
 
+  select * into v_invite from public.team_invites
+    where code = upper(trim(p_code)) and used_at is null and expires_at > now()
+    for update;
+  if found then
+    select * into v_team from public.teams where id = v_invite.team_id;
+    v_role := 'student';
+  else
   select * into v_team from public.teams where join_code_student = upper(trim(p_code));
   if found then
     v_role := 'student';
   else
     select * into v_team from public.teams where join_code_mentor = upper(trim(p_code));
     if found then v_role := 'mentor'; end if;
+  end if;
   end if;
 
   if v_team.id is null then
@@ -452,11 +485,70 @@ begin
     v_is_admin := not exists (select 1 from public.team_members where team_id = v_team.id and role = 'mentor' and is_admin);
   end if;
 
-  insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, v_role, v_is_admin);
+  if v_invite.id is not null then
+    insert into public.team_members (user_id, team_id, role, subteam, captain_roles)
+      values (auth.uid(), v_team.id, 'student', v_invite.subteam, v_invite.captain_roles);
+    update public.team_invites set used_by = auth.uid(), used_at = now() where id = v_invite.id;
+  else
+    insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, v_role, v_is_admin);
+  end if;
 
   return v_team;
 end;
 $$;
+
+-- Mentor-only: mint a single-use student invite with roles pre-assigned.
+create or replace function public.create_student_invite(p_label text, p_subteam text, p_captain_roles text[])
+returns public.team_invites
+language plpgsql security definer set search_path = public as $$
+declare
+  v_team_id uuid;
+  v_code text;
+  v_invite public.team_invites;
+begin
+  select team_id into v_team_id from public.team_members where user_id = auth.uid();
+  if v_team_id is null or not public.is_mentor_of(v_team_id) then
+    raise exception 'Only mentors can invite students.';
+  end if;
+  loop
+    v_code := public.generate_join_code();
+    exit when not exists (select 1 from public.teams where join_code_student = v_code or join_code_mentor = v_code)
+      and not exists (select 1 from public.team_invites where code = v_code);
+  end loop;
+  insert into public.team_invites (team_id, code, label, subteam, captain_roles, created_by)
+    values (v_team_id, v_code, nullif(trim(p_label), ''), coalesce(p_subteam, 'cross-team'), coalesce(p_captain_roles, '{}'), auth.uid())
+    returning * into v_invite;
+  return v_invite;
+end;
+$$;
+
+-- Mentor-only: this team's invites that are still redeemable.
+create or replace function public.list_student_invites()
+returns setof public.team_invites
+language sql security definer set search_path = public stable as $$
+  select i.* from public.team_invites i
+  where i.team_id = public.my_team_id() and public.is_mentor_of(i.team_id)
+    and i.used_at is null and i.expires_at > now()
+  order by i.created_at desc;
+$$;
+
+create or replace function public.revoke_student_invite(p_invite_id uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  v_team_id uuid;
+begin
+  select team_id into v_team_id from public.team_members where user_id = auth.uid();
+  if v_team_id is null or not public.is_mentor_of(v_team_id) then
+    raise exception 'Only mentors can revoke invites.';
+  end if;
+  delete from public.team_invites where id = p_invite_id and team_id = v_team_id and used_at is null;
+end;
+$$;
+
+grant execute on function public.create_student_invite(text, text, text[]) to authenticated;
+grant execute on function public.list_student_invites() to authenticated;
+grant execute on function public.revoke_student_invite(uuid) to authenticated;
 
 create or replace function public.leave_team()
 returns void
@@ -1082,3 +1174,35 @@ create table if not exists public.reminder_sent (
   primary key (user_id, item_key, days_before)
 );
 alter table public.reminder_sent enable row level security;
+
+-- ---- Developer tools (testing only) ----
+--
+-- dev_allowlist holds the emails allowed to call dev_reset_my_account().
+-- RLS is on with no policies and no grants, so it can only be edited from
+-- the SQL editor, e.g.:
+--   insert into public.dev_allowlist (email) values ('you@example.com');
+-- Remove this block (and the Developer panel in account.html) before launch.
+create table if not exists public.dev_allowlist (email text primary key);
+alter table public.dev_allowlist enable row level security;
+
+-- Wipes the caller's own team membership (deleting the team if they were
+-- its last member) and personal season data, so onboarding can be re-run.
+create or replace function public.dev_reset_my_account()
+returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  v_team_id uuid;
+  v_email text := lower(coalesce(auth.jwt() ->> 'email', ''));
+begin
+  if auth.uid() is null or not exists (select 1 from public.dev_allowlist where lower(email) = v_email) then
+    raise exception 'Not allowed.';
+  end if;
+  select team_id into v_team_id from public.team_members where user_id = auth.uid();
+  delete from public.team_members where user_id = auth.uid();
+  if v_team_id is not null and not exists (select 1 from public.team_members where team_id = v_team_id) then
+    delete from public.teams where id = v_team_id;
+  end if;
+  delete from public.season_data where user_id = auth.uid();
+end;
+$$;
+grant execute on function public.dev_reset_my_account() to authenticated;

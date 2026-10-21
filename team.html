@@ -5,7 +5,7 @@
 <script>(function(){try{if(localStorage.getItem('frcgrants_theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Team — FRC Hub</title>
-<meta name="description" content="Mentor team management: roster, join codes, and season settings.">
+<meta name="description" content="Your team's classroom: posted assignments, extra-work requests, the roster, and budget goals, all in one place.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -48,44 +48,244 @@
 <main class="site-main">
   <section class="page-head">
     <h1>Team</h1>
-    <p>Roster, join codes, and season settings — visible to mentors only.</p>
+    <p>Manage your team: post assignments, leave notes, track the robot, and run the roster. Looking for your own to-dos? Head to <a href="assignments.html">Assignments</a>.</p>
   </section>
 
-  <div id="team-signed-out" class="finder-hint">
-    <a href="account.html">Sign in</a> to manage your team.
+  <div id="team-signed-out">
+    <div class="preview-banner">
+      <div><strong>You're previewing your team hub</strong><span>Sign up and join your team to see the roster, assignment stream, and shared budget.</span></div>
+      <button type="button" class="submit-btn-sm" data-auth-open="signup">Create a free account</button>
+    </div>
+    <div class="preview-sample" aria-label="Sample team preview">
+      <section class="forum-section">
+        <div class="eyebrow">Stream <span style="font-weight:400;">· sample</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Mentor posted: Pit organization day</span><span style="color:var(--text-faint);">Saturday</span><strong>Everyone</strong></div><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Captain assigned: Scout the district event list</span><span style="color:var(--text-faint);">Programming</span><strong>3 open</strong></div><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Join codes, roster &amp; subteams</span><span style="color:var(--text-faint);">People tab</span><strong>Mentors</strong></div>
+      </section>
+    </div>
   </div>
 
-  <div id="team-manage-app" hidden>
-    <div class="account-wrap">
-      <div class="info-msg" id="team-manage-info"></div>
-      <div class="error-msg" id="team-manage-error"></div>
-
-      <div class="account-card">
-        <div id="team-manage-header"></div>
-      </div>
-
-      <div class="account-card" id="team-codes-section" hidden>
-        <h2>Join codes</h2>
-        <p class="small">Share the right code with new mentors or students — the correct role is set automatically.</p>
-        <div id="team-codes"></div>
-      </div>
-
-      <div class="account-card">
-        <h3 class="team-subhead" style="margin-top:0;">Roster</h3>
-        <p class="small">Edit subteams and captain roles, promote students to mentor, grant admin, or remove members.</p>
-        <div id="team-roster"></div>
-      </div>
-
-      <div class="account-card" id="team-admin-actions" hidden>
-        <h2>Team settings</h2>
-        <button type="button" class="submit-btn-sm" id="team-start-season-btn">Start new season</button>
-        <div class="danger-zone">
-          <div class="eyebrow">Danger zone</div>
-          <p class="small">Deleting the team permanently removes the roster, join codes, and all season and budget data for everyone on it. This can't be undone.</p>
-          <div class="danger-zone-row">
-            <button type="button" class="danger-btn" id="team-delete-btn">Delete team</button>
-          </div>
+  <div id="team-no-team" class="account-wrap" style="max-width:460px; padding-top:20px;" hidden>
+    <div class="account-card" style="text-align:center;">
+      <h2>Join a team</h2>
+      <p class="small">Ask your mentor or captain for the student join code — the right role is set automatically.</p>
+      <div class="error-msg" id="team-join-error"></div>
+      <form id="team-join-form">
+        <div class="field">
+          <label for="team-join-code">Join code</label>
+          <input type="text" id="team-join-code" placeholder="e.g. 7K2PQ1" maxlength="6" required style="text-transform:uppercase;">
         </div>
+        <button type="submit" class="submit-btn">Join team</button>
+      </form>
+      <p class="small" style="margin-top:16px; margin-bottom:0;">Mentor starting a new team? <a href="account.html">Create one from your account page</a>.</p>
+    </div>
+  </div>
+
+  <div id="team-app" hidden>
+    <div class="info-msg" id="team-info"></div>
+    <div class="error-msg" id="team-error"></div>
+
+    <div class="account-card">
+      <div id="team-header"></div>
+    </div>
+
+    <div class="settings-shell">
+      <aside class="settings-sidebar">
+        <nav class="settings-nav" id="team-tabs">
+          <button type="button" class="settings-nav-btn active" data-panel="stream" aria-pressed="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Stream</span>
+          </button>
+          <button type="button" class="settings-nav-btn" data-panel="mywork" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Work</span>
+          </button>
+          <button type="button" class="settings-nav-btn" data-panel="robot" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            <span>Robot &amp; notes</span>
+          </button>
+          <button type="button" class="settings-nav-btn" data-panel="people" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>People</span>
+          </button>
+          <button type="button" class="settings-nav-btn" data-panel="budget" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Budget goals</span>
+          </button>
+        </nav>
+      </aside>
+
+      <div class="settings-content">
+
+        <section class="settings-panel active" data-panel="stream" id="team-panel-stream">
+          <div class="settings-panel-card" id="team-compose-card" hidden>
+            <div class="settings-panel-head">
+              <h1>Post an assignment</h1>
+              <p class="small">A recurring daily to-do for the whole team, a subteam, or one member. Everyone it applies to gets a fresh checkbox for it each day.</p>
+            </div>
+            <form id="team-compose-form" class="custom-task-form">
+              <input type="text" id="team-compose-label" placeholder="e.g. Log today's build hours" maxlength="140" required>
+              <span id="team-compose-assign-to"></span>
+              <button type="submit" class="submit-btn-sm">Post</button>
+            </form>
+          </div>
+
+          <div class="settings-panel-card" id="team-requests-card" hidden>
+            <div class="settings-panel-head">
+              <h1>Needs your approval</h1>
+              <p class="small">Members requesting extra work picked up from the Season Tracker (a sample plan teams can add to or remove from).</p>
+            </div>
+            <div class="thread-list" id="team-requests-list"></div>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Stream</h1>
+              <p class="small">Assignments posted to your team.</p>
+            </div>
+            <div class="milestone-list" id="team-stream-list"></div>
+            <p class="finder-hint" id="team-stream-empty" hidden>No assignments posted yet.</p>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Request extra work</h1>
+              <p class="small">Pick up an unassigned Season Tracker task — a mentor or captain approves it before it's officially yours.</p>
+            </div>
+            <div class="thread-list" id="team-request-pending"></div>
+            <div class="custom-task-form" style="margin-top:10px;">
+              <span id="team-request-picker"></span>
+              <button type="button" class="submit-btn-sm" id="team-request-submit-btn">Request</button>
+            </div>
+            <p class="finder-hint" id="team-request-empty" hidden>Nothing unassigned right now — nice work.</p>
+          </div>
+        </section>
+
+        <section class="settings-panel" data-panel="mywork" id="team-panel-mywork" hidden>
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Today</h1>
+              <p class="small">Daily assignments posted to you, your subteam, or the whole team.</p>
+            </div>
+            <div class="milestone-list" id="team-mywork-daily-list"></div>
+            <p class="finder-hint" id="team-mywork-daily-empty" hidden>Nothing assigned to you today — nice and clear.</p>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Your tasks</h1>
+              <p class="small">Season Tracker milestones and tasks with your name on them. The tracker is a sample your team can customize.</p>
+            </div>
+            <div class="milestone-list" id="team-mywork-tasks-list"></div>
+            <p class="finder-hint" id="team-mywork-tasks-empty" hidden>Nothing assigned to you right now — check <a href="season.html">Season Tracker</a> or request extra work from the Stream tab.</p>
+          </div>
+        </section>
+
+        <section class="settings-panel" data-panel="robot" id="team-panel-robot" hidden>
+          <div class="settings-panel-card" id="team-notes-compose-card" hidden>
+            <div class="settings-panel-head">
+              <h1>Leave a note</h1>
+              <p class="small">Shown on each student's Assignments page. Send it to the whole team, a subteam, or one student.</p>
+            </div>
+            <form id="team-notes-form" class="custom-task-form">
+              <input type="text" id="team-notes-text" placeholder="e.g. Great work on the intake — focus on wiring this week" maxlength="500" required>
+              <span id="team-notes-audience"></span>
+              <button type="submit" class="submit-btn-sm">Post note</button>
+            </form>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Notes</h1>
+              <p class="small" id="team-notes-sub">Notes from your mentors.</p>
+            </div>
+            <div class="thread-list" id="team-notes-list"></div>
+            <p class="finder-hint" id="team-notes-empty" hidden>No notes yet.</p>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Robot progress</h1>
+              <p class="small" id="team-robot-sub">How far along each part of this season's robot is.</p>
+            </div>
+            <div id="team-robot-list"></div>
+            <p class="finder-hint" id="team-robot-empty" hidden>No subsystems tracked yet.</p>
+            <form id="team-robot-form" class="custom-task-form" style="margin-top:14px;" hidden>
+              <input type="text" id="team-robot-label" placeholder="e.g. Climber" maxlength="60" required>
+              <button type="submit" class="submit-btn-sm">Add subsystem</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="settings-panel" data-panel="people" id="team-panel-people" hidden>
+          <div class="settings-panel-card" id="team-codes-section" hidden>
+            <div class="settings-panel-head">
+              <h1>Join codes</h1>
+              <p class="small">Share the right code with new mentors or students — the correct role is set automatically.</p>
+            </div>
+            <div id="team-codes"></div>
+          </div>
+
+          <div class="settings-panel-card" id="team-invites-section" hidden>
+            <div class="settings-panel-head">
+              <h1>Invite a student</h1>
+              <p class="small">Pick their subteam and any captain roles up front. Send them the link — they get those roles the moment they join. Each invite works once and expires in 14 days.</p>
+            </div>
+            <form id="team-invite-form" class="invite-form">
+              <input type="text" id="team-invite-label" placeholder="Student's name (optional, for your reference)" maxlength="60" />
+              <select id="team-invite-subteam" aria-label="Subteam"></select>
+              <div id="team-invite-captains"></div>
+              <button type="submit" class="submit-btn-sm">Create invite link</button>
+            </form>
+            <div id="team-invites-list"></div>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Roster</h1>
+              <p class="small">Edit subteams and captain roles, promote students to mentor, grant admin, or remove members.</p>
+            </div>
+            <div id="team-roster"></div>
+          </div>
+
+          <div class="settings-panel-card" id="team-admin-actions" hidden>
+            <div class="settings-panel-head">
+              <h1>Team settings</h1>
+            </div>
+            <button type="button" class="submit-btn-sm" id="team-start-season-btn">Start new season</button>
+            <div class="danger-zone">
+              <div class="eyebrow">Danger zone</div>
+              <p class="small">Deleting the team permanently removes the roster, join codes, and all season and budget data for everyone on it. This can't be undone.</p>
+              <div class="danger-zone-row">
+                <button type="button" class="danger-btn" id="team-delete-btn">Delete team</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-panel" data-panel="budget" id="team-panel-budget" hidden>
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Season fundraising goal</h1>
+              <p class="small">Mentors and the Business/Outreach Captain can set the goal. See the full breakdown on <a href="budget.html">Budget &amp; Sponsors</a>.</p>
+            </div>
+            <div id="team-budget-snapshot"></div>
+            <div id="team-goal-edit"></div>
+          </div>
+
+          <div class="settings-panel-card">
+            <div class="settings-panel-head">
+              <h1>Specific goals</h1>
+              <p class="small">Itemized targets — new drivetrain parts, competition travel — tracked against funds raised.</p>
+            </div>
+            <div id="team-goal-list" class="thread-list"></div>
+            <form id="team-goal-form" class="custom-task-form" style="margin-top:14px;" hidden>
+              <input type="text" id="team-goal-label" placeholder="e.g. New swerve modules" maxlength="80" required>
+              <input type="number" id="team-goal-amount" min="1" step="1" placeholder="Amount ($)" required>
+              <button type="submit" class="submit-btn-sm">Add goal</button>
+            </form>
+          </div>
+        </section>
+
       </div>
     </div>
   </div>
@@ -109,10 +309,14 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
+<script src="js/forum-data.js"></script>
 <script src="js/team.js"></script>
+<script src="js/auth-modal.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/mobile-nav.js"></script>
 <script src="js/nav-dropdown.js"></script>
+<script src="js/season-core.js"></script>
+<script src="js/season-data.js"></script>
 <script src="js/team-manage.js"></script>
 </body>
 </html>

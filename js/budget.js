@@ -152,7 +152,7 @@
   }
 
   function appendGoalEditRow(card, goal) {
-    if (!Team.isMentor()) return;
+    if (!Team.canEditBudgetGoal()) return;
     var goalInput = el("input", { type: "number", min: "0", step: "1", placeholder: "Set season goal ($)" });
     if (goal) goalInput.value = goal;
     var goalBtn = el("button", { type: "button", class: "submit-btn-sm" }, [goal ? "Update goal" : "Save goal"]);

@@ -33,12 +33,6 @@
   var CUSTOM_TASKS_KEY = "frcgrants_season_custom_tasks_v1";
   var TEAM_TOKEN_PREFIX = "team:";
 
-  var TEAM_LABELS = {
-    design: "Design", mechanical: "Mechanical", electrical: "Electrical",
-    programming: "Programming", business: "Business/Outreach", "cross-team": "Cross-team",
-  };
-  var SUBTEAM_KEYS = ["design", "mechanical", "electrical", "programming", "business", "cross-team"];
-
   function el(tag, attrs, children) {
     var node = document.createElement(tag);
     if (attrs) {
@@ -97,33 +91,6 @@
       var data = Object.assign({}, current || {});
       mutator(data);
       return Team.saveTeamData(data);
-    });
-  }
-
-  function addTemplate(label, assignTo) {
-    return patchTeamData(function (data) {
-      var templates = (data.dailyTemplates || []).slice();
-      templates.push({
-        id: "daily-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
-        label: label,
-        assignTo: assignTo,
-        active: true,
-        createdAt: new Date().toISOString(),
-        createdBy: Team.state.user.id,
-      });
-      data.dailyTemplates = templates;
-    });
-  }
-
-  function setTemplateActive(id, active) {
-    return patchTeamData(function (data) {
-      (data.dailyTemplates || []).forEach(function (t) { if (t.id === id) t.active = active; });
-    });
-  }
-
-  function deleteTemplate(id) {
-    return patchTeamData(function (data) {
-      data.dailyTemplates = (data.dailyTemplates || []).filter(function (t) { return t.id !== id; });
     });
   }
 
@@ -242,94 +209,54 @@
     });
   }
 
-  // ---- Manage daily assignments (mentors + captains only). ----
+  // ---- Mentor notes + robot progress (read-only here; mentors and
+  // captains edit them on the Team page). ----
 
-  var roster = [];
+  function renderTeamExtras(myId, mySubteam) {
+    var notesSection = document.getElementById("notes-section");
+    var robotSection = document.getElementById("robot-section");
+    notesSection.hidden = false;
+    robotSection.hidden = false;
 
-  function assignToLabel(assignTo) {
-    if (assignTo === "everyone") return "Everyone";
-    if (TEAM_LABELS[assignTo]) return TEAM_LABELS[assignTo];
-    var match = roster.filter(function (r) { return r.user_id === assignTo; })[0];
-    return match ? ((match.profile && match.profile.display_name) || "Member") : "Former member";
-  }
+    Promise.all([Team.loadTeamData(), Team.loadRoster()]).then(function (res) {
+      var data = res[0] || {};
 
-  function buildAssignToSelect() {
-    var select = el("select", { required: "required" });
-    var scope = Team.captainScope();
-    if (Team.isMentor() || Team.isTeamCaptain()) {
-      select.appendChild(el("option", { value: "everyone" }, ["Everyone (whole team)"]));
-    }
-    var subteamGroup = el("optgroup", { label: "A subteam" });
-    SUBTEAM_KEYS.filter(function (k) { return scope.indexOf(k) !== -1; }).forEach(function (k) {
-      subteamGroup.appendChild(el("option", { value: k }, [TEAM_LABELS[k]]));
-    });
-    if (subteamGroup.children.length) select.appendChild(subteamGroup);
-
-    var memberGroup = el("optgroup", { label: "One member" });
-    roster
-      .filter(function (r) { return Team.isMentor() || Team.isTeamCaptain() || scope.indexOf(r.subteam) !== -1; })
-      .forEach(function (r) {
-        memberGroup.appendChild(el("option", { value: r.user_id }, [(r.profile && r.profile.display_name) || "Member"]));
-      });
-    if (memberGroup.children.length) select.appendChild(memberGroup);
-    return select;
-  }
-
-  function renderManageSection() {
-    var listHost = document.getElementById("manage-list");
-    Team.loadRoster().then(function (rows) {
-      roster = rows;
-      return Team.loadTeamData();
-    }).then(function (data) {
-      var templates = (data && data.dailyTemplates) || [];
-      listHost.innerHTML = "";
-      if (!templates.length) {
-        listHost.appendChild(el("p", { class: "finder-hint" }, ["No daily assignments yet -- add one below."]));
-        return;
-      }
-      templates.forEach(function (tpl) {
-        var toggleBtn = el("button", { type: "button", class: "submit-btn-sm" + (tpl.active ? " submit-btn-ghost" : "") }, [tpl.active ? "Pause" : "Resume"]);
-        toggleBtn.addEventListener("click", function () {
-          setTemplateActive(tpl.id, !tpl.active).then(renderManageSection);
-        });
-        var deleteBtn = el("button", { type: "button", class: "reset-btn" }, ["Delete"]);
-        deleteBtn.addEventListener("click", function () {
-          if (!confirm('Delete "' + tpl.label + '"? This can\'t be undone.')) return;
-          deleteTemplate(tpl.id).then(renderManageSection);
-        });
-        listHost.appendChild(el("div", { class: "milestone-row" }, [
-          el("div", { class: "ms-body" }, [
-            el("div", { class: "ms-top" }, [
-              el("div", { class: "ms-title-group" }, [
-                el("span", { class: "ms-label" + (tpl.active ? "" : " ms-subtask-done") }, [tpl.label]),
-                el("span", { class: "ms-assigned" }, ["Assigned to " + assignToLabel(tpl.assignTo)]),
-              ]),
-              el("div", { style: "display:flex; gap:8px; flex-shrink:0;" }, [toggleBtn, deleteBtn]),
-            ]),
+      var notesList = document.getElementById("notes-list");
+      notesList.innerHTML = "";
+      var notes = (data.mentorNotes || []).filter(function (n) {
+        return n.audience === "everyone" || n.audience === myId || (!!mySubteam && n.audience === mySubteam) || Team.isMentor();
+      }).slice().reverse();
+      document.getElementById("notes-empty").hidden = notes.length > 0;
+      notes.forEach(function (n) {
+        var meta = n.audience === "everyone" ? "Whole team" : (n.audience === myId ? "Just for you" : "Your subteam");
+        if (n.createdAt) meta += " · " + Core.formatDate(new Date(n.createdAt));
+        notesList.appendChild(el("div", { class: "thread-row" }, [
+          el("div", { class: "thread-row-main" }, [
+            el("span", { class: "thread-title" }, [n.text]),
+            el("span", { class: "thread-meta" }, [meta]),
           ]),
         ]));
       });
-    });
-  }
 
-  function initManageForm() {
-    Team.loadRoster().then(function (rows) {
-      roster = rows;
-      var host = document.getElementById("manage-assign-to");
-      host.innerHTML = "";
-      host.appendChild(buildAssignToSelect());
-    });
-
-    document.getElementById("manage-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      var labelInput = document.getElementById("manage-label");
-      var select = document.getElementById("manage-assign-to").querySelector("select");
-      var label = labelInput.value.trim();
-      if (!label || !select || !select.value) return;
-      addTemplate(label, select.value).then(function () {
-        labelInput.value = "";
-        renderManageSection();
+      var robotList = document.getElementById("robot-list");
+      robotList.innerHTML = "";
+      var items = data.robotProgress || [];
+      document.getElementById("robot-empty").hidden = items.length > 0;
+      var total = 0;
+      items.forEach(function (it) {
+        var pct = Math.max(0, Math.min(100, Number(it.percent) || 0));
+        total += pct;
+        var fill = el("div", { class: "robot-bar-fill" });
+        fill.style.width = pct + "%";
+        robotList.appendChild(el("div", { class: "robot-row" }, [
+          el("div", { class: "robot-row-top" }, [el("span", { class: "robot-label" }, [it.label]), el("span", { class: "robot-pct" }, [pct + "%"])]),
+          el("div", { class: "robot-bar" }, [fill]),
+        ]));
       });
+      if (items.length) {
+        var overall = Math.round(total / items.length);
+        robotList.insertBefore(el("div", { class: "robot-overall" }, ["Overall: " + overall + "% complete"]), robotList.firstChild);
+      }
     });
   }
 
@@ -346,13 +273,16 @@
 
     renderTasksSection(myId, mySubteam);
 
+    document.getElementById("notes-section").hidden = !hasTeam;
+    document.getElementById("robot-section").hidden = !hasTeam;
+    if (hasTeam) renderTeamExtras(myId, mySubteam);
+
     document.getElementById("daily-section").hidden = !hasTeam;
     document.getElementById("daily-no-team").hidden = hasTeam;
     if (hasTeam) renderDailySection(myId, mySubteam);
 
     var canManage = hasTeam && (Team.isMentor() || Team.captainScope().length > 0);
-    document.getElementById("manage-section").hidden = !canManage;
-    if (canManage) { renderManageSection(); initManageForm(); }
+    document.getElementById("manage-hint").hidden = !canManage;
   }
 
   Team.ready.then(render);

@@ -48,14 +48,39 @@
 <main class="site-main">
   <section class="page-head">
     <h1>Assignments</h1>
-    <p>Today's daily assignments, plus any Season Tracker tasks and milestones assigned to you.</p>
+    <p>Today's daily assignments, plus any Season Tracker tasks and milestones assigned to you. (The Season Tracker is a sample plan your team can add to, edit, and remove from.)</p>
   </section>
 
-  <div id="assignments-signed-out" class="finder-hint">
-    <a href="account.html">Sign in</a> to see what's assigned to you.
+  <div id="assignments-signed-out">
+    <div class="preview-banner">
+      <div><strong>You're previewing Assignments</strong><span>Sign up and join your team to see what mentors and captains assign to you.</span></div>
+      <button type="button" class="submit-btn-sm" data-auth-open="signup">Create a free account</button>
+    </div>
+    <div class="preview-sample" aria-label="Sample assignments preview">
+      <section class="forum-section">
+        <div class="eyebrow">Today <span style="font-weight:400;">· sample</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Charge and label all batteries</span><span style="color:var(--text-faint);">Today</span><strong>Pit crew</strong></div><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Review CAD for the intake</span><span style="color:var(--text-faint);">Today</span><strong>Design</strong></div>
+      </section>
+      <section class="forum-section">
+        <div class="eyebrow">Your tasks <span style="font-weight:400;">· sample</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Submit Impact Award essay draft</span><span style="color:var(--text-faint);">Due in 6 days</span><strong>Business</strong></div><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Wire the new PDH</span><span style="color:var(--text-faint);">Due in 9 days</span><strong>Electrical</strong></div>
+      </section>
+    </div>
   </div>
 
   <div id="assignments-app" hidden>
+    <section class="forum-section" id="notes-section" hidden>
+      <div class="eyebrow">Notes from your mentor</div>
+      <div class="thread-list" id="notes-list"></div>
+      <p class="finder-hint" id="notes-empty" hidden>No notes for you yet — check back after your next meeting.</p>
+    </section>
+
+    <section class="forum-section" id="robot-section" hidden>
+      <div class="eyebrow">Robot progress</div>
+      <div id="robot-list"></div>
+      <p class="finder-hint" id="robot-empty" hidden>Your mentors haven't set up robot tracking yet.</p>
+    </section>
+
     <section class="forum-section" id="daily-section">
       <div class="eyebrow">Today</div>
       <div class="milestone-list" id="daily-list"></div>
@@ -72,16 +97,7 @@
       <p class="finder-hint" id="my-tasks-empty" hidden>Nothing assigned to you right now — check <a href="season.html">Season Tracker</a> to pick something up.</p>
     </section>
 
-    <section class="forum-section" id="manage-section" hidden>
-      <div class="eyebrow">Manage daily assignments</div>
-      <p class="finder-hint">Create a recurring daily to-do for the whole team, a subteam, or one member. Everyone it applies to gets a fresh checkbox for it each day.</p>
-      <form id="manage-form" class="custom-task-form" style="margin:14px 0;">
-        <input type="text" id="manage-label" placeholder="e.g. Log today's build hours" maxlength="140" required>
-        <span id="manage-assign-to"></span>
-        <button type="submit" class="submit-btn-sm">Add daily assignment</button>
-      </form>
-      <div class="milestone-list" id="manage-list"></div>
-    </section>
+    <p class="finder-hint" id="manage-hint" hidden>Posting assignments, writing notes, and updating robot progress happens on the <a href="team.html">Team</a> page.</p>
   </div>
 </main>
 
@@ -103,7 +119,9 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
+<script src="js/forum-data.js"></script>
 <script src="js/team.js"></script>
+<script src="js/auth-modal.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/mobile-nav.js"></script>
 <script src="js/nav-dropdown.js"></script>

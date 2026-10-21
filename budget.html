@@ -55,8 +55,22 @@
     Budget tracking is shared per team. <a href="account.html">Create or join a team</a> on the Account page to use it.
   </div>
 
-  <div id="budget-signed-out" class="finder-hint" hidden>
-    <a href="account.html">Sign in</a> and join your team to track budget and sponsors together.
+  <div id="budget-signed-out" hidden>
+    <div class="preview-banner">
+      <div><strong>You're previewing the budget tracker</strong><span>Sign up and join your team to track income, expenses, and sponsors together.</span></div>
+      <button type="button" class="submit-btn-sm" data-auth-open="signup">Create a free account</button>
+    </div>
+    <div class="preview-sample" aria-label="Sample budget preview">
+      <section class="pace-card">
+        <div class="pace-eyebrow">Funds raised <span style="font-weight:400;">· sample data</span></div>
+        <div class="pace-headline">$4,250</div>
+        <p>$1,180 spent · $3,070 net · 71% of a $6,000 goal</p>
+      </section>
+      <section class="forum-section">
+        <div class="eyebrow">Recent transactions</div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Sponsorship — Local Machine Shop</span><span style="color:var(--text-faint);">Income</span><strong>+$2,500</strong></div><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Registration</span><span style="color:var(--text-faint);">Expense</span><strong>−$850</strong></div><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.88rem;"><span>Parts — Motors &amp; Wiring</span><span style="color:var(--text-faint);">Expense</span><strong>−$330</strong></div>
+      </section>
+    </div>
   </div>
 
   <div id="budget-app" hidden>
@@ -141,7 +155,9 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
+<script src="js/forum-data.js"></script>
 <script src="js/team.js"></script>
+<script src="js/auth-modal.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/mobile-nav.js"></script>
 <script src="js/nav-dropdown.js"></script>

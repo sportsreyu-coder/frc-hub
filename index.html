@@ -49,9 +49,9 @@
   <section class="hero" id="hero-signed-out">
     <div class="hero-grid">
       <h1>Everything your<br>season needs, in one place.</h1>
-      <p class="lead">Season pace, grants closing soon, and the rest of the toolkit — all in one dashboard. Sign in to save grants, sync your season tracker across devices, and join your team.</p>
+      <p class="lead">Season pace, grants closing soon, and the rest of the toolkit — all in one dashboard. Sign in to save grants, sync your season tracker (a sample plan you can fully customize) across devices, and join your team.</p>
       <div class="hero-cta-row">
-        <a href="account.html" class="nav-cta">Sign in</a>
+        <button type="button" class="nav-cta" data-auth-open="signup">Sign in / Sign up</button>
         <a href="grants.html" class="hero-secondary-btn">Browse grants</a>
       </div>
     </div>
@@ -73,6 +73,7 @@
         <span class="dash-arrow">→</span>
       </div>
       <div id="dash-season-body">Loading…</div>
+      <p class="sample-note">Sample plan — add, edit, or remove anything.</p>
     </a>
 
     <a href="assignments.html" class="dash-card dash-assignments" id="dash-assignments" hidden>
@@ -109,24 +110,6 @@
       <div id="dash-forum-body">Loading…</div>
     </a>
   </section>
-
-  <section class="dash-grid" id="dash-team-row" hidden>
-    <a href="account.html" class="dash-card dash-team" id="dash-team">
-      <div class="dash-card-head">
-        <span class="eyebrow">Your team</span>
-        <span class="dash-arrow">→</span>
-      </div>
-      <div id="dash-team-body">Loading…</div>
-    </a>
-
-    <a href="budget.html" class="dash-card dash-budget" id="dash-budget">
-      <div class="dash-card-head">
-        <span class="eyebrow">Budget</span>
-        <span class="dash-arrow">→</span>
-      </div>
-      <div id="dash-budget-body">Loading…</div>
-    </a>
-  </section>
 </main>
 
 <footer class="site-footer">
@@ -148,6 +131,7 @@
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>
 <script src="js/team.js"></script>
+<script src="js/auth-modal.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/mobile-nav.js"></script>
 <script src="js/nav-dropdown.js"></script>

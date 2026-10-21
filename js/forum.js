@@ -218,7 +218,7 @@
       gate.appendChild(el("p", { class: "finder-hint" }, ["Forum isn't configured yet."]));
     } else if (!currentUser) {
       form.hidden = true;
-      gate.appendChild(el("p", { class: "finder-hint" }, [el("a", { href: "account.html" }, ["Sign in"]), " to post."]));
+      gate.appendChild(el("p", { class: "finder-hint" }, [el("a", { href: "account.html", "data-auth-open": "signin" }, ["Sign in"]), " to post."]));
     } else if (!currentProfile) {
       form.hidden = true;
       gate.appendChild(el("p", { class: "finder-hint" }, [

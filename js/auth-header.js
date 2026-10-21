@@ -43,8 +43,12 @@
 
     function build(profile) {
       profile = profile || {};
-      var name = profile.display_name || googleName;
-      var hex = profile.avatar_color && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[profile.avatar_color];
+      // Onboarding stores these in auth metadata until a team exists (the
+      // profiles row needs a team_number), so fall back to that.
+      var shownName = profile.display_name || meta.display_name;
+      var colorKey = profile.avatar_color || meta.avatar_color;
+      var name = shownName || googleName;
+      var hex = colorKey && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[colorKey];
 
       var btn = el("button", { type: "button", class: "account-avatar-btn", "aria-label": "Account menu" },
         avatarUrl ? [el("img", { src: avatarUrl, alt: "", referrerpolicy: "no-referrer" })] : [initialFor(name)]
@@ -55,7 +59,7 @@
       }
 
       var dropdownChildren = [];
-      if (profile.display_name) dropdownChildren.push(el("div", { class: "account-dropdown-name" }, [profile.display_name]));
+      if (shownName) dropdownChildren.push(el("div", { class: "account-dropdown-name" }, [shownName]));
       dropdownChildren.push(el("div", { class: "account-dropdown-email" }, [user.email || ""]));
       dropdownChildren.push(el("a", { class: "account-dropdown-action", href: "account.html" }, ["Profile settings"]));
       dropdownChildren.push(el("button", { type: "button", class: "account-dropdown-action account-dropdown-signout" }, ["Sign out"]));

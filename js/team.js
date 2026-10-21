@@ -33,7 +33,7 @@
 
   function notify() {
     var navLink = document.getElementById("nav-team-link");
-    if (navLink) navLink.hidden = !isMentor();
+    if (navLink) navLink.hidden = !state.user;
     listeners.forEach(function (fn) { fn(state); });
   }
 
@@ -98,6 +98,7 @@
 
   function canEditTeamSettings() { return !state.team || isMentor() || isTeamCaptain(); }
   function canEditRoster() { return isMentor() || isTeamCaptain(); }
+  function canEditBudgetGoal() { return isMentor() || captainRoles().indexOf("business_captain") !== -1; }
 
   function rpc(name, args) {
     return sb.rpc(name, args).then(function (res) {
@@ -127,6 +128,7 @@
     canAssign: canAssign,
     canEditTeamSettings: canEditTeamSettings,
     canEditRoster: canEditRoster,
+    canEditBudgetGoal: canEditBudgetGoal,
 
     createTeam: function (teamNumber, teamName, district, role) {
       return refreshAfter(rpc("create_team", { p_team_number: teamNumber, p_team_name: teamName, p_district: district, p_role: role }));
@@ -150,6 +152,15 @@
     },
     setMemberRoles: function (userId, subteam, captainRolesList) {
       return rpc("set_member_roles", { p_user_id: userId, p_subteam: subteam, p_captain_roles: captainRolesList });
+    },
+    createStudentInvite: function (label, subteam, captainRolesList) {
+      return rpc("create_student_invite", { p_label: label, p_subteam: subteam, p_captain_roles: captainRolesList });
+    },
+    listStudentInvites: function () {
+      return rpc("list_student_invites", {});
+    },
+    revokeStudentInvite: function (inviteId) {
+      return rpc("revoke_student_invite", { p_invite_id: inviteId });
     },
     removeMember: function (userId) {
       return rpc("remove_member", { p_user_id: userId });
