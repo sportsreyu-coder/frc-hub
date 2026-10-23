@@ -34,15 +34,35 @@
   var step = "auth";
   var mode = "signin";
   var role = null;
-  var teamTab = "join";
+  var teamTab = null; // remembered once the user picks a tab; mentors start on "create"
   var avatarColor = "";
   var joinCode = "";
   var teamChanged = false;
   var busy = false;
 
+  // An invite link (?join=CODE) has to survive the email-confirmation
+  // round trip, which usually opens in a new tab and redirects to the bare
+  // page URL -- so keep it in localStorage (sessionStorage is per-tab) for
+  // a week, cleared once the user joins.
+  var JOIN_KEY = "frc_join_code";
+  var JOIN_TTL = 7 * 24 * 60 * 60 * 1000;
   try { joinCode = (new URLSearchParams(window.location.search).get("join") || "").toUpperCase().slice(0, 6); } catch (e) { /* ignore */ }
-  if (joinCode) { try { sessionStorage.setItem("frc_join_code", joinCode); } catch (e) { /* ignore */ } }
-  else { try { joinCode = sessionStorage.getItem("frc_join_code") || ""; } catch (e) { /* ignore */ } }
+  if (joinCode) { try { localStorage.setItem(JOIN_KEY, joinCode + "|" + Date.now()); } catch (e) { /* ignore */ } }
+  else {
+    try {
+      var savedJoin = (localStorage.getItem(JOIN_KEY) || "").split("|");
+      if (savedJoin[0] && Date.now() - Number(savedJoin[1]) < JOIN_TTL) joinCode = savedJoin[0];
+      else localStorage.removeItem(JOIN_KEY);
+    } catch (e) { /* ignore */ }
+  }
+  function clearJoinCode() {
+    joinCode = "";
+    try { localStorage.removeItem(JOIN_KEY); } catch (e) { /* ignore */ }
+    try {
+      var u = new URL(window.location.href);
+      if (u.searchParams.has("join")) { u.searchParams.delete("join"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+    } catch (e) { /* ignore */ }
+  }
 
   function $(sel) { return overlay.querySelector(sel); }
   function meta() { return (user && user.user_metadata) || {}; }
@@ -116,7 +136,7 @@
       '<form id="am-create-form" hidden>' +
       '<div class="field"><label for="am-team-number">Team number</label><input type="text" id="am-team-number" placeholder="e.g. 4152" required></div>' +
       '<div class="field"><label for="am-team-name">Team name (optional)</label><input type="text" id="am-team-name" placeholder="e.g. RoboCats"></div>' +
-      '<div class="field"><label for="am-team-district">District</label><select id="am-team-district"></select></div>' +
+      '<div class="field"><label for="am-team-district">District</label><select id="am-team-district" required><option value="" disabled selected>Select your district…</option></select></div>' +
       '<button type="submit" class="submit-btn">Create team</button></form>' +
       '<button type="button" class="am-skip" id="am-skip-team">Skip this step</button></div>' +
 
@@ -141,7 +161,7 @@
 
     // district list
     var sel = $("#am-team-district");
-    (window.FRC_DISTRICTS || [{ value: "", label: "Not in a district" }]).forEach(function (d) {
+    (window.FRC_DISTRICTS || [{ value: "none", label: "Not in a district" }]).forEach(function (d) {
       var o = document.createElement("option");
       o.value = d.value;
       o.textContent = d.label;
@@ -195,7 +215,9 @@
     if (newStep === "team") prepTeamStep();
     if (newStep === "profile") prepProfileStep();
     if (newStep === "done") {
-      $("#am-done-sub").textContent = hasTeamNow ? "Your team is connected. Everything you need is one click away." : "You can join or create a team any time from Settings → Team.";
+      $("#am-done-sub").textContent = hasTeamNow
+        ? "Your team is connected. Everything you need is one click away."
+        : "You can " + (role === "student" ? "join a team" : "join or create a team") + " any time from Settings → Team.";
     }
     var first = overlay.querySelector('.am-pane:not([hidden]) input:not([hidden]), .am-pane:not([hidden]) button.role-choice-btn');
     if (first) setTimeout(function () { try { first.focus(); } catch (e) { /* ignore */ } }, 30);
@@ -289,6 +311,12 @@
           if (password.length < 6) throw new Error("Password must be at least 6 characters.");
           var up = await sb.auth.signUp({ email: email, password: password, options: { emailRedirectTo: redirectUrl(), data: name ? { full_name: name } : {} } });
           if (up.error) throw up.error;
+          // With email confirmation on, Supabase answers a sign-up for an
+          // already-registered email with a user that has no identities
+          // (and sends nothing) instead of an error.
+          if (up.data && up.data.user && Array.isArray(up.data.user.identities) && !up.data.user.identities.length) {
+            throw new Error("An account with " + email + " already exists. Sign in instead.");
+          }
           if (!(up.data && up.data.session)) setMsg("#am-info", "Check " + email + " for a confirmation link to finish creating your account.");
         } else {
           var inn = await sb.auth.signInWithPassword({ email: email, password: password });
@@ -307,7 +335,10 @@
       if (!email) return setMsg("#am-error", "Enter your email above first.");
       var name = $("#am-name").value.trim();
       var r = await sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: redirectUrl(), shouldCreateUser: mode === "signup", data: name ? { full_name: name } : {} } });
-      if (r.error) return setMsg("#am-error", r.error.message);
+      if (r.error) {
+        var noAccount = mode === "signin" && /signups not allowed/i.test(r.error.message);
+        return setMsg("#am-error", noAccount ? "No account uses " + email + " yet. Create one instead." : r.error.message);
+      }
       setMsg("#am-info", "Check " + email + " for a " + (mode === "signup" ? "sign-up" : "sign-in") + " link.");
     });
 
@@ -368,7 +399,7 @@
     if (res.error) return setMsg("#am-team-error", res.error.message);
     teamChanged = true;
     hasTeamNow = true;
-    try { sessionStorage.removeItem("frc_join_code"); } catch (e) { /* ignore */ }
+    clearJoinCode();
     show("profile");
   }
 
