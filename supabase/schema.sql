@@ -1181,6 +1181,47 @@ alter table public.reminder_sent enable row level security;
 -- RLS is on with no policies and no grants, so it can only be edited from
 -- the SQL editor, e.g.:
 --   insert into public.dev_allowlist (email) values ('you@example.com');
+-- Uploaded profile pictures. The image itself lives in the public
+-- `avatars` Storage bucket under `<user id>/...`; profiles.avatar_url
+-- holds its public URL so the header and forum can show it without a
+-- Storage round trip. Users without a team have no profiles row yet
+-- (team_number is NOT NULL), so account.js also mirrors the URL into
+-- auth metadata as `custom_avatar_url` -- the same fallback onboarding
+-- uses for display_name/avatar_color. js/account.js downsizes every
+-- upload to 256px JPEG client-side (which also strips EXIF/GPS), and the
+-- bucket's own limits below reject anything else.
+alter table public.profiles add column if not exists avatar_url text;
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('avatars', 'avatars', true, 1048576, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+-- Public bucket = anyone can read by URL; writes are limited to the
+-- caller's own `<user id>/` folder.
+drop policy if exists "Users can upload their own avatar" on storage.objects;
+create policy "Users can upload their own avatar"
+  on storage.objects for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "Users can update their own avatar" on storage.objects;
+create policy "Users can update their own avatar"
+  on storage.objects for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "Users can delete their own avatar" on storage.objects;
+create policy "Users can delete their own avatar"
+  on storage.objects for delete to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- Listing is needed so account.js can find and remove old uploads.
+drop policy if exists "Users can list their own avatars" on storage.objects;
+create policy "Users can list their own avatars"
+  on storage.objects for select to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
 -- Remove this block (and the Developer panel in account.html) before launch.
 create table if not exists public.dev_allowlist (email text primary key);
 alter table public.dev_allowlist enable row level security;

@@ -223,7 +223,7 @@ button.nav-cta { background: none; font-family: inherit; cursor: pointer; }
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid var(--border-strong);
+  border: none;
   background: var(--accent);
   color: #fff;
   font-weight: 700;
@@ -236,7 +236,6 @@ button.nav-cta { background: none; font-family: inherit; cursor: pointer; }
   overflow: hidden;
 }
 
-.account-avatar-btn:hover { border-color: var(--accent); }
 .account-avatar-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .account-dropdown {
@@ -3006,6 +3005,18 @@ main.site-main {
 }
 
 .settings-identity-text { min-width: 0; }
+
+.settings-avatar { overflow: hidden; }
+.settings-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.avatar-upload-row { display: flex; align-items: center; gap: 16px; }
+.avatar-upload-preview { width: 64px; height: 64px; font-size: 24px; }
+.avatar-upload-actions { min-width: 0; }
+.avatar-upload-hint { margin: 8px 0 0; font-size: 0.78rem; color: var(--text-faint); }
+.avatar-upload-buttons { display: flex; align-items: center; gap: 14px; }
+.avatar-upload-btn { display: inline-block; }
+.avatar-upload-btn.is-busy { opacity: 0.6; pointer-events: none; }
+
 .settings-name { font-weight: 600; font-size: 0.92rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .settings-email { font-size: 0.78rem; color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -3462,19 +3473,6 @@ textarea:focus-visible,
 }
 .sample-banner strong:first-child { display: block; font-size: 1.05rem; color: var(--amber); }
 .sample-banner p { margin: 6px 0 0; font-size: 0.92rem; line-height: 1.5; }
-.sample-tag {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: var(--amber-bg);
-  color: var(--amber);
-  border: 1px solid var(--amber);
-}
 .sample-note { margin: 10px 0 0; font-size: 0.8rem; font-weight: 600; color: var(--amber); }
 .settings-sample-note { margin: 0 0 14px; }
 

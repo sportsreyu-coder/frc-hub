@@ -113,10 +113,27 @@
             <div class="settings-panel-card">
               <div class="settings-panel-head">
                 <h1>Profile</h1>
-                <p class="small">How you show up around FRC Hub — your avatar color follows you everywhere, and your signature appears under anything you post in the <a href="forum.html">Forum</a>.</p>
+                <p class="small">How you show up around FRC Hub — your photo and avatar color follow you everywhere, and your signature appears under anything you post in the <a href="forum.html">Forum</a>.</p>
               </div>
               <div class="info-msg" id="customize-info"></div>
               <form id="customize-form">
+                <div class="settings-section">
+                  <label class="settings-section-label">Profile picture</label>
+                  <div class="avatar-upload-row">
+                    <div class="settings-avatar avatar-upload-preview" id="avatar-upload-preview">?</div>
+                    <div class="avatar-upload-actions">
+                      <div class="avatar-upload-buttons">
+                        <label class="submit-btn-sm avatar-upload-btn" for="avatar-file-input">Upload photo</label>
+                        <button type="button" class="link-btn" id="avatar-remove-btn" hidden>Remove</button>
+                      </div>
+                      <input type="file" id="avatar-file-input" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                      <p class="avatar-upload-hint" id="avatar-upload-status">JPG, PNG, WebP or GIF — cropped to a square.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="settings-divider"></div>
+
                 <div class="settings-section">
                   <label class="settings-section-label">Avatar color</label>
                   <div class="color-swatch-row" id="color-swatch-row"></div>

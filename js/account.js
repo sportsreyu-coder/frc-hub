@@ -72,6 +72,7 @@
       return;
     }
     if (!confirm("Delete your FRC Hub profile, forum posts, and season progress? This can't be undone.")) return;
+    try { await removeAvatarFiles(null); } catch (e) { /* best-effort; the profile row still goes */ }
     var res = await sb.rpc("delete_my_data");
     if (res.error) { showError(errEl, res.error.message); return; }
     await sb.auth.signOut();
@@ -98,6 +99,107 @@
     });
   }
   renderSwatches();
+
+  // ---- Profile picture. Uploads go to the `avatars` Storage bucket
+  // under `<user id>/` (see supabase/schema.sql). The URL is written to
+  // profiles.avatar_url when the row exists and always to auth metadata
+  // (`custom_avatar_url`) so users without a team -- who have no
+  // profiles row yet -- still get it. Removing it falls back to the
+  // Google photo, then the colored initial.
+  var customAvatarUrl = "";
+  var AVATAR_SIZE = 256;
+  var avatarFileInput = document.getElementById("avatar-file-input");
+  var avatarRemoveBtn = document.getElementById("avatar-remove-btn");
+  var avatarUploadLabel = document.querySelector(".avatar-upload-btn");
+  var avatarStatus = document.getElementById("avatar-upload-status");
+  var avatarStatusDefault = avatarStatus.textContent;
+
+  function setAvatarStatus(msg) { avatarStatus.textContent = msg || avatarStatusDefault; }
+  function setAvatarBusy(busy) {
+    avatarUploadLabel.classList.toggle("is-busy", busy);
+    avatarFileInput.disabled = busy;
+    avatarRemoveBtn.disabled = busy;
+  }
+
+  // Center-crops to a square and re-encodes as a small JPEG. Re-encoding
+  // also drops EXIF metadata (phone photos often carry GPS location).
+  function resizeToSquareJpeg(file) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var side = Math.min(img.naturalWidth, img.naturalHeight);
+        var size = Math.min(AVATAR_SIZE, side);
+        var canvas = document.createElement("canvas");
+        canvas.width = canvas.height = size;
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#fff"; // transparent PNGs would otherwise turn black
+        ctx.fillRect(0, 0, size, size);
+        ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, size, size);
+        canvas.toBlob(function (blob) {
+          blob ? resolve(blob) : reject(new Error("couldn't process that image"));
+        }, "image/jpeg", 0.85);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error("that file isn't a readable image")); };
+      img.src = url;
+    });
+  }
+
+  async function removeAvatarFiles(keepName) {
+    var listRes = await sb.storage.from("avatars").list(currentUser.id);
+    var paths = (listRes.data || [])
+      .filter(function (f) { return f.name !== keepName; })
+      .map(function (f) { return currentUser.id + "/" + f.name; });
+    if (paths.length) await sb.storage.from("avatars").remove(paths);
+  }
+
+  async function saveAvatarUrl(url) {
+    var profRes = await sb.from("profiles").update({ avatar_url: url, updated_at: new Date().toISOString() }).eq("id", currentUser.id);
+    if (profRes.error) throw profRes.error;
+    // Last, so the header's USER_UPDATED re-render sees the new profile row too.
+    var upd = await sb.auth.updateUser({ data: { custom_avatar_url: url } });
+    if (upd.error) throw upd.error;
+    if (upd.data && upd.data.user) currentUser = upd.data.user;
+    customAvatarUrl = url || "";
+    updateSettingsIdentity();
+  }
+
+  avatarFileInput.addEventListener("change", async function () {
+    var file = avatarFileInput.files && avatarFileInput.files[0];
+    avatarFileInput.value = "";
+    if (!file || !currentUser) return;
+    if (!/^image\//.test(file.type)) { setAvatarStatus("Please choose an image file."); return; }
+    if (file.size > 15 * 1024 * 1024) { setAvatarStatus("That image is over 15 MB — please pick a smaller one."); return; }
+    setAvatarBusy(true);
+    setAvatarStatus("Uploading…");
+    try {
+      var blob = await resizeToSquareJpeg(file);
+      var name = "avatar-" + Date.now() + ".jpg";
+      var up = await sb.storage.from("avatars").upload(currentUser.id + "/" + name, blob, { contentType: "image/jpeg", cacheControl: "31536000" });
+      if (up.error) throw up.error;
+      var publicUrl = sb.storage.from("avatars").getPublicUrl(currentUser.id + "/" + name).data.publicUrl;
+      await saveAvatarUrl(publicUrl);
+      removeAvatarFiles(name); // best-effort cleanup of the previous photo
+      setAvatarStatus("Profile picture updated.");
+    } catch (err) {
+      setAvatarStatus("Couldn't upload: " + (err.message || err));
+    }
+    setAvatarBusy(false);
+  });
+
+  avatarRemoveBtn.addEventListener("click", async function () {
+    if (!currentUser) return;
+    setAvatarBusy(true);
+    try {
+      await saveAvatarUrl(null);
+      await removeAvatarFiles(null);
+      setAvatarStatus("Profile picture removed.");
+    } catch (err) {
+      setAvatarStatus("Couldn't remove it: " + (err.message || err));
+    }
+    setAvatarBusy(false);
+  });
 
   // `profiles.team_number` is NOT NULL, but team fields no longer have
   // their own edit form (team membership drives them via
@@ -149,9 +251,22 @@
     var meta = currentUser.user_metadata || {};
     var name = displayName || meta.display_name || meta.full_name || meta.name || (currentUser.email || "").split("@")[0] || "Your account";
     nameEl.textContent = name;
-    avatarEl.textContent = name.charAt(0).toUpperCase();
     var hex = selectedAvatarColor && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[selectedAvatarColor];
-    avatarEl.style.background = hex || "";
+    var photoUrl = customAvatarUrl || meta.avatar_url || meta.picture || "";
+    [avatarEl, document.getElementById("avatar-upload-preview")].forEach(function (node) {
+      node.textContent = "";
+      if (photoUrl) {
+        var img = document.createElement("img");
+        img.src = photoUrl;
+        img.alt = "";
+        img.referrerPolicy = "no-referrer";
+        node.appendChild(img);
+      } else {
+        node.textContent = name.charAt(0).toUpperCase();
+      }
+      node.style.background = hex || "";
+    });
+    avatarRemoveBtn.hidden = !customAvatarUrl;
   }
 
   async function loadProfile() {
@@ -163,6 +278,7 @@
       selectedAvatarColor = profile.avatar_color || "";
       renderSwatches();
     }
+    customAvatarUrl = (profile && profile.avatar_url) || (currentUser.user_metadata || {}).custom_avatar_url || "";
     updateSettingsIdentity();
   }
 
@@ -352,7 +468,7 @@
       var team = Team.state.team;
       var user = Team.state.user;
       if (!team || !user) return;
-      sb.from("profiles").select("display_name").eq("id", user.id).maybeSingle().then(function (res) {
+      sb.from("profiles").select("display_name, avatar_url").eq("id", user.id).maybeSingle().then(function (res) {
         var existingName = res && res.data && res.data.display_name;
         var meta = user.user_metadata || {};
         var payload = {
@@ -364,6 +480,7 @@
         };
         if (!existingName) payload.display_name = meta.display_name || meta.full_name || meta.name || (user.email || "").split("@")[0];
         if (!existingName && meta.avatar_color) payload.avatar_color = meta.avatar_color;
+        if (!(res && res.data && res.data.avatar_url) && meta.custom_avatar_url) payload.avatar_url = meta.custom_avatar_url;
         if (!existingName && typeof meta.reminders_opt_out === "boolean") payload.reminder_emails_opt_out = meta.reminders_opt_out;
         sb.from("profiles").upsert(payload);
       });

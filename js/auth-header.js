@@ -1,5 +1,5 @@
 // Shared, site-wide "am I signed in" header widget. Runs on every page:
-// shows a Google avatar (or an initial-letter fallback) with a sign-out
+// shows the uploaded or Google avatar (or an initial-letter fallback) with a sign-out
 // dropdown when signed in, and the plain "Sign in" link otherwise.
 //
 // Exposes window.__frcHubSupabase so other scripts on the same page
@@ -38,7 +38,7 @@
     if (!slot) return;
 
     var meta = user.user_metadata || {};
-    var avatarUrl = meta.avatar_url || meta.picture;
+    var googleAvatarUrl = meta.avatar_url || meta.picture;
     var googleName = meta.full_name || meta.name || user.email || "";
 
     function build(profile) {
@@ -48,6 +48,8 @@
       var shownName = profile.display_name || meta.display_name;
       var colorKey = profile.avatar_color || meta.avatar_color;
       var name = shownName || googleName;
+      // An uploaded photo (account.js) wins over the Google one.
+      var avatarUrl = profile.avatar_url || meta.custom_avatar_url || googleAvatarUrl;
       var hex = colorKey && window.FRC_AVATAR_COLOR_HEX && window.FRC_AVATAR_COLOR_HEX[colorKey];
 
       var btn = el("button", { type: "button", class: "account-avatar-btn", "aria-label": "Account menu" },
@@ -80,7 +82,7 @@
       slot.appendChild(el("div", { class: "account-avatar-wrap" }, [btn, dropdown]));
     }
 
-    sb.from("profiles").select("display_name, avatar_color").eq("id", user.id).maybeSingle().then(function (res) {
+    sb.from("profiles").select("display_name, avatar_color, avatar_url").eq("id", user.id).maybeSingle().then(function (res) {
       build(res && res.data);
     }, function () { build(null); });
   }
