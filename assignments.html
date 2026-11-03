@@ -48,7 +48,7 @@
 <main class="site-main">
   <section class="page-head">
     <h1>Assignments</h1>
-    <p>Today's daily assignments, plus any Season Tracker tasks and milestones assigned to you. (The Season Tracker is a sample plan your team can add to, edit, and remove from.)</p>
+    <p id="assignments-head-sub">Today's daily assignments, plus any Season Tracker tasks and milestones assigned to you. (The Season Tracker is a sample plan your team can add to, edit, and remove from.)</p>
   </section>
 
   <div id="assignments-signed-out">
@@ -69,6 +69,13 @@
   </div>
 
   <div id="assignments-app" hidden>
+    <section class="forum-section" id="review-section" hidden>
+      <div class="eyebrow">Student review</div>
+      <p class="small" style="margin-bottom:12px;">Each student's progress at a glance. Open a student to see what they have outstanding, then log a note for them.</p>
+      <div class="review-list" id="review-list"></div>
+      <p class="finder-hint" id="review-empty" hidden>No students have joined your team yet.</p>
+    </section>
+
     <section class="forum-section" id="notes-section" hidden>
       <div class="eyebrow">Notes from your mentor</div>
       <div class="thread-list" id="notes-list"></div>
@@ -82,7 +89,7 @@
     </section>
 
     <section class="forum-section" id="daily-section">
-      <div class="eyebrow">Today</div>
+      <div class="eyebrow" id="daily-eyebrow">Today</div>
       <div class="milestone-list" id="daily-list"></div>
       <p class="finder-hint" id="daily-empty" hidden>Nothing assigned to you today — nice and clear.</p>
     </section>
@@ -91,8 +98,8 @@
       Daily assignments are set up by your team's mentors and captains. <a href="account.html">Join or create a team</a> to see them here.
     </div>
 
-    <section class="forum-section">
-      <div class="eyebrow">Your tasks</div>
+    <section class="forum-section" id="tasks-section">
+      <div class="eyebrow" id="tasks-eyebrow">Your tasks</div>
       <div class="milestone-list" id="my-tasks-list"></div>
       <p class="finder-hint" id="my-tasks-empty" hidden>Nothing assigned to you right now — check <a href="season.html">Season Tracker</a> to pick something up.</p>
     </section>

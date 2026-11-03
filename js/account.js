@@ -121,30 +121,151 @@
     avatarRemoveBtn.disabled = busy;
   }
 
-  // Center-crops to a square and re-encodes as a small JPEG. Re-encoding
-  // also drops EXIF metadata (phone photos often carry GPS location).
-  function resizeToSquareJpeg(file) {
+  function loadImage(file) {
     return new Promise(function (resolve, reject) {
       var url = URL.createObjectURL(file);
       var img = new Image();
-      img.onload = function () {
-        URL.revokeObjectURL(url);
-        var side = Math.min(img.naturalWidth, img.naturalHeight);
-        var size = Math.min(AVATAR_SIZE, side);
-        var canvas = document.createElement("canvas");
-        canvas.width = canvas.height = size;
-        var ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#fff"; // transparent PNGs would otherwise turn black
-        ctx.fillRect(0, 0, size, size);
-        ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, size, size);
-        canvas.toBlob(function (blob) {
-          blob ? resolve(blob) : reject(new Error("couldn't process that image"));
-        }, "image/jpeg", 0.85);
-      };
+      img.onload = function () { resolve(img); };
       img.onerror = function () { URL.revokeObjectURL(url); reject(new Error("that file isn't a readable image")); };
       img.src = url;
     });
   }
+
+  // ---- Cropper (Discord-style): the image sits behind a circular
+  // cut-out; drag to pan, slider/wheel/+- to zoom. Everything is kept in
+  // stage pixels: `scale` maps natural image px -> stage px, and
+  // (offX, offY) is the image center's offset from the stage center.
+  // The image may never be panned or zoomed so the circle shows past its
+  // edge. The result is a square JPEG of what's inside the circle; CSS
+  // rounds it everywhere it's shown.
+  var CROP_RATIO = 0.8; // circle diameter / stage width -- matches .avatar-crop-mask
+  var MAX_ZOOM = 4;
+  var cropOverlay = document.getElementById("avatar-crop-overlay");
+  var cropStage = document.getElementById("avatar-crop-stage");
+  var cropImgEl = document.getElementById("avatar-crop-img");
+  var cropZoom = document.getElementById("avatar-crop-zoom");
+  var crop = null; // { img, zoom, offX, offY, resolve }
+
+  function cropGeometry() {
+    var stage = cropStage.clientWidth;
+    var circle = stage * CROP_RATIO;
+    var w = crop.img.naturalWidth, h = crop.img.naturalHeight;
+    var scale = (circle / Math.min(w, h)) * crop.zoom;
+    return { stage: stage, circle: circle, w: w, h: h, scale: scale };
+  }
+
+  function clampCrop() {
+    var g = cropGeometry();
+    var maxX = Math.max(0, (g.w * g.scale - g.circle) / 2);
+    var maxY = Math.max(0, (g.h * g.scale - g.circle) / 2);
+    crop.offX = Math.max(-maxX, Math.min(maxX, crop.offX));
+    crop.offY = Math.max(-maxY, Math.min(maxY, crop.offY));
+  }
+
+  function renderCrop() {
+    clampCrop();
+    var g = cropGeometry();
+    var dw = g.w * g.scale, dh = g.h * g.scale;
+    cropImgEl.style.width = dw + "px";
+    cropImgEl.style.height = dh + "px";
+    cropImgEl.style.left = (g.stage - dw) / 2 + crop.offX + "px";
+    cropImgEl.style.top = (g.stage - dh) / 2 + crop.offY + "px";
+    cropZoom.value = crop.zoom;
+  }
+
+  // Zooms toward the stage center, keeping whatever is under it in place.
+  function setCropZoom(z) {
+    z = Math.max(1, Math.min(MAX_ZOOM, z));
+    var ratio = z / crop.zoom;
+    crop.offX *= ratio;
+    crop.offY *= ratio;
+    crop.zoom = z;
+    renderCrop();
+  }
+
+  function closeCropper(result) {
+    if (!crop) return;
+    var done = crop.resolve;
+    URL.revokeObjectURL(crop.img.src);
+    crop = null;
+    cropOverlay.hidden = true;
+    cropImgEl.removeAttribute("src");
+    done(result);
+  }
+
+  // Resolves with a JPEG blob, or null if cancelled.
+  function openCropper(img) {
+    return new Promise(function (resolve) {
+      crop = { img: img, zoom: 1, offX: 0, offY: 0, resolve: resolve };
+      cropImgEl.src = img.src;
+      cropOverlay.hidden = false;
+      renderCrop();
+      cropStage.focus();
+    });
+  }
+
+  function exportCrop() {
+    var g = cropGeometry();
+    var srcSide = g.circle / g.scale;
+    var sx = g.w / 2 - (crop.offX + g.circle / 2) / g.scale;
+    var sy = g.h / 2 - (crop.offY + g.circle / 2) / g.scale;
+    var canvas = document.createElement("canvas");
+    canvas.width = canvas.height = AVATAR_SIZE;
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#fff"; // transparent PNGs would otherwise turn black
+    ctx.fillRect(0, 0, AVATAR_SIZE, AVATAR_SIZE);
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(crop.img, sx, sy, srcSide, srcSide, 0, 0, AVATAR_SIZE, AVATAR_SIZE);
+    // Re-encoding also drops EXIF metadata (phone photos often carry GPS).
+    canvas.toBlob(function (blob) { closeCropper(blob); }, "image/jpeg", 0.88);
+  }
+
+  var drag = null;
+  cropStage.addEventListener("pointerdown", function (e) {
+    if (!crop) return;
+    drag = { x: e.clientX, y: e.clientY, offX: crop.offX, offY: crop.offY };
+    cropStage.setPointerCapture(e.pointerId);
+    cropStage.classList.add("is-dragging");
+  });
+  cropStage.addEventListener("pointermove", function (e) {
+    if (!drag || !crop) return;
+    crop.offX = drag.offX + (e.clientX - drag.x);
+    crop.offY = drag.offY + (e.clientY - drag.y);
+    renderCrop();
+  });
+  function endDrag() { drag = null; cropStage.classList.remove("is-dragging"); }
+  cropStage.addEventListener("pointerup", endDrag);
+  cropStage.addEventListener("pointercancel", endDrag);
+  cropStage.addEventListener("wheel", function (e) {
+    if (!crop) return;
+    e.preventDefault();
+    setCropZoom(crop.zoom * Math.exp(-e.deltaY * 0.002));
+  }, { passive: false });
+  cropStage.addEventListener("keydown", function (e) {
+    if (!crop) return;
+    var step = e.shiftKey ? 20 : 5;
+    var moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+    if (moves[e.key]) {
+      crop.offX += moves[e.key][0];
+      crop.offY += moves[e.key][1];
+      renderCrop();
+    } else if (e.key === "+" || e.key === "=") setCropZoom(crop.zoom + 0.1);
+    else if (e.key === "-") setCropZoom(crop.zoom - 0.1);
+    else return;
+    e.preventDefault();
+  });
+  cropZoom.addEventListener("input", function () { if (crop) setCropZoom(parseFloat(cropZoom.value)); });
+  document.getElementById("avatar-crop-reset").addEventListener("click", function () {
+    if (!crop) return;
+    crop.zoom = 1; crop.offX = 0; crop.offY = 0;
+    renderCrop();
+  });
+  document.getElementById("avatar-crop-apply").addEventListener("click", function () { if (crop) exportCrop(); });
+  document.getElementById("avatar-crop-cancel").addEventListener("click", function () { closeCropper(null); });
+  document.getElementById("avatar-crop-close").addEventListener("click", function () { closeCropper(null); });
+  cropOverlay.addEventListener("click", function (e) { if (e.target === cropOverlay) closeCropper(null); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && crop) closeCropper(null); });
+  window.addEventListener("resize", function () { if (crop) renderCrop(); });
 
   async function removeAvatarFiles(keepName) {
     var listRes = await sb.storage.from("avatars").list(currentUser.id);
@@ -172,9 +293,10 @@
     if (!/^image\//.test(file.type)) { setAvatarStatus("Please choose an image file."); return; }
     if (file.size > 15 * 1024 * 1024) { setAvatarStatus("That image is over 15 MB — please pick a smaller one."); return; }
     setAvatarBusy(true);
-    setAvatarStatus("Uploading…");
     try {
-      var blob = await resizeToSquareJpeg(file);
+      var blob = await openCropper(await loadImage(file));
+      if (!blob) { setAvatarStatus(""); setAvatarBusy(false); return; }
+      setAvatarStatus("Uploading…");
       var name = "avatar-" + Date.now() + ".jpg";
       var up = await sb.storage.from("avatars").upload(currentUser.id + "/" + name, blob, { contentType: "image/jpeg", cacheControl: "31536000" });
       if (up.error) throw up.error;

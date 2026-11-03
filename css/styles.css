@@ -1487,6 +1487,11 @@ main.site-main {
   font-size: 13.5px;
 }
 
+/* The audience select sits in a wrapper span; make the wrapper a flex box so the
+   select stretches to the same height as the text input and button beside it. */
+#team-notes-audience { display: flex; }
+#team-notes-audience select { box-sizing: border-box; height: 100%; min-height: 100%; }
+
 .milestone-list {
   display: flex;
   flex-direction: column;
@@ -3017,6 +3022,40 @@ main.site-main {
 .avatar-upload-btn { display: inline-block; }
 .avatar-upload-btn.is-busy { opacity: 0.6; pointer-events: none; }
 
+.avatar-crop-modal { max-width: 400px; }
+.avatar-crop-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #1e1f22;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.avatar-crop-stage.is-dragging { cursor: grabbing; }
+.avatar-crop-stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.avatar-crop-stage img { position: absolute; max-width: none; pointer-events: none; }
+/* The cut-out: a centered circle whose huge shadow dims everything
+   outside it. Its diameter (80% of the stage) must match CROP_RATIO in
+   js/account.js. */
+.avatar-crop-mask {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+}
+.avatar-crop-zoom { display: flex; align-items: center; gap: 12px; margin: 18px 4px 0; color: var(--text-faint); }
+.avatar-crop-zoom input { flex: 1; accent-color: var(--accent); }
+.avatar-crop-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; }
+.avatar-crop-foot-right { display: flex; align-items: center; gap: 18px; }
+
 .settings-name { font-weight: 600; font-size: 0.92rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .settings-email { font-size: 0.78rem; color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -3592,3 +3631,13 @@ body.am-open { overflow: hidden; }
 .preview-banner span { font-size: 0.82rem; color: var(--text-dim); }
 .preview-banner .submit-btn-sm { width: auto; }
 .preview-sample { opacity: 0.92; pointer-events: none; user-select: none; }
+
+/* Mentor student-review cards on the Assignments page */
+.review-list { display: flex; flex-direction: column; gap: 10px; }
+.review-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; }
+.review-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer; list-style-position: outside; }
+.review-name { font-weight: 700; }
+.review-stats { margin-left: auto; font-size: 0.82rem; color: var(--text-faint); }
+.review-card .robot-bar { margin: 10px 0; }
+.review-tasks { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; font-size: 0.88rem; }
+.review-task { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); }

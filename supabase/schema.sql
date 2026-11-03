@@ -196,6 +196,34 @@ create table if not exists public.teams (
   updated_at timestamptz not null default now()
 );
 
+-- Catch-up for a teams table created before these columns existed --
+-- `create table if not exists` above is a no-op on an existing table, so
+-- without this create_team()/join_team() fail with "column ... does not
+-- exist". Existing rows get fresh codes backfilled before the not-null
+-- and uniqueness rules are applied.
+-- The original FRC Hub Pro schema had teams as one row per *user*, with
+-- id referencing auth.users and per-user insert/update policies. Strip
+-- that so ids are independent and writes only go through the RPCs below.
+alter table public.teams drop constraint if exists teams_id_fkey;
+drop policy if exists "Teams can view their own row" on public.teams;
+drop policy if exists "Teams can insert their own row" on public.teams;
+drop policy if exists "Teams can update their own row" on public.teams;
+revoke insert, update, delete on public.teams from authenticated;
+alter table public.teams alter column id set default gen_random_uuid();
+alter table public.teams add column if not exists team_name text;
+alter table public.teams add column if not exists district text;
+alter table public.teams add column if not exists join_code_student text;
+alter table public.teams add column if not exists join_code_mentor text;
+alter table public.teams add column if not exists current_season_year int not null default extract(year from now())::int;
+alter table public.teams add column if not exists created_at timestamptz not null default now();
+alter table public.teams add column if not exists updated_at timestamptz not null default now();
+update public.teams set join_code_student = upper(substr(md5(gen_random_uuid()::text), 1, 6)) where join_code_student is null;
+update public.teams set join_code_mentor = upper(substr(md5(gen_random_uuid()::text), 1, 6)) where join_code_mentor is null;
+alter table public.teams alter column join_code_student set not null;
+alter table public.teams alter column join_code_mentor set not null;
+create unique index if not exists teams_join_code_student_key on public.teams (join_code_student);
+create unique index if not exists teams_join_code_mentor_key on public.teams (join_code_mentor);
+
 -- One row per *user*, not per (team, user) -- a person is on exactly one
 -- team at a time, enforced here by user_id being the primary key instead
 -- of needing a separate uniqueness check everywhere.

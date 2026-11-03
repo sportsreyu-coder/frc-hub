@@ -111,45 +111,48 @@
   // ---- "Your tasks": milestones + custom tasks already assigned to you
   // in Season Tracker, not yet done. ----
 
-  function renderTasksSection(myId, mySubteam) {
+  // Open and finished Season Tracker items for one person. `direct` limits
+  // matching to tasks with that exact user id (used for mentors, who aren't
+  // part of any subteam's workload).
+  function collectTasks(data, uid, subteam, direct) {
+    var team = !!Team.state.team;
+    var progress = team ? (data && data.progress) || {} : Core.loadProgress();
+    var assignments = team ? (data && data.assignments) || {} : loadLocalAssignments();
+    var customTasks = team ? (data && data.customTasks) || [] : loadLocalCustomTasks();
+    var today = Core.startOfDay(new Date());
+    var open = [], done = [];
+    function consider(id, label, date) {
+      if (!isAssignedToMe(assignmentTokens(assignments, id), uid, direct ? null : subteam)) return;
+      var item = { id: id, label: label, date: date, overdue: !!date && Core.daysBetween(today, date) < 0 };
+      (progress[id] ? done : open).push(item);
+    }
+    Core.getMilestonesWithDates().forEach(function (m) { consider(m.id, m.label, m.date); });
+    customTasks.forEach(function (t) { consider(t.id, t.label, t.dueDate ? new Date(t.dueDate + "T00:00:00") : null); });
+    open.sort(function (a, b) {
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return a.date - b.date;
+    });
+    return { open: open, done: done };
+  }
+
+  function renderTasksSection(myId, mySubteam, direct) {
     var list = document.getElementById("my-tasks-list");
     var empty = document.getElementById("my-tasks-empty");
     list.innerHTML = "";
 
     var teamDataPromise = Team.state.team ? Team.loadTeamData() : Promise.resolve(null);
     teamDataPromise.then(function (data) {
-      var progress = Team.state.team ? (data && data.progress) || {} : Core.loadProgress();
-      var assignments = Team.state.team ? (data && data.assignments) || {} : loadLocalAssignments();
-      var customTasks = Team.state.team ? (data && data.customTasks) || [] : loadLocalCustomTasks();
+      var items = collectTasks(data, myId, mySubteam, direct).open;
 
-      var today = Core.startOfDay(new Date());
-      var items = [];
-
-      Core.getMilestonesWithDates().forEach(function (m) {
-        if (progress[m.id]) return;
-        if (!isAssignedToMe(assignmentTokens(assignments, m.id), myId, mySubteam)) return;
-        items.push({ id: m.id, label: m.label, date: m.date, overdue: Core.daysBetween(today, m.date) < 0 });
-      });
-
-      customTasks.forEach(function (t) {
-        if (progress[t.id]) return;
-        if (!isAssignedToMe(assignmentTokens(assignments, t.id), myId, mySubteam)) return;
-        var date = t.dueDate ? new Date(t.dueDate + "T00:00:00") : null;
-        items.push({ id: t.id, label: t.label, date: date, overdue: !!date && Core.daysBetween(today, date) < 0 });
-      });
-
-      items.sort(function (a, b) {
-        if (!a.date && !b.date) return 0;
-        if (!a.date) return 1;
-        if (!b.date) return -1;
-        return a.date - b.date;
-      });
-
+      // Mentors only see this section when something is assigned to them.
+      document.getElementById("tasks-section").hidden = direct && items.length === 0;
       empty.hidden = items.length > 0;
       items.forEach(function (item) {
         var checkbox = el("input", { type: "checkbox" });
         checkbox.addEventListener("change", function () {
-          toggleProgressKey(item.id, true).then(function () { renderTasksSection(myId, mySubteam); });
+          toggleProgressKey(item.id, true).then(function () { renderTasksSection(myId, mySubteam, direct); });
         });
         var meta = [];
         if (item.date) meta.push(el("span", { class: "ms-date" + (item.overdue ? " is-overdue" : "") }, [item.overdue ? "Overdue" : Core.formatDate(item.date)]));
@@ -168,15 +171,16 @@
 
   // ---- "Today": daily assignments assigned to me or my subteam. ----
 
-  function appliesToMe(tpl, myId, mySubteam) {
+  function appliesToMe(tpl, myId, mySubteam, direct) {
     if (!tpl.active) return false;
+    if (direct) return !!myId && tpl.assignTo === myId;
     if (tpl.assignTo === "everyone") return true;
     if (myId && tpl.assignTo === myId) return true;
     if (mySubteam && tpl.assignTo === mySubteam) return true;
     return false;
   }
 
-  function renderDailySection(myId, mySubteam) {
+  function renderDailySection(myId, mySubteam, direct) {
     var list = document.getElementById("daily-list");
     var empty = document.getElementById("daily-empty");
     list.innerHTML = "";
@@ -184,8 +188,10 @@
     Team.loadTeamData().then(function (data) {
       var templates = (data && data.dailyTemplates) || [];
       var progress = (data && data.progress) || {};
-      var mine = templates.filter(function (t) { return appliesToMe(t, myId, mySubteam); });
+      var mine = templates.filter(function (t) { return appliesToMe(t, myId, mySubteam, direct); });
 
+      // Mentors only see this section when something is assigned to them.
+      document.getElementById("daily-section").hidden = direct && mine.length === 0;
       empty.hidden = mine.length > 0;
       mine.forEach(function (tpl) {
         var key = dailyProgressKey(tpl.id, myId);
@@ -193,7 +199,7 @@
         var checkbox = el("input", { type: "checkbox" });
         checkbox.checked = done;
         checkbox.addEventListener("change", function () {
-          toggleProgressKey(key, checkbox.checked).then(function () { renderDailySection(myId, mySubteam); });
+          toggleProgressKey(key, checkbox.checked).then(function () { renderDailySection(myId, mySubteam, direct); });
         });
         list.appendChild(el("label", { class: "milestone-row" }, [
           checkbox,
@@ -260,6 +266,94 @@
     });
   }
 
+  // ---- Mentor view: per-student review. ----
+
+  var SUBTEAM_NAMES = { mechanical: "Mechanical", electrical: "Electrical", programming: "Programming", design: "Design", business: "Business" };
+
+  function studentName(r) { return (r.profile && r.profile.display_name) || "Member"; }
+
+  function postNoteFor(uid, text) {
+    return patchTeamData(function (d) {
+      var notes = (d.mentorNotes || []).slice();
+      notes.push({ id: "note-" + Date.now() + "-" + Math.floor(Math.random() * 1000), text: text, audience: uid, createdAt: new Date().toISOString(), createdBy: Team.state.user.id });
+      d.mentorNotes = notes;
+    });
+  }
+
+  function renderReviewSection() {
+    var section = document.getElementById("review-section");
+    var list = document.getElementById("review-list");
+    section.hidden = false;
+
+    Promise.all([Team.loadTeamData(), Team.loadRoster()]).then(function (res) {
+      var data = res[0] || {};
+      var students = (res[1] || []).filter(function (r) { return r.role === "student"; });
+      var templates = data.dailyTemplates || [];
+      var progress = data.progress || {};
+      var notes = data.mentorNotes || [];
+
+      // Keep open cards open across re-renders.
+      var openIds = {};
+      Array.prototype.forEach.call(list.querySelectorAll("details[open]"), function (d) { openIds[d.getAttribute("data-uid")] = true; });
+      list.innerHTML = "";
+      document.getElementById("review-empty").hidden = students.length > 0;
+
+      students.forEach(function (r) {
+        var tasks = collectTasks(data, r.user_id, r.subteam, false);
+        var daily = templates.filter(function (t) { return appliesToMe(t, r.user_id, r.subteam, false); });
+        var dailyDone = daily.filter(function (t) { return progress[dailyProgressKey(t.id, r.user_id)]; }).length;
+        var overdue = tasks.open.filter(function (t) { return t.overdue; }).length;
+        var totalTasks = tasks.open.length + tasks.done.length;
+        var pct = totalTasks ? Math.round(tasks.done.length / totalTasks * 100) : 0;
+        var mine = notes.filter(function (n) { return n.audience === r.user_id; }).slice().reverse();
+
+        var summary = el("summary", { class: "review-summary" }, [
+          el("span", { class: "review-name" }, [studentName(r)]),
+          r.subteam && r.subteam !== "cross-team" ? el("span", { class: "role-badge" }, [SUBTEAM_NAMES[r.subteam] || r.subteam]) : null,
+          el("span", { class: "review-stats" }, [
+            "Today " + dailyDone + "/" + daily.length + " · " + tasks.done.length + "/" + totalTasks + " tasks done" + (overdue ? " · " : ""),
+            overdue ? el("span", { class: "is-overdue" }, [overdue + " overdue"]) : null,
+          ]),
+        ]);
+
+        var bar = el("div", { class: "robot-bar" }, []);
+        var fill = el("div", { class: "robot-bar-fill" });
+        fill.style.width = pct + "%";
+        bar.appendChild(fill);
+
+        var openList = el("div", { class: "review-tasks" }, tasks.open.length ? tasks.open.map(function (t) {
+          return el("div", { class: "review-task" }, [
+            el("span", {}, [t.label]),
+            t.date ? el("span", { class: "ms-date" + (t.overdue ? " is-overdue" : "") }, [t.overdue ? "Overdue" : Core.formatDate(t.date)]) : null,
+          ]);
+        }) : [el("p", { class: "finder-hint" }, ["Nothing outstanding."])]);
+
+        var input = el("input", { type: "text", placeholder: "Log a note for " + studentName(r), maxlength: "500", required: "required" });
+        var form = el("form", { class: "custom-task-form" }, [input, el("button", { type: "submit", class: "submit-btn-sm" }, ["Log note"])]);
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var text = input.value.trim();
+          if (!text) return;
+          postNoteFor(r.user_id, text).then(renderReviewSection);
+        });
+
+        var noteRows = mine.slice(0, 3).map(function (n) {
+          return el("div", { class: "thread-row" }, [el("div", { class: "thread-row-main" }, [
+            el("span", { class: "thread-title" }, [n.text]),
+            el("span", { class: "thread-meta" }, [n.createdAt ? Core.formatDate(new Date(n.createdAt)) : ""]),
+          ])]);
+        });
+
+        var card = el("details", { class: "review-card", "data-uid": r.user_id }, [
+          summary, bar, openList, form,
+          noteRows.length ? el("div", { class: "thread-list" }, noteRows) : null,
+        ]);
+        if (openIds[r.user_id]) card.setAttribute("open", "");
+        list.appendChild(card);
+      });
+    });
+  }
+
   // ---- Page bootstrap ----
 
   function render() {
@@ -271,15 +365,24 @@
     var mySubteam = Team.state.membership && Team.state.membership.subteam;
     var hasTeam = !!Team.state.team;
 
-    renderTasksSection(myId, mySubteam);
+    // Mentors review students instead of carrying their own workload; only
+    // items assigned to them directly still show up here.
+    var isMentor = hasTeam && Team.isMentor();
+    document.getElementById("review-section").hidden = !isMentor;
+    document.getElementById("assignments-head-sub").textContent = isMentor
+      ? "Review how each student is doing and log notes. Anything assigned directly to you still appears below."
+      : "Today's daily assignments, plus any Season Tracker tasks and milestones assigned to you. (The Season Tracker is a sample plan your team can add to, edit, and remove from.)";
+    if (isMentor) renderReviewSection();
 
-    document.getElementById("notes-section").hidden = !hasTeam;
+    renderTasksSection(myId, mySubteam, isMentor);
+
+    document.getElementById("notes-section").hidden = !hasTeam || isMentor;
     document.getElementById("robot-section").hidden = !hasTeam;
     if (hasTeam) renderTeamExtras(myId, mySubteam);
 
     document.getElementById("daily-section").hidden = !hasTeam;
     document.getElementById("daily-no-team").hidden = hasTeam;
-    if (hasTeam) renderDailySection(myId, mySubteam);
+    if (hasTeam) renderDailySection(myId, mySubteam, isMentor);
 
     var canManage = hasTeam && (Team.isMentor() || Team.captainScope().length > 0);
     document.getElementById("manage-hint").hidden = !canManage;

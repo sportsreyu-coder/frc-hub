@@ -102,7 +102,7 @@
           }
           if (!d.budgetGoals || !d.budgetGoals.length) {
             d.budgetGoals = DEFAULT_BUDGET_GOALS.map(function (g, i) {
-              return { id: "goal-seed-" + i, label: g.label, amount: g.amount, createdAt: now, createdBy: uid };
+              return { id: "goal-seed-" + i, label: g.label, amount: g.amount, raised: 0, createdAt: now, createdBy: uid };
             });
           }
           d.seeded = true;
@@ -779,26 +779,34 @@
         return;
       }
       goals.forEach(function (g) {
-        var reached = income >= g.amount;
+        var raised = Number(g.raised) || 0;
+        var reached = raised >= g.amount;
+        var pct = Math.min(100, Math.round((raised / g.amount) * 100));
         var row = el("div", { class: "thread-row" }, [
           el("div", { class: "thread-row-main" }, [
             el("span", { class: "thread-title" }, [g.label]),
-            el("span", { class: "thread-meta" }, [money(income) + " of " + money(g.amount) + (reached ? " · Reached" : "")]),
+            el("span", { class: "thread-meta" }, [money(raised) + " raised of " + money(g.amount) + (reached ? " · Reached" : "")]),
+            el("div", { class: "progress-track", style: "margin-top:6px;" }, [
+              el("div", { class: "progress-fill", style: "width:" + pct + "%" }),
+            ]),
           ]),
         ]);
         if (Team.canEditBudgetGoal()) {
-          var amountInput = el("input", { type: "number", min: "1", step: "1", value: String(g.amount), style: "width:90px; padding:4px 8px; font-size:0.8rem;" });
+          var inputStyle = "width:90px; padding:4px 8px; font-size:0.8rem;";
+          var raisedInput = el("input", { type: "number", min: "0", step: "1", value: String(raised), title: "Raised so far ($)", "aria-label": "Raised for " + g.label, style: inputStyle });
+          var amountInput = el("input", { type: "number", min: "1", step: "1", value: String(g.amount), title: "Target ($)", "aria-label": "Target for " + g.label, style: inputStyle });
           var updateBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Update"]);
           updateBtn.addEventListener("click", function () {
+            var r = parseFloat(raisedInput.value);
             var v = parseFloat(amountInput.value);
-            if (isNaN(v) || v <= 0) return;
-            patchTeamData(function (d) { (d.budgetGoals || []).forEach(function (x) { if (x.id === g.id) x.amount = v; }); }).then(renderBudgetTab);
+            if (isNaN(r) || r < 0 || isNaN(v) || v <= 0) return;
+            patchTeamData(function (d) { (d.budgetGoals || []).forEach(function (x) { if (x.id === g.id) { x.raised = r; x.amount = v; } }); }).then(renderBudgetTab);
           });
           var delBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Delete"]);
           delBtn.addEventListener("click", function () {
             patchTeamData(function (d) { d.budgetGoals = (d.budgetGoals || []).filter(function (x) { return x.id !== g.id; }); }).then(renderBudgetTab);
           });
-          row.appendChild(el("div", { class: "post-actions" }, [amountInput, updateBtn, delBtn]));
+          row.appendChild(el("div", { class: "post-actions" }, [raisedInput, el("span", { class: "thread-meta" }, ["of"]), amountInput, updateBtn, delBtn]));
         }
         list.appendChild(row);
       });
@@ -814,7 +822,7 @@
     if (!label || isNaN(amount) || amount <= 0) return;
     patchTeamData(function (data) {
       var goals = (data.budgetGoals || []).slice();
-      goals.push({ id: "goal-" + Date.now() + "-" + Math.floor(Math.random() * 1000), label: label, amount: amount, createdAt: new Date().toISOString(), createdBy: Team.state.user.id });
+      goals.push({ id: "goal-" + Date.now() + "-" + Math.floor(Math.random() * 1000), label: label, amount: amount, raised: 0, createdAt: new Date().toISOString(), createdBy: Team.state.user.id });
       data.budgetGoals = goals;
     }).then(function () {
       labelInput.value = "";
