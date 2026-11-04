@@ -224,17 +224,36 @@
       subteamSelect.value = "cross-team";
       inviteCaptainChecks = captainCheckboxes([]);
       document.getElementById("team-invite-captains").appendChild(inviteCaptainChecks);
+      var roleSelect = document.getElementById("team-invite-role");
+      if (Team.isAdmin()) roleSelect.appendChild(el("option", { value: "mentor" }, ["Mentor"]));
       document.getElementById("team-invite-form").addEventListener("submit", function (e) {
         e.preventDefault();
         var roles = Array.prototype.slice.call(inviteCaptainChecks.querySelectorAll("input:checked")).map(function (c) { return c.value; });
         var labelInput = document.getElementById("team-invite-label");
-        Team.createStudentInvite(labelInput.value, subteamSelect.value, roles).then(function (invite) {
-          copyText(inviteUrl(invite.code));
-          showInfo("Invite created and link copied.");
-          labelInput.value = "";
-          subteamSelect.value = "cross-team";
-          Array.prototype.forEach.call(inviteCaptainChecks.querySelectorAll("input"), function (c) { c.checked = false; });
-          renderInvites();
+        var emailInput = document.getElementById("team-invite-email");
+        var sendBox = document.getElementById("team-invite-send");
+        var email = emailInput.value.trim();
+        var wantEmail = sendBox.checked;
+        if (wantEmail && !email) { showErr("Enter an email address to send the invite to."); return; }
+        Team.createStudentInvite(labelInput.value, subteamSelect.value, roles, email, roleSelect.value).then(function (invite) {
+          var done = function (msg) {
+            showInfo(msg);
+            labelInput.value = "";
+            emailInput.value = "";
+            sendBox.checked = false;
+            subteamSelect.value = "cross-team";
+            roleSelect.value = "student";
+            Array.prototype.forEach.call(inviteCaptainChecks.querySelectorAll("input"), function (c) { c.checked = false; });
+            renderInvites();
+          };
+          if (!wantEmail) { copyText(inviteUrl(invite.code)); return done("Invite created and link copied."); }
+          return Team.sendInviteEmail(invite.id).then(function () {
+            done("Invite emailed to " + email + ".");
+          }).catch(function (err) {
+            copyText(inviteUrl(invite.code));
+            done("");
+            showErr(err.message);
+          });
         }).catch(function (err) { showErr(err.message); });
       });
     }
@@ -242,24 +261,48 @@
     var host = document.getElementById("team-invites-list");
     Team.listStudentInvites().then(function (invites) {
       host.innerHTML = "";
-      (invites || []).forEach(function (inv) {
-        var roleBits = [];
+      if (!invites || !invites.length) {
+        host.appendChild(el("p", { class: "small" }, ["No invites yet."]));
+        return;
+      }
+      host.appendChild(el("div", { class: "eyebrow" }, ["Invited"]));
+      invites.forEach(function (inv) {
+        var roleBits = [inv.role === "mentor" ? "Mentor" : "Student"];
         if (inv.subteam && inv.subteam !== "cross-team") roleBits.push(SUBTEAM_LABELS[inv.subteam] || inv.subteam);
         (inv.captain_roles || []).forEach(function (c) { roleBits.push(CAPTAIN_LABELS[c] || c); });
+        var status = inv.used_at ? "Joined " + new Date(inv.used_at).toLocaleDateString()
+          : new Date(inv.expires_at) <= new Date() ? "Expired " + new Date(inv.expires_at).toLocaleDateString()
+          : "Pending · expires " + new Date(inv.expires_at).toLocaleDateString();
+        var who = [inv.label, inv.email].filter(Boolean).join(" · ") || "Invite link";
+        var pending = !inv.used_at && new Date(inv.expires_at) > new Date();
         var row = el("div", { class: "thread-row" }, [
           el("div", { class: "thread-row-main" }, [
-            el("span", { class: "thread-title" }, [inv.label || "Student invite"]),
-            el("span", { class: "thread-meta" }, [(roleBits.length ? roleBits.join(", ") : "No special roles") + " · expires " + new Date(inv.expires_at).toLocaleDateString()]),
+            el("span", { class: "thread-title" }, [who]),
+            el("span", { class: "thread-meta" }, [roleBits.join(", ") + " · " + status + (inv.emailed_at ? " · emailed" : "")]),
           ]),
         ]);
-        var copyBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Copy link"]);
-        copyBtn.addEventListener("click", function () { copyText(inviteUrl(inv.code)); showInfo("Link copied."); });
-        var revokeBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Revoke"]);
-        revokeBtn.addEventListener("click", function () {
-          if (!confirm("Revoke this invite? The link will stop working.")) return;
-          Team.revokeStudentInvite(inv.id).then(renderInvites).catch(function (err) { showErr(err.message); });
-        });
-        row.appendChild(el("div", { class: "post-actions" }, [copyBtn, revokeBtn]));
+        var actions = el("div", { class: "post-actions" }, []);
+        if (pending) {
+          var copyBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Copy link"]);
+          copyBtn.addEventListener("click", function () { copyText(inviteUrl(inv.code)); showInfo("Link copied."); });
+          actions.appendChild(copyBtn);
+          if (inv.email) {
+            var resendBtn = el("button", { type: "button", class: "ms-expand-toggle" }, [inv.emailed_at ? "Resend" : "Email"]);
+            resendBtn.addEventListener("click", function () {
+              Team.sendInviteEmail(inv.id).then(function () { showInfo("Invite emailed to " + inv.email + "."); renderInvites(); }).catch(function (err) { showErr(err.message); });
+            });
+            actions.appendChild(resendBtn);
+          }
+        }
+        if (!inv.used_at) {
+          var revokeBtn = el("button", { type: "button", class: "ms-expand-toggle" }, [pending ? "Revoke" : "Remove"]);
+          revokeBtn.addEventListener("click", function () {
+            if (pending && !confirm("Revoke this invite? The link will stop working.")) return;
+            Team.revokeStudentInvite(inv.id).then(renderInvites).catch(function (err) { showErr(err.message); });
+          });
+          actions.appendChild(revokeBtn);
+        }
+        row.appendChild(actions);
         host.appendChild(row);
       });
     }).catch(function (err) { showErr(err.message); });

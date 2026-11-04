@@ -227,13 +227,16 @@
 
           <div class="settings-panel-card" id="team-invites-section" hidden>
             <div class="settings-panel-head">
-              <h1>Invite a student</h1>
-              <p class="small">Pick their subteam and any captain roles up front. Send them the link — they get those roles the moment they join. Each invite works once and expires in 14 days.</p>
+              <h1>Invite someone</h1>
+              <p class="small">Pick their role, subteam and any captain roles up front. Copy the link or have it emailed — they get those roles the moment they join. Each invite works once and expires after 7 days; after that, create a new one.</p>
             </div>
             <form id="team-invite-form" class="invite-form">
-              <input type="text" id="team-invite-label" placeholder="Student's name (optional, for your reference)" maxlength="60" />
+              <input type="text" id="team-invite-label" placeholder="Name (optional, for your reference)" maxlength="60" />
+              <input type="email" id="team-invite-email" placeholder="Email (optional — needed to send by email)" maxlength="254" />
+              <select id="team-invite-role" aria-label="Role"><option value="student">Student</option></select>
               <select id="team-invite-subteam" aria-label="Subteam"></select>
               <div id="team-invite-captains"></div>
+              <label class="small"><input type="checkbox" id="team-invite-send" /> Email this invite to the address above</label>
               <button type="submit" class="submit-btn-sm">Create invite link</button>
             </form>
             <div id="team-invites-list"></div>

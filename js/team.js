@@ -153,8 +153,15 @@
     setMemberRoles: function (userId, subteam, captainRolesList) {
       return rpc("set_member_roles", { p_user_id: userId, p_subteam: subteam, p_captain_roles: captainRolesList });
     },
-    createStudentInvite: function (label, subteam, captainRolesList) {
-      return rpc("create_student_invite", { p_label: label, p_subteam: subteam, p_captain_roles: captainRolesList });
+    createStudentInvite: function (label, subteam, captainRolesList, email, role) {
+      return rpc("create_student_invite", { p_label: label, p_subteam: subteam, p_captain_roles: captainRolesList, p_email: email || null, p_role: role || "student" });
+    },
+    // Emails an existing invite's link via the send-invite edge function.
+    sendInviteEmail: function (inviteId) {
+      return sb.functions.invoke("send-invite", { body: { invite_id: inviteId } }).then(function (res) {
+        if (res.error) throw new Error("Invite created, but the email couldn't be sent. Copy the link and send it yourself.");
+        return res.data;
+      });
     },
     listStudentInvites: function () {
       return rpc("list_student_invites", {});

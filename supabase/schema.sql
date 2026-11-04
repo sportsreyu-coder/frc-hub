@@ -366,10 +366,18 @@ create table if not exists public.team_invites (
     check (captain_roles <@ array['team_captain','technical_captain','nontechnical_captain','design_captain','mechanical_captain','electrical_captain','programming_captain','business_captain']::text[]),
   created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now(),
-  expires_at timestamptz not null default now() + interval '14 days',
+  expires_at timestamptz not null default now() + interval '7 days',
   used_by uuid references auth.users (id) on delete set null,
   used_at timestamptz
 );
+-- Added later: who the invite was emailed to, which role it grants, and when
+-- the email went out. Links last 7 days; expired ones are never redeemable
+-- (join_team checks expires_at) and the mentor must create a fresh one.
+alter table public.team_invites add column if not exists email text;
+alter table public.team_invites add column if not exists role text not null default 'student'
+  check (role in ('student', 'mentor'));
+alter table public.team_invites add column if not exists emailed_at timestamptz;
+alter table public.team_invites alter column expires_at set default now() + interval '7 days';
 create index if not exists team_invites_team_idx on public.team_invites (team_id);
 alter table public.team_invites enable row level security;
 
@@ -489,7 +497,7 @@ begin
     for update;
   if found then
     select * into v_team from public.teams where id = v_invite.team_id;
-    v_role := 'student';
+    v_role := v_invite.role;
   else
   select * into v_team from public.teams where join_code_student = upper(trim(p_code));
   if found then
@@ -514,8 +522,15 @@ begin
   end if;
 
   if v_invite.id is not null then
-    insert into public.team_members (user_id, team_id, role, subteam, captain_roles)
-      values (auth.uid(), v_team.id, 'student', v_invite.subteam, v_invite.captain_roles);
+    -- A mentor invite never carries admin rights (same rule as the mentor code).
+    if v_invite.role = 'mentor' then
+      insert into public.team_members (user_id, team_id, role, subteam, captain_roles, is_admin)
+        values (auth.uid(), v_team.id, 'mentor', v_invite.subteam, v_invite.captain_roles,
+          not exists (select 1 from public.team_members where team_id = v_team.id and role = 'mentor' and is_admin));
+    else
+      insert into public.team_members (user_id, team_id, role, subteam, captain_roles)
+        values (auth.uid(), v_team.id, 'student', v_invite.subteam, v_invite.captain_roles);
+    end if;
     update public.team_invites set used_by = auth.uid(), used_at = now() where id = v_invite.id;
   else
     insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, v_role, v_is_admin);
@@ -525,8 +540,10 @@ begin
 end;
 $$;
 
--- Mentor-only: mint a single-use student invite with roles pre-assigned.
-create or replace function public.create_student_invite(p_label text, p_subteam text, p_captain_roles text[])
+-- Mentor-only: mint a single-use invite (7-day expiry) with roles
+-- pre-assigned. Inviting another mentor requires admin rights.
+drop function if exists public.create_student_invite(text, text, text[]);
+create or replace function public.create_student_invite(p_label text, p_subteam text, p_captain_roles text[], p_email text default null, p_role text default 'student')
 returns public.team_invites
 language plpgsql security definer set search_path = public as $$
 declare
@@ -538,26 +555,46 @@ begin
   if v_team_id is null or not public.is_mentor_of(v_team_id) then
     raise exception 'Only mentors can invite students.';
   end if;
+  p_role := coalesce(nullif(trim(p_role), ''), 'student');
+  if p_role not in ('student', 'mentor') then
+    raise exception 'Invalid invite role.';
+  end if;
+  if p_role = 'mentor' and not public.is_admin_of(v_team_id) then
+    raise exception 'Only team admins can invite mentors.';
+  end if;
   loop
     v_code := public.generate_join_code();
     exit when not exists (select 1 from public.teams where join_code_student = v_code or join_code_mentor = v_code)
       and not exists (select 1 from public.team_invites where code = v_code);
   end loop;
-  insert into public.team_invites (team_id, code, label, subteam, captain_roles, created_by)
-    values (v_team_id, v_code, nullif(trim(p_label), ''), coalesce(p_subteam, 'cross-team'), coalesce(p_captain_roles, '{}'), auth.uid())
+  insert into public.team_invites (team_id, code, label, subteam, captain_roles, created_by, email, role, expires_at)
+    values (v_team_id, v_code, nullif(trim(p_label), ''), coalesce(p_subteam, 'cross-team'), coalesce(p_captain_roles, '{}'),
+      auth.uid(), nullif(lower(trim(p_email)), ''), p_role, now() + interval '7 days')
     returning * into v_invite;
   return v_invite;
 end;
 $$;
 
--- Mentor-only: this team's invites that are still redeemable.
+-- Mentor-only: every invite this team has made (pending, used, expired) so
+-- mentors can see who they've invited. Redeemability is derived client-side
+-- from used_at / expires_at.
 create or replace function public.list_student_invites()
 returns setof public.team_invites
 language sql security definer set search_path = public stable as $$
   select i.* from public.team_invites i
   where i.team_id = public.my_team_id() and public.is_mentor_of(i.team_id)
-    and i.used_at is null and i.expires_at > now()
-  order by i.created_at desc;
+  order by i.created_at desc
+  limit 200;
+$$;
+
+-- Called by the send-invite edge function after it emails the link.
+create or replace function public.mark_invite_emailed(p_invite_id uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  update public.team_invites set emailed_at = now()
+  where id = p_invite_id and team_id = public.my_team_id() and public.is_mentor_of(team_id);
+end;
 $$;
 
 create or replace function public.revoke_student_invite(p_invite_id uuid)
@@ -574,7 +611,8 @@ begin
 end;
 $$;
 
-grant execute on function public.create_student_invite(text, text, text[]) to authenticated;
+grant execute on function public.create_student_invite(text, text, text[], text, text) to authenticated;
+grant execute on function public.mark_invite_emailed(uuid) to authenticated;
 grant execute on function public.list_student_invites() to authenticated;
 grant execute on function public.revoke_student_invite(uuid) to authenticated;
 

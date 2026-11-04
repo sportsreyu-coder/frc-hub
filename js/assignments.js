@@ -287,6 +287,7 @@
 
     Promise.all([Team.loadTeamData(), Team.loadRoster()]).then(function (res) {
       var data = res[0] || {};
+      var buildLog = data.buildLog || [];
       var students = (res[1] || []).filter(function (r) { return r.role === "student"; });
       var templates = data.dailyTemplates || [];
       var progress = data.progress || {};
@@ -344,8 +345,12 @@
           ])]);
         });
 
+        var hours = window.BuildLog.mentorPanel(buildLog, r.user_id, renderReviewSection);
+        summary.insertBefore(el("span", { class: "review-stats" }, [hours.summary + (hours.status ? " · " + hours.status : "")]), summary.lastChild);
+        summary.lastChild.style.marginLeft = "0";
+
         var card = el("details", { class: "review-card", "data-uid": r.user_id }, [
-          summary, bar, openList, form,
+          summary, bar, openList, hours.node, form,
           noteRows.length ? el("div", { class: "thread-list" }, noteRows) : null,
         ]);
         if (openIds[r.user_id]) card.setAttribute("open", "");
@@ -379,6 +384,10 @@
     document.getElementById("notes-section").hidden = !hasTeam || isMentor;
     document.getElementById("robot-section").hidden = !hasTeam;
     if (hasTeam) renderTeamExtras(myId, mySubteam);
+
+    var logSection = document.getElementById("buildlog-section");
+    logSection.hidden = !hasTeam || isMentor;
+    if (!logSection.hidden) window.BuildLog.renderStudent(myId);
 
     document.getElementById("daily-section").hidden = !hasTeam;
     document.getElementById("daily-no-team").hidden = hasTeam;

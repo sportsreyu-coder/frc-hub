@@ -38,3 +38,17 @@ Then schedule `send-reminders` to run once a day -- either:
 Without that scheduling step, `send-reminders` exists and works if invoked,
 but nothing invokes it on its own -- reminders are wired up, not yet turned
 on, until this is done.
+
+## send-invite
+
+Emails a team join link when a mentor ticks "Email this invite" in
+Team -> People. Called by the frontend with the mentor's own session (JWT
+verification stays on). Uses the same `RESEND_API_KEY` secret as
+`send-reminders`; set `INVITE_FROM_EMAIL` to an address on your Resend-verified
+domain. Deploy after running the updated `schema.sql`:
+
+```bash
+supabase functions deploy send-invite
+```
+
+Without it, invites still work -- the mentor just copies the link manually.

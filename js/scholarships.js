@@ -3,6 +3,7 @@
 
   var CATEGORY_LABELS = {
     "frc-specific": "FIRST/FRC-specific",
+    "any-robotics": "Any robotics",
     "stem-general": "General STEM",
   };
 

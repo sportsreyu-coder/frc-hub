@@ -48,16 +48,16 @@
     "id": "michigan-tech-first-scholarship",
     "name": "Michigan Tech FIRST Scholarship",
     "provider": "Michigan Technological University",
-    "link": "https://www.mtu.edu/admissions/financial/scholarships/",
-    "amount": "$1,500–$4,000/year",
-    "deadline": "Requires a separate competitive application, due February 1",
+    "link": "https://www.mtu.edu/admissions/first/",
+    "amount": "$4,000/year ($16,000 total, 25 awarded) or $1,500/year ($6,000 total, 15 awarded)",
+    "deadline": "February 1, 2027",
     "category": "frc-specific",
     "tags": [
       "renewable",
       "university-specific"
     ],
-    "notes": "Open to incoming students who competed on a FIRST Robotics Competition, FIRST Tech Challenge, or VEX Robotics team. Not automatic with admission — a separate application is required.",
-    "lastVerified": "2026-10-13"
+    "notes": "Listed on the FIRST Scholarship Portal. Open to incoming students who competed on a FIRST Robotics Competition, FIRST Tech Challenge, or VEX Robotics team. Not automatic with admission — a separate application is required.",
+    "lastVerified": "2026-11-03"
   },
   {
     "id": "detroit-mercy-first-scholarship",
@@ -423,5 +423,767 @@
     ],
     "notes": "For a TSA student member pursuing a STEM path. TSA's national competitive events include a Robotics and Automation category, and many FRC/VEX competitors already hold TSA membership through their school's CTE or STEM program.",
     "lastVerified": "2026-10-13"
+  },
+  {
+    "id": "adrian-college-first",
+    "name": "Adrian College FIRST Robotics Scholarship",
+    "provider": "Adrian College",
+    "link": "https://www.adrian.edu/financial-aid/undergraduate/overview",
+    "amount": "$10,000/year, up to $40,000 over 4 years",
+    "deadline": "May 1, 2027 (must be admitted by April 15)",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Ten awarded to incoming students who competed in FRC or FTC. Minimum 3.0 GPA.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "bob-bonczyk-memorial",
+    "name": "Bob Bonczyk Memorial Scholarship",
+    "provider": "Bob Bonczyk's family / FRC Team 107",
+    "link": "https://team107robotics.weebly.com/scholarship.html",
+    "amount": "$1,000",
+    "deadline": "March 5, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "state-restricted"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Awarded each year to a graduating senior showing commitment to robotics, team leadership, and community impact. Appears tied to Team 107's program in Michigan, so check eligibility on the team's page.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "cirkled-in-no-sweat",
+    "name": "Cirkled In \"No Sweat\" Scholarship",
+    "provider": "Cirkled In",
+    "link": "https://www.cirkledin.com/scholarships",
+    "amount": "$2,500 (one winner per quarter)",
+    "deadline": "December 31, 2026",
+    "category": "frc-specific",
+    "tags": [
+      "national"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Not FIRST-exclusive: open to all U.S. high school students in grades 9-12. No essay, minimum GPA, or recommendation letters.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "drexel-first",
+    "name": "Drexel FIRST Robotics Scholarship",
+    "provider": "Drexel University",
+    "link": "https://drexel.edu/drexelcentral/finaid/grants/undergraduate-scholarships",
+    "amount": "$8,000",
+    "deadline": "February 1, 2027 for Regular Decision; November 25 for Early Decision and Early Action",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For FIRST Robotics team members. Requires a supplemental application in Discover Drexel.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "embry-riddle-florida-first",
+    "name": "Embry-Riddle FIRST Scholarship (Daytona Beach)",
+    "provider": "Embry-Riddle Aeronautical University",
+    "link": "https://webforms.erau.edu/private/student-services/scholarship-applications/daytona/?s=first",
+    "amount": "Up to $5,000/year",
+    "deadline": "March 15, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For select FRC and FTC participants. Reviewed on academics, leadership, community service, and an essay.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "florida-tech-first",
+    "name": "Florida Tech FIRST Scholarship",
+    "provider": "Florida Institute of Technology",
+    "link": "https://admissions.fit.edu/apply/",
+    "amount": "$2,500",
+    "deadline": "December 31, 2026",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For applying first-year students who are currently part of FIRST.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "hanover-college-first",
+    "name": "Hanover College FIRST Scholarship",
+    "provider": "Hanover College",
+    "link": "https://www.hanover.edu/admission/financialaid/",
+    "amount": "$2,000 (ten awarded)",
+    "deadline": "February 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For FRC or FTC participants. Requires the FIRST Scholarship form and a letter from a FIRST mentor or coach. Must be admitted to be selected.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "indiana-tech-first",
+    "name": "Indiana Tech FIRST Scholarship",
+    "provider": "Indiana Tech",
+    "link": "https://apply.indianatech.edu/register/FIRST_Scholarship",
+    "amount": "$2,500/year, renewable up to 4 years",
+    "deadline": "April 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For FIRST participants entering the Talwar College of Engineering and Computer Sciences on the Fort Wayne campus.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "iu-luddy-first",
+    "name": "Luddy FIRST Robotics Scholarship",
+    "provider": "Indiana University Luddy School of Informatics, Computing, and Engineering",
+    "link": "https://luddy.iu.edu/cost-financial-aid/scholarships-ugrad.html",
+    "amount": "Up to $2,000/year for up to 4 years",
+    "deadline": "March 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For incoming IU Bloomington students who took part in FRC or FTC and are pursuing a Luddy undergraduate degree.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "kansas-state-first",
+    "name": "Kansas State Engineering FIRST Scholarship",
+    "provider": "Kansas State University Carl R. Ice College of Engineering",
+    "link": "https://engg.k-state.edu/student-success/scholarships/",
+    "amount": "$1,000, one time (up to three awarded)",
+    "deadline": "March 31, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For first-year engineering students.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "lawrence-tech-first",
+    "name": "Lawrence Tech FIRST Robotics Scholarship",
+    "provider": "Lawrence Technological University",
+    "link": "https://ltu.edu/scholarships/first-robotics-scholarship/",
+    "amount": "$5,000/year ($20,000 over 8 semesters)",
+    "deadline": "May 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For newly admitted first-year FIRST team members with at least a 3.0 GPA. Requires a 500-word essay and a mentor recommendation.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "merrimack-first",
+    "name": "Merrimack College FIRST Robotics Scholarship",
+    "provider": "Merrimack College",
+    "link": "https://admission.merrimack.edu/register/first-robotics-scholarship",
+    "amount": "$5,000, renewable up to $20,000 over 4 years (up to ten awarded)",
+    "deadline": "March 15, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For high school seniors who took part in FIRST and will study a STEM field at Merrimack.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "miami-ohio-first",
+    "name": "Miami University FIRST Scholarship",
+    "provider": "Miami University College of Engineering and Computing",
+    "link": "https://miamioh.edu/admission-aid/apply/first-year-students/index.html",
+    "amount": "$4,000, renewable up to 4 years",
+    "deadline": "December 1, 2026",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For an incoming engineering or computing major who took part in FIRST Robotics. Minimum 3.0 GPA.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "missouri-st-first",
+    "name": "Missouri S&T FIRST Robotics Scholarship",
+    "provider": "Missouri University of Science and Technology",
+    "link": "https://scholarships.mst.edu",
+    "amount": "$1,000",
+    "deadline": "February 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Competitive award for incoming full-time freshmen who were on a FIRST Robotics team in high school.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "mbzuai-tahnoon-ai-excellence",
+    "name": "Tahnoon bin Zayed Scholarship in AI Excellence",
+    "provider": "Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)",
+    "link": "https://mbzuai.ac.ae/study/ug-admission-process/",
+    "amount": "$45,000 on the portal; may cover up to 100% of tuition",
+    "deadline": "February 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Not FIRST-exclusive: merit-based, for students in MBZUAI's BS in Artificial Intelligence in Abu Dhabi, UAE. Open to UAE nationals and international students.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "nyu-tandon-first",
+    "name": "NYU Tandon FIRST Scholarship",
+    "provider": "New York University Tandon School of Engineering",
+    "link": "https://engineering.nyu.edu/admissions/undergraduate/financial-aid-and-scholarships",
+    "amount": "$2,000, one time",
+    "deadline": "August 31, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For high school students who are or were on an FRC or FTC team. Requires a brief application and a recommendation letter.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "olin-first",
+    "name": "Olin College FIRST Scholarship",
+    "provider": "Olin College of Engineering",
+    "link": "https://www.olin.edu/admission/costs-financial-aid",
+    "amount": "$100,800",
+    "deadline": "December 15, 2026",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For full-time entering freshmen who were on a FIRST team in high school.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "kansas-state-pltw",
+    "name": "Kansas State Project Lead The Way Scholarship",
+    "provider": "Kansas State University Carl R. Ice College of Engineering",
+    "link": "https://engg.k-state.edu/student-success/scholarships/",
+    "amount": "$500, one time (at least two awarded)",
+    "deadline": "March 31, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Tied to Project Lead The Way rather than FIRST. For first-year engineering students.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "robert-morris-first",
+    "name": "Robert Morris University FIRST Robotics Scholarship",
+    "provider": "Robert Morris University",
+    "link": "https://www.rmu.edu/admissions/financial-aid/scholarships",
+    "amount": "$1,000, one time",
+    "deadline": "May 3, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For U.S. citizens graduating in 2027 as current FIRST participants and enrolling full-time in engineering or computer science. Minimum 3.0 GPA.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "rit-first",
+    "name": "RIT FIRST Scholarship",
+    "provider": "Rochester Institute of Technology",
+    "link": "https://www.rit.edu/first-scholarship",
+    "amount": "$14,000",
+    "deadline": "January 15, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For outstanding admitted first-year applicants who were on a high school FIRST team.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "smart-scholarship",
+    "name": "SMART Scholarship-for-Service Program",
+    "provider": "U.S. Department of War",
+    "link": "https://www.smartscholarship.org/smart",
+    "amount": "Full tuition plus a $30,000-$46,000 annual stipend (portal lists $100,000)",
+    "deadline": "December 4, 2026",
+    "category": "frc-specific",
+    "tags": [
+      "national"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Not FIRST-exclusive: for STEM students. Requires a 3.0 GPA, the ability to obtain a security clearance, and a post-graduation civilian service commitment. High school seniors can apply.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "swe-houston-first",
+    "name": "SWE Houston Area Scholarship",
+    "provider": "Society of Women Engineers, Houston Area",
+    "link": "https://houston.swe.org/student-scholarships/scholarship-application/",
+    "amount": "$1,000",
+    "deadline": "March 1, 2027",
+    "category": "frc-specific",
+    "tags": [],
+    "notes": "Listed on the FIRST Scholarship Portal. For high school seniors entering an ABET-accredited 4-year engineering program with a strong interest in robotics or automation and at least one FIRST competition.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "sd-mines-first",
+    "name": "South Dakota Mines FIRST Scholarship",
+    "provider": "South Dakota School of Mines and Technology",
+    "link": "https://apply.sdsmt.edu/manage/form/form?id=b1d45adc-9b41-4019-a0b9-17bc07fd2429",
+    "amount": "$1,000 (two awarded)",
+    "deadline": "February 15, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For seniors who took part in FRC or FTC and are admitted by the deadline. Requires an ACT of 27 or higher and a 3.5 GPA.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "te-connectivity-first",
+    "name": "TE Connectivity FIRST Scholarship",
+    "provider": "TE Connectivity",
+    "link": "https://scholarshipamerica.org/scholarship/teconnectivity/",
+    "amount": "$2,500",
+    "deadline": "May 31, 2027",
+    "category": "frc-specific",
+    "tags": [],
+    "notes": "Listed on the FIRST Scholarship Portal. For high school seniors on a FIRST team who plan to attend college. The portal lists a Pennsylvania location, so check eligibility.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "texas-tech-first",
+    "name": "Texas Tech Engineering FIRST Scholarship",
+    "provider": "Texas Tech University Whitacre College of Engineering",
+    "link": "https://www.depts.ttu.edu/coe/oe/alumni.php",
+    "amount": "$2,000/year, renewable for 4 years",
+    "deadline": "February 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For incoming freshmen from an FTC or FRC team.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "trine-first",
+    "name": "Trine University FIRST Scholarship",
+    "provider": "Trine University",
+    "link": "https://www.trine.edu/admission-aid/tuition-aid/types-of-aid/scholarships.aspx",
+    "amount": "$2,500, renewable up to $10,000 over 4 years (ten awarded)",
+    "deadline": "March 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For seniors from FRC or FTC entering the Allen School of Engineering and Computing. Requires two recommendations and an essay.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "tulane-first",
+    "name": "Tulane University FIRST Scholarship",
+    "provider": "Tulane University",
+    "link": "https://admission.tulane.edu/tuition-aid/merit-scholarships",
+    "amount": "$15,000-$30,000, renewable over 4 years",
+    "deadline": "January 15, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For seniors with a full FRC or FTC season in junior or senior year who will study in the School of Science and Engineering.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "usafa-first",
+    "name": "U.S. Air Force Academy Appointment",
+    "provider": "United States Air Force Academy",
+    "link": "https://www.academyadmissions.com/",
+    "amount": "Full scholarship with room, board, and a monthly stipend (portal lists $400,000)",
+    "deadline": "November 15, 2026",
+    "category": "frc-specific",
+    "tags": [
+      "full-ride"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Not FIRST-exclusive: every cadet attends on full scholarship.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "illinois-grainger-first",
+    "name": "Grainger Engineering FIRST Scholarship",
+    "provider": "University of Illinois Grainger College of Engineering",
+    "link": "https://forms.illinois.edu/sec/354355948",
+    "amount": "$2,000 (five awarded)",
+    "deadline": "March 16, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For graduating seniors from FRC or FTC admitted to a Grainger engineering major at Urbana-Champaign.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "northern-iowa-first",
+    "name": "UNI STEM Scholarship",
+    "provider": "University of Northern Iowa",
+    "link": "https://stem.uni.edu/k12-students-families/scholarships-and-aid/uni-stem-scholarships",
+    "amount": "$2,000, one time (one awarded)",
+    "deadline": "January 31, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For an 11th grade participant in the Iowa Regional FIRST Robotics Competition. Must apply as a junior and be accepted by UNI.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "valparaiso-first",
+    "name": "Valparaiso FIRST Robotics Scholarship",
+    "provider": "Valparaiso University",
+    "link": "https://www.valpo.edu/college-of-engineering/experiential-learning/scholarships/",
+    "amount": "$1,000/year, renewable",
+    "deadline": "January 11, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Selected on FIRST involvement, team accomplishments, academics, and other activities.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "vcu-first",
+    "name": "VCU FIRST Robotics Scholarship",
+    "provider": "Virginia Commonwealth University College of Engineering",
+    "link": "https://connect.egr.vcu.edu/register/first_robotics_scholarship_app",
+    "amount": "$16,000/year, renewable up to $64,000 over 4 years (two awarded)",
+    "deadline": "January 15, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. Requires at least two years on a FIRST team, including senior year. FRC preferred, FTC may apply. Maintain a 3.3 GPA to renew.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "wentworth-first",
+    "name": "Wentworth FIRST Robotics Scholarship",
+    "provider": "Wentworth Institute of Technology",
+    "link": "https://wit.edu/admissions/financial-aid/scholarships",
+    "amount": "$10,000/year, renewable for 4 years (up to five awarded)",
+    "deadline": "January 1, 2027 (must be accepted by Early Action Round 2)",
+    "category": "frc-specific",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For students who took part in FIRST Robotics consistently throughout high school.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "western-tech-first",
+    "name": "Western Technical College FIRST Scholarship",
+    "provider": "Western Technical College Foundation",
+    "link": "https://www.westerntc.edu/paying-for-college/scholarships",
+    "amount": "$500",
+    "deadline": "June 1, 2027",
+    "category": "frc-specific",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Listed on the FIRST Scholarship Portal. For FRC or FTC participants admitted full-time to an Integrated Technology program. Preference given to financial need.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "wentworth-vex",
+    "name": "Wentworth VEX Robotics Scholarship",
+    "provider": "Wentworth Institute of Technology",
+    "link": "https://wit.edu/admissions/financial-aid/scholarships",
+    "amount": "$10,000/year, renewable for 4 years (up to five awarded)",
+    "deadline": "January 1 (must be accepted by Early Action Round 2)",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For students who took part in VEX Robotics consistently throughout high school.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "fpl-robotics",
+    "name": "Florida Power & Light Robotics Scholarship",
+    "provider": "NextEra Energy Foundation",
+    "link": "https://scholarshipamerica.org/scholarship/nextera/",
+    "amount": "$5,000-$20,000",
+    "deadline": "Currently closed; check Scholarship America for the next cycle",
+    "category": "any-robotics",
+    "tags": [
+      "state-restricted"
+    ],
+    "notes": "For seniors with at least two years in FIRST, BEST, or VEX, at a high school in FPL's Florida service area, pursuing engineering, information management, or another approved STEM program. Minimum 3.0 weighted GPA.",
+    "lastVerified": "2026-11-03"
+  },
+  {
+    "id": "sme-robotics",
+    "name": "SME Education Foundation Robotics Scholarship",
+    "provider": "SME Education Foundation",
+    "link": "https://bigfuture.collegeboard.org/scholarships/sme-education-foundation-robotics-scholarship",
+    "amount": "Varies",
+    "deadline": "February 1, 2027",
+    "category": "any-robotics",
+    "tags": [
+      "national"
+    ],
+    "notes": "For U.S. or Canadian undergraduates in manufacturing or industrial engineering, manufacturing technology, or a related field who competed in robotics in high school. Minimum 2.0 GPA."
+  },
+  {
+    "id": "embry-riddle-robotics",
+    "name": "Embry-Riddle Robotics Scholarship",
+    "provider": "Embry-Riddle Aeronautical University",
+    "link": "https://recf.org/scholarship/embry-riddle-aeronautical-university/",
+    "amount": "Up to $5,000/year (up to $25,000)",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For high school seniors active on any robotics team in the U.S. or its territories. Requires an essay on robotics involvement and admission to the university."
+  },
+  {
+    "id": "illinois-tech-vex",
+    "name": "Illinois Tech VEX Robotics Scholarship",
+    "provider": "Illinois Institute of Technology",
+    "link": "https://www.iit.edu/admissions-aid/tuition-and-aid/scholarships/first-year-student-scholarships/illinois-tech-vex-robotics-scholarship",
+    "amount": "$20,000/year for up to 4 years",
+    "deadline": "January 15 of senior year",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For seniors with at least one full VEX season in junior or senior year. Any major. Requires a one-page essay."
+  },
+  {
+    "id": "johnson-wales-robotics",
+    "name": "Johnson & Wales Robotics Scholarship",
+    "provider": "Johnson & Wales University",
+    "link": "https://www.jwu.edu/admissions/paying-for-college/scholarships-and-grants.html",
+    "amount": "$2,500, renewable up to 4 years (no limit on awards)",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For students who competed in robotics during junior or senior year. Mention your participation in the general application."
+  },
+  {
+    "id": "msoe-robotics",
+    "name": "MSOE Tuition Scholarship",
+    "provider": "Milwaukee School of Engineering",
+    "link": "https://www.msoe.edu/admissions-aid/financial-aid-scholarships/scholarships-and-grants/msoe-scholarships-grants",
+    "amount": "Tuition-based amount, renewable up to 6 years",
+    "deadline": "January 1",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For freshmen, transfer, and international students from FIRST, VEX, Aerial Drone, PLTW, SkillsUSA, or TSA programs. Limit of one award."
+  },
+  {
+    "id": "rpi-recf-robotics",
+    "name": "Rensselaer RECF Robotics Scholarship",
+    "provider": "Rensselaer Polytechnic Institute",
+    "link": "https://recf.org/scholarship/rensselaer-polytechnic-institute/",
+    "amount": "At least $12,500/year, at least $50,000 over 4 years (up to ten awarded)",
+    "deadline": "May 15 of junior year (opens December 1)",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "For high school juniors on an RECF Robotics team. Requires a mentor or coach recommendation and an essay."
+  },
+  {
+    "id": "syracuse-vex",
+    "name": "Syracuse Engineering VEX Scholarship",
+    "provider": "Syracuse University College of Engineering and Computer Science",
+    "link": "https://ecs.syracuse.edu/admissions/undergraduate/scholarships",
+    "amount": "Amount not listed (ten renewable awards)",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "For students who took part in VEX Robotics programs in high school."
+  },
+  {
+    "id": "uindy-vex",
+    "name": "University of Indianapolis Robotics Scholarship",
+    "provider": "University of Indianapolis",
+    "link": "https://www.uindy.edu/vex-scholarship/",
+    "amount": "$10,000",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Robotics participants are automatically eligible to be considered."
+  },
+  {
+    "id": "pransky-women-in-robotics",
+    "name": "Joanne Pransky Celebration of Women in Robotics",
+    "provider": "Joanne Pransky Celebration of Women in Robotics",
+    "link": "https://recf.org/scholarship/joan-pransky-scholarship/",
+    "amount": "$1,000 (five awarded each session)",
+    "deadline": "March 1 and September 1",
+    "category": "any-robotics",
+    "tags": [
+      "multiple-awards"
+    ],
+    "notes": "For women and girls in robotics and drones, from high school through PhD."
+  },
+  {
+    "id": "st-cloud-robotics",
+    "name": "SCTCC Robotics Full-Ride Scholarship",
+    "provider": "St. Cloud Technical & Community College Foundation",
+    "link": "https://recf.org/scholarship/st-cloud-technical-community-college-foundation/",
+    "amount": "Full ride, listed at $12,000 (one awarded)",
+    "deadline": "January 31",
+    "category": "any-robotics",
+    "tags": [
+      "full-ride",
+      "state-restricted",
+      "university-specific"
+    ],
+    "notes": "For a full-time student in an SCTCC STEM program with at least two years of robotics who stays active in Minnesota's robotics community. Requires an essay and a recommendation letter."
+  },
+  {
+    "id": "florida-poly-robotics",
+    "name": "Florida Poly Robotics Merit Scholarship",
+    "provider": "Florida Polytechnic University",
+    "link": "https://floridapoly.edu/student-affairs/student-development/teams/robotics.php",
+    "amount": "Amount not listed (ten non-renewable awards)",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific",
+      "multiple-awards"
+    ],
+    "notes": "For full-time technology and engineering students with a passion for robotics. Minimum 3.5 GPA. Competition experience preferred, not required."
+  },
+  {
+    "id": "wpi-recf-robotics",
+    "name": "WPI RECF Robotics and Drones Scholarship",
+    "provider": "Worcester Polytechnic Institute",
+    "link": "https://recf.org/scholarship/worcester-polytechnic-institute-wpi/",
+    "amount": "$80,000 grand prize; two $40,000 runner-up awards",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "renewable",
+      "university-specific"
+    ],
+    "notes": "For alumni of RECF robotics and drone programs."
+  },
+  {
+    "id": "bryan-college-robotics",
+    "name": "Bryan College Robotics Team Scholarship",
+    "provider": "Bryan College",
+    "link": "https://recf.org/scholarship/bryan-college/",
+    "amount": "$1,000, first year",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "For students who join Bryan College's robotics team."
+  },
+  {
+    "id": "lsu-pre-engineering-robotics",
+    "name": "LSU Pre-Engineering Robotics Scholarship",
+    "provider": "Louisiana State University",
+    "link": "https://recf.org/scholarship/louisiana-state-university/",
+    "amount": "$1,000 ($500 per semester, one awarded)",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "For one outstanding freshman entering the College of Engineering."
+  },
+  {
+    "id": "msu-recf-robotics",
+    "name": "Michigan State RECF Robotics Scholarship",
+    "provider": "Michigan State University",
+    "link": "https://recf.org/scholarship/michigan-state-university/",
+    "amount": "$1,500 (three awarded)",
+    "deadline": "Awarded in early April; no separate application",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "For first-year students. List your RECF robotics participation on your MSU application."
+  },
+  {
+    "id": "umkc-robotics",
+    "name": "UMKC Engineering Robotics Scholarships",
+    "provider": "University of Missouri-Kansas City School of Science & Engineering",
+    "link": "https://recf.org/scholarship/university-of-missouri-kansas-city-school-of-science-engineering/",
+    "amount": "Amount not listed",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "Offered to robotics participants."
+  },
+  {
+    "id": "vaughn-vex",
+    "name": "Vaughn College VEX Scholarship",
+    "provider": "Vaughn College of Aeronautics and Technology",
+    "link": "https://recf.org/scholarship/vaughn-college-of-aeronautics-and-technology/",
+    "amount": "Amount not listed (three non-renewable awards)",
+    "deadline": "Check current cycle on the provider's site",
+    "category": "any-robotics",
+    "tags": [
+      "university-specific"
+    ],
+    "notes": "For full-time students who competed in VEX."
+  },
+  {
+    "id": "americanmuscle-robotics",
+    "name": "AmericanMuscle Student Scholarship",
+    "provider": "AmericanMuscle",
+    "link": "https://recf.org/scholarship/americanmuscle/",
+    "amount": "$2,500 (two awarded per year)",
+    "deadline": "One award each spring and fall semester",
+    "category": "any-robotics",
+    "tags": [],
+    "notes": "For students pursuing robotics, mechanical engineering, or other automotive-themed majors."
   }
 ]
