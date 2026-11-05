@@ -79,9 +79,13 @@
     return "rolling";
   }
 
+  // Rolling grants count as open: they have no deadline, so nothing has
+  // closed them. Goes through describe() so this always agrees with the badge
+  // on the card -- an unclear date like "TBD" computes as "rolling" above but
+  // shows "Check site", and shouldn't be presented as open.
   function isCurrentlyOpen(grant, today) {
-    var s = getGrantStatus(grant, today);
-    return s === "open" || s === "closing-soon";
+    var key = describe(grant, today).key;
+    return key === "open" || key === "closing-soon" || key === "rolling";
   }
 
   var MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

@@ -250,8 +250,9 @@
         status: isMentor() ? "approved" : "pending",
         created_by: state.user.id,
       };
-      return sb.from("budget_entries").insert(row).then(function (res) {
+      return sb.from("budget_entries").insert(row).select().single().then(function (res) {
         if (res.error) throw new Error(res.error.message);
+        return res.data;
       });
     },
     approveBudgetEntry: function (id) {

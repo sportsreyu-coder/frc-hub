@@ -1154,6 +1154,14 @@ create policy "Team members can manage their saved grants"
 grant select, insert, update, delete on public.saved_grants to authenticated;
 create index if not exists saved_grants_team_idx on public.saved_grants (team_id);
 
+-- A saved grant the team has checked off as potential funding. No amount
+-- lives here: grants don't award a set figure, so the amount is typed in
+-- when one is approved and stored as a normal budget_entries row, which
+-- keeps the student-pending/mentor-approves rule above. Deleting that entry
+-- clears budget_entry_id, which puts the grant back to "potential".
+alter table public.saved_grants add column if not exists on_budget boolean not null default false;
+alter table public.saved_grants add column if not exists budget_entry_id uuid references public.budget_entries (id) on delete set null;
+
 -- ---- Reminders + calendar subscription feed (G4) ----
 --
 -- Both features need something running outside anyone's browser: the

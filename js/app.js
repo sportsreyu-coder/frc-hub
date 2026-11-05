@@ -105,7 +105,7 @@
   function renderStats() {
     var total = grants.length;
     var open = grants.filter(function (g) { return GrantStatus.isCurrentlyOpen(g); }).length;
-    var rolling = grants.filter(function (g) { return GrantStatus.getGrantStatus(g) === "rolling"; }).length;
+    var rolling = grants.filter(function (g) { return GrantStatus.describe(g).key === "rolling"; }).length;
     var unknown = grants.filter(function (g) { return GrantStatus.getGrantStatus(g) === "unknown"; }).length;
     var geo = grants.filter(function (g) { return g.tags.indexOf("no-geo-restrictions") !== -1; }).length;
     var no501 = grants.filter(function (g) { return g.tags.indexOf("no-501c3-required") !== -1; }).length;
@@ -152,8 +152,8 @@
 
     var datesTable = document.getElementById("dates-table");
     datesTable.innerHTML = "";
-    if (openWithDates.length < 3) {
-      datesTable.appendChild(el("p", { class: "finder-hint" }, [
+    if (openWithDates.length === 0) {
+      datesTable.appendChild(el("p", { class: "dates-empty" }, [
         "No upcoming deadlines published right now — check back soon.",
       ]));
       return;
@@ -327,6 +327,7 @@
     saveBtn.innerHTML = saved ? STAR_SVG_FILLED : STAR_SVG_OUTLINE;
     saveBtn.addEventListener("click", function (e) {
       e.preventDefault();
+      if (!window.SavedGrants.confirmUnsave(g.id)) return;
       window.SavedGrants.toggle(g.id);
       render();
     });

@@ -66,6 +66,13 @@
     // grant is saved; null otherwise (solo/no-team mode has no stage
     // tracking, just the plain saved/not-saved list).
     getPipelineEntry: function (id) { return pipeline[id] || null; },
+    // Unsaving deletes the saved_grants row, and a potential grant on the
+    // budget page lives on that row -- so check first when there is one.
+    confirmUnsave: function (id) {
+      var entry = pipeline[id];
+      if (!entry || !entry.on_budget) return true;
+      return confirm("This grant is on your budget page. Unsaving it removes it from there too (any amount already logged stays in Transactions). Continue?");
+    },
     toggle: function (id) {
       var i = ids.indexOf(id);
       var willSave = i === -1;

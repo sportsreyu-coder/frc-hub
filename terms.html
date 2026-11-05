@@ -28,7 +28,12 @@
           <a href="assignments.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span>Assignments</span></a>
         </div>
       </div>
-      <a href="grants.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><span>Find grants</span></a>
+      <div class="nav-dropdown-group" id="nav-grants-group">
+        <a href="grants.html" class="nav-dropdown-trigger" id="nav-grants-trigger" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><span>Find grants</span><svg class="nav-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
+        <div class="nav-dropdown-menu" id="nav-grants-menu">
+          <a href="saved-grants.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Saved Grants</span></a>
+        </div>
+      </div>
       <a href="scholarships.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg><span>Scholarships</span></a>
       <a href="forum.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg><span>Forum</span></a>
       <a href="resources.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span>Resources</span></a>
@@ -46,34 +51,92 @@
 
 <main class="site-main">
   <section class="page-head">
-    <h1>Terms</h1>
-    <p>The short version of the basic terms for using FRC Hub — see also our <a href="privacy.html">Privacy</a> page.</p>
+    <h1>Terms of Use</h1>
+    <p>The rules for using FRC Hub, in plain language. See also our <a href="privacy.html">Privacy Policy</a>. Last updated November 4, 2026.</p>
   </section>
 
-  <section class="legal-section">
-    <h2>What this is</h2>
-    <p>FRC Hub is a free, community-maintained toolkit for FIRST Robotics Competition teams. It is not an official FIRST® product and isn't affiliated with or endorsed by FIRST.</p>
-  </section>
-
-  <section class="legal-section">
-    <h2>Accuracy</h2>
-    <p>Grant, scholarship, fundraising, and resource listings are collected from public sources and other teams, and may be out of date or inaccurate. Always confirm amounts, deadlines, and eligibility directly with the grantor, scholarship provider, or vendor before relying on anything listed here.</p>
-  </section>
-
-  <section class="legal-section">
-    <h2>Your content</h2>
-    <p>If you post on the forum, you're responsible for what you post. Don't post anything false, abusive, or that reveals someone else's private information. Posts can be reported and removed by a moderator; see <a href="privacy.html">Privacy</a> for how we handle personal information.</p>
-  </section>
-
-  <section class="legal-section">
-    <h2>No warranty</h2>
-    <p>FRC Hub is provided as-is, with no guarantee it will always be available, error-free, or fit for any particular purpose. We're not liable for decisions made based on information found here.</p>
-  </section>
-
-  <section class="legal-section">
-    <h2>Changes</h2>
-    <p>These terms may change as the site changes. Continued use after a change means you accept the updated terms.</p>
-  </section>
+  <div class="legal-grid">
+    <section class="legal-section">
+      <h2>1. Agreeing to these terms</h2>
+      <p>By using FRC Hub, you agree to these Terms and to our <a href="privacy.html">Privacy Policy</a>. If you don’t agree, please don’t use the site. In these Terms, “we” and “us” mean the volunteer maintainers of FRC Hub.</p>
+    </section>
+    <section class="legal-section">
+      <h2>2. What FRC Hub is</h2>
+      <p>FRC Hub is a free, community-maintained toolkit for FIRST® Robotics Competition teams. It is not an official FIRST product and isn’t affiliated with or endorsed by FIRST. FIRST and related names and marks belong to their respective owners, and we use them only to describe what the site is for.</p>
+    </section>
+    <section class="legal-section">
+      <h2>3. Who can use it</h2>
+      <p>FRC Hub is intended for FRC team members, mentors, and others who support teams. If you’re under 18, please make sure a parent, guardian, or team mentor is comfortable with you using the site. If you’re under 13, don’t create an account or post without a parent or guardian’s permission and help. See the <a href="privacy.html">Privacy Policy</a> for more on students and minors.</p>
+    </section>
+    <section class="legal-section">
+      <h2>4. Your account</h2>
+      <p>You’re responsible for keeping your sign-in details safe and for what happens under your account. Give accurate team information, and don’t impersonate another person or team. Tell us if you think someone else has used your account.</p>
+    </section>
+    <section class="legal-section">
+      <h2>5. Team workspaces</h2>
+      <p>Team tools hold information shared among team members. Mentors and team admins can manage members, invitations, and roles, and they’re responsible for how their team uses these tools. Only invite people who belong on your team, and treat invite links and calendar feed links as private, since anyone holding one may be able to use it.</p>
+      <p>Team records such as budgets, sponsors, and build logs are organizational aids, not official financial, tax, or attendance records. Your team and school remain responsible for their own records and rules.</p>
+    </section>
+    <section class="legal-section">
+      <h2>6. Accuracy of listings</h2>
+      <p>Grant, scholarship, fundraising, and resource listings are collected from public sources and other teams, and may be out of date or inaccurate. <strong>Always confirm amounts, deadlines, and eligibility directly with the grantor, scholarship provider, or vendor before relying on anything listed here.</strong> A listing doesn’t guarantee that you’ll qualify or receive funding, and it isn’t an endorsement.</p>
+    </section>
+    <section class="legal-section">
+      <h2>7. Reminders and deadlines</h2>
+      <p>Season tracking, deadline reminders, and calendar feeds are conveniences. Emails can be delayed or missed and dates can be wrong, so you’re responsible for meeting your own deadlines, including FIRST, grant, and scholarship deadlines.</p>
+    </section>
+    <section class="legal-section">
+      <h2>8. Not professional advice</h2>
+      <p>Nothing on FRC Hub is legal, tax, financial, or safety advice. Check with a qualified professional, your school, or your team’s mentors when it matters, and follow FIRST’s rules and your team’s safety practices. Build and fundraising information from other users may not suit your situation.</p>
+    </section>
+    <section class="legal-section">
+      <h2>9. Forum and community rules</h2>
+      <p>You’re responsible for what you post. Forum posts and replies are public, so please don’t post:</p>
+      <ul><li>anything false, abusive, harassing, threatening, or discriminatory</li><li>anything sexual, or otherwise inappropriate for a community that includes minors</li><li>private information about yourself or anyone else, especially students</li><li>spam, advertising, scams, or malicious links</li><li>anything that infringes someone else’s rights or breaks the law</li></ul>
+      <p>Anyone can report a post. Moderators may remove content, with or without notice, but we don’t review everything and aren’t responsible for what users post.</p>
+    </section>
+    <section class="legal-section">
+      <h2>10. Your content</h2>
+      <p>You keep ownership of what you post or upload. You give us a non-exclusive, royalty-free license to host, store, copy, and display it as needed to run FRC Hub, including showing forum posts publicly and team content to your team. This license ends when the content is deleted, apart from limited backup copies and anything others have already reused. Only post content you have the right to share.</p>
+      <p>If you believe content on FRC Hub infringes your copyright, contact us with the location of the content and details of the work, and we’ll review it.</p>
+    </section>
+    <section class="legal-section">
+      <h2>11. Acceptable use</h2>
+      <p>Please don’t try to break, overload, or get around the security of the site, access data that isn’t yours, scrape other users’ personal information, or use automated tools in a way that harms the service. Don’t use FRC Hub for anything unlawful.</p>
+    </section>
+    <section class="legal-section">
+      <h2>12. Our content</h2>
+      <p>Apart from user content and material owned by others, the site’s text, design, and code belong to the FRC Hub maintainers or their licensors. You’re welcome to use the site and share links and listings for team purposes, but these Terms don’t grant other rights to the site’s content or code.</p>
+    </section>
+    <section class="legal-section">
+      <h2>13. Other websites and services</h2>
+      <p>FRC Hub links to outside websites, such as grant providers and scholarship programs, and relies on third-party services such as sign-in and email. We don’t control those sites or services and aren’t responsible for their content, availability, or practices. Their own terms apply when you use them.</p>
+    </section>
+    <section class="legal-section">
+      <h2>14. Availability and termination</h2>
+      <p>We’re volunteers, so we may change, suspend, or discontinue any part of FRC Hub at any time, and data could be lost, so keep your own copies of anything important. You can stop using the site whenever you like, and can download or delete your data from the <a href="account.html">Account page</a>. We may suspend or remove accounts or content that break these Terms or put users or the service at risk.</p>
+    </section>
+    <section class="legal-section">
+      <h2>15. No warranty</h2>
+      <p><strong>FRC Hub is provided “as is” and “as available,” without warranties of any kind, whether express or implied, including fitness for a particular purpose, accuracy, and non-infringement.</strong> We don’t promise that it will always be available, secure, or free of errors.</p>
+    </section>
+    <section class="legal-section">
+      <h2>16. Limitation of liability</h2>
+      <p><strong>To the fullest extent the law allows, the FRC Hub maintainers and contributors aren’t liable for indirect, incidental, special, or consequential damages, or for lost funding, missed deadlines, lost data, or decisions made based on information found here.</strong> Some places don’t allow certain limits, so parts of this section may not apply to you, and nothing here removes rights that can’t legally be waived.</p>
+    </section>
+    <section class="legal-section">
+      <h2>17. Changes to these terms</h2>
+      <p>These Terms may change as the site changes. When they do, we’ll update the “Last updated” date at the top of this page. Continuing to use FRC Hub after a change means you accept the updated Terms.</p>
+    </section>
+    <section class="legal-section">
+      <h2>18. General</h2>
+      <p>If part of these Terms can’t be enforced, the rest still applies. Not enforcing a rule right away doesn’t mean we’ve given up the right to enforce it later. These Terms and the <a href="privacy.html">Privacy Policy</a> are the full agreement between you and us about FRC Hub.</p>
+    </section>
+    <section class="legal-section">
+      <h2>19. Contact</h2>
+      <p>Email us at <a href="mailto:sportsreyu@gmail.com">sportsreyu@gmail.com</a>, or use the “Contact” link in the footer of any page.</p>
+    </section>
+  </div>
 </main>
 
 <footer class="site-footer">
@@ -81,9 +144,8 @@
     <span>FRC Hub — a community-maintained toolkit for FIRST Robotics Competition teams.</span>
     <span>Not affiliated with FIRST®.</span>
     <nav class="footer-links">
-      <a href="roadmap.html">Roadmap</a>
       <a href="https://github.com/sportsreyu-coder/frc-hub/issues/new?title=Incorrect%20info%20on%20FRC%20Hub">Report incorrect info</a>
-      <a href="https://github.com/sportsreyu-coder/frc-hub/issues/new?title=Contact%20from%20FRC%20Hub">Contact</a>
+      <a href="mailto:sportsreyu@gmail.com?subject=Contact%20from%20FRC%20Hub">Contact</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </nav>

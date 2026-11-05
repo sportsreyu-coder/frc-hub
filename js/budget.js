@@ -6,13 +6,15 @@
 
   var CATEGORY_LABELS = {
     registration: "Registration", parts: "Parts", travel: "Travel",
-    outreach: "Outreach", tools: "Tools", sponsorship: "Sponsorship", other: "Other",
+    outreach: "Outreach", tools: "Tools", sponsorship: "Sponsorship", grant: "Grants", other: "Other",
   };
   var SPONSOR_STATUSES = ["prospect", "asked", "committed", "received", "thanked"];
   var STATUS_LABELS = { prospect: "Prospect", asked: "Asked", committed: "Committed", received: "Received", thanked: "Thanked" };
 
   var entries = [];
   var sponsors = [];
+  var savedGrants = []; // saved_grants rows
+  var grantsById = {}; // from data/grants.json, for names and links
 
   function el(tag, attrs, children) {
     var node = document.createElement(tag);
@@ -30,6 +32,13 @@
 
   function money(n) {
     return "$" + (Number(n) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // Local calendar date; toISOString() is UTC, which reads as tomorrow in the
+  // evening for US teams.
+  function todayLocal() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
   function downloadCSV(filename, rows) {
@@ -227,14 +236,113 @@
         }
         var delBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Delete"]);
         delBtn.addEventListener("click", function () {
-          if (!confirm("Delete this entry?")) return;
-          Team.deleteBudgetEntry(e.id).then(load);
+          // The foreign key clears budget_entry_id, which is what puts a
+          // linked grant back to potential; its stage needs moving back too.
+          var linked = savedGrants.filter(function (r) { return r.budget_entry_id === e.id; })[0];
+          if (!confirm(linked ? "Delete this entry? " + grantName(linked) + " will go back to a potential grant." : "Delete this entry?")) return;
+          Team.deleteBudgetEntry(e.id).then(function () {
+            if (linked) return Team.updatePipelineEntry(linked.grant_id, { stage: "submitted" });
+          }).then(load);
         });
         actions.push(delBtn);
       }
       if (actions.length) row.appendChild(el("div", { class: "post-actions" }, actions));
       list.appendChild(row);
     });
+  }
+
+  function grantName(row) {
+    var g = grantsById[row.grant_id];
+    return g ? g.name : row.grant_id;
+  }
+
+  function grantTitle(row) {
+    var g = grantsById[row.grant_id];
+    if (!g || !g.link) return el("span", { class: "thread-title" }, [grantName(row)]);
+    return el("a", { class: "thread-title", href: g.link, target: "_blank", rel: "noopener" }, [grantName(row)]);
+  }
+
+  // Checking "Approved" asks for the amount, since grants don't award a set
+  // figure. It's then a normal income entry, so a student's still needs a
+  // mentor's approval before it counts toward totals.
+  function potentialGrantRow(row) {
+    var id = "grant-approved-" + row.grant_id;
+    var chk = el("input", { type: "checkbox", id: id });
+    var removeBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Remove"]);
+    removeBtn.addEventListener("click", function () {
+      removeBtn.disabled = true;
+      Team.updatePipelineEntry(row.grant_id, { on_budget: false })
+        .catch(function (err) { alert("Couldn't remove it: " + err.message); })
+        .then(load);
+    });
+
+    var amount = el("input", { type: "number", min: "0.01", step: "0.01", placeholder: "Amount ($)", "aria-label": "Amount received from " + grantName(row), required: "required" });
+    var date = el("input", { type: "date", "aria-label": "Date received", required: "required" });
+    date.value = todayLocal();
+    var submitBtn = el("button", { type: "submit", class: "submit-btn-sm" }, ["Add to budget"]);
+    var form = el("form", { class: "custom-task-form potential-grant-form" }, [amount, date, submitBtn]);
+    form.hidden = true;
+
+    chk.addEventListener("change", function () {
+      form.hidden = !chk.checked;
+      if (chk.checked) amount.focus();
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var value = parseFloat(amount.value);
+      if (!date.value || isNaN(value) || value <= 0) return;
+      submitBtn.disabled = true;
+      Team.addBudgetEntry({ date: date.value, type: "income", category: "grant", amount: value, note: grantName(row) }).then(function (entry) {
+        return Team.updatePipelineEntry(row.grant_id, { stage: "awarded", budget_entry_id: entry.id }).catch(function (err) {
+          alert("The amount was logged in Transactions, but this grant couldn't be marked approved: " + err.message + "\nDon't add it again.");
+        });
+      }).then(load).catch(function (err) {
+        submitBtn.disabled = false;
+        alert("Couldn't add it to the budget: " + err.message);
+      });
+    });
+
+    return el("div", { class: "thread-row potential-grant-row" }, [
+      el("div", { class: "thread-row-main" }, [
+        grantTitle(row),
+        el("span", { class: "thread-meta" }, ["Potential · not counted in totals"]),
+      ]),
+      el("div", { class: "potential-grant-actions" }, [
+        el("label", { class: "grant-complete-check", for: id }, [chk, "Approved"]),
+        removeBtn,
+      ]),
+      form,
+    ]);
+  }
+
+  function approvedGrantRow(row) {
+    var entry = entries.filter(function (e) { return e.id === row.budget_entry_id; })[0];
+    return el("div", { class: "thread-row" }, [
+      el("div", { class: "thread-row-main" }, [
+        grantTitle(row),
+        el("span", { class: "thread-meta" }, [
+          entry ? entry.entry_date + (entry.status === "pending" ? " · Pending approval" : " · Approved") : "Approved",
+        ]),
+      ]),
+      entry ? el("span", { class: "potential-grant-amount" }, ["+" + money(entry.amount)]) : null,
+    ]);
+  }
+
+  function renderPotentialGrants() {
+    var host = document.getElementById("potential-grants");
+    host.innerHTML = "";
+    var tracked = savedGrants.filter(function (r) { return r.on_budget; });
+    if (!tracked.length) {
+      host.appendChild(el("p", { class: "finder-hint" }, [
+        "No potential grants yet. Check one off on ",
+        el("a", { href: "saved-grants.html" }, ["Saved Grants"]),
+        " to log it here.",
+      ]));
+      return;
+    }
+    tracked.filter(function (r) { return !r.budget_entry_id; }).forEach(function (r) { host.appendChild(potentialGrantRow(r)); });
+    tracked.filter(function (r) { return r.budget_entry_id; }).forEach(function (r) { host.appendChild(approvedGrantRow(r)); });
   }
 
   function renderSponsors() {
@@ -290,14 +398,31 @@
   function render() {
     renderGoalCard();
     renderCategoryTotals();
+    renderPotentialGrants();
     renderEntries();
     renderSponsors();
   }
 
+  // Falls back to showing the raw grant id if this fails, rather than
+  // taking the rest of the budget page down with it.
+  var grantNamesPromise = null;
+  function loadGrantNames() {
+    if (!grantNamesPromise) {
+      grantNamesPromise = fetch("data/grants.json").then(function (r) {
+        if (!r.ok) throw new Error("Failed to load data/grants.json");
+        return r.json();
+      }).then(function (list) {
+        list.forEach(function (g) { grantsById[g.id] = g; });
+      }).catch(function (err) { console.error(err); });
+    }
+    return grantNamesPromise;
+  }
+
   function load() {
-    Promise.all([Team.loadBudgetEntries(), Team.loadSponsors()]).then(function (res) {
+    Promise.all([Team.loadBudgetEntries(), Team.loadSponsors(), Team.loadSavedGrants(), loadGrantNames()]).then(function (res) {
       entries = res[0];
       sponsors = res[1];
+      savedGrants = res[2];
       render();
     }).catch(function (err) { console.error(err); });
   }
@@ -344,7 +469,7 @@
     downloadCSV("sponsors.csv", rows);
   });
 
-  document.getElementById("entry-date").value = new Date().toISOString().slice(0, 10);
+  document.getElementById("entry-date").value = todayLocal();
 
   Team.ready.then(function () {
     if (!Team.state.user) {
