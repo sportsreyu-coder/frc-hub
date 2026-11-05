@@ -68,7 +68,9 @@
 
       var dropdown = el("div", { class: "account-dropdown", hidden: "" }, dropdownChildren);
       dropdown.querySelector(".account-dropdown-signout").addEventListener("click", function () {
-        sb.auth.signOut();
+        sb.auth.signOut().then(function (res) {
+          if (res.error) alert("Couldn't sign out: " + res.error.message);
+        });
       });
 
       btn.addEventListener("click", function (e) {
@@ -93,7 +95,10 @@
     slot.innerHTML = '<a href="account.html" class="nav-cta">Sign in</a>';
   }
 
-  sb.auth.onAuthStateChange(function (_event, session) {
+  sb.auth.onAuthStateChange(function (event, session) {
+    // Scripts across the site render signed-in content once on load, so
+    // reload rather than leave any of it on screen after signing out.
+    if (event === "SIGNED_OUT") { window.location.reload(); return; }
     if (session && session.user) renderSignedIn(session.user);
     else renderSignedOut();
   });

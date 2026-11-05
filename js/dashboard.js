@@ -358,10 +358,18 @@
   renderForumWidget();
   renderAssignmentsWidget();
 
-  if (window.__frcHubSupabase) {
-    window.__frcHubSupabase.auth.getSession().then(function (res) {
-      var session = res.data.session;
-      if (session && session.user) renderPersonalHero(session.user, summary);
-    });
+  // Signing in from the auth modal doesn't reload the page, so keep listening.
+  // SIGNED_IN also fires on tab refocus, hence the check for a new user.
+  var heroUserId = null;
+  function showHeroFor(session) {
+    if (!session || !session.user || session.user.id === heroUserId) return;
+    heroUserId = session.user.id;
+    renderPersonalHero(session.user, summary);
   }
+
+  if (window.__frcHubSupabase) {
+    window.__frcHubSupabase.auth.onAuthStateChange(function (_event, session) { showHeroFor(session); });
+    window.__frcHubSupabase.auth.getSession().then(function (res) { showHeroFor(res.data.session); });
+  }
+  if (window.FRCTeam) window.FRCTeam.onChange(renderAssignmentsWidget);
 })();

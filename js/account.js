@@ -20,7 +20,8 @@
   function showInfo(msg) { showError(authInfo, msg); }
 
   document.getElementById("signout-btn").addEventListener("click", async function () {
-    await sb.auth.signOut();
+    var res = await sb.auth.signOut();
+    if (res.error) alert("Couldn't sign out: " + res.error.message);
   });
 
   // G5: self-serve data export/deletion -- see delete_my_data() in
