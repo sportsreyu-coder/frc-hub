@@ -57,7 +57,7 @@
         el("p", { class: "scholarship-meta" }, ["💰 " + s.amount]),
         el("p", { class: "scholarship-meta" }, ["📅 " + s.deadline]),
         s.notes ? el("p", {}, [s.notes]) : null,
-        el("div", { class: "gc-verified" + (verifiedText ? "" : " gc-needs-verification") }, [verifiedText || "Needs verification"]),
+        verifiedText ? el("div", { class: "gc-verified" }, [verifiedText]) : null,
       ]);
       grid.appendChild(card);
     });

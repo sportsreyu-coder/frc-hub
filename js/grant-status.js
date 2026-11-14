@@ -135,7 +135,7 @@
 
   // "Verified Sep 2026" from an item's `lastVerified` ISO date (YYYY-MM-DD),
   // or null if it's missing, unparseable, or older than 12 months -- those
-  // all render as "Needs verification" instead (see callers).
+  // all render no verified label at all (see callers).
   function verifiedLabel(lastVerified, today) {
     if (!lastVerified) return null;
     var d = new Date(lastVerified);

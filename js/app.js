@@ -7,6 +7,7 @@
     savedOnly: false,
     boosts: new Set(),
     c3: null, // "have" | "school" | "neither" | null
+    schoolProgram: false, // true = hide grants that exclude school programs/activities
     stateFilter: "", // "" | "__nationwide__" | a US state name
     sort: "deadline",
     limit: 24,
@@ -46,11 +47,12 @@
     "no-501c3-required": "No 501(c)(3) required",
     "no-geo-restrictions": "No location restrictions",
     "geo-restricted": "Location restricted",
+    "no-school-programs": "Not for school programs",
   };
 
   var TAG_ORDER = [
     "no-geo-restrictions", "geo-restricted", "corporate-employee", "rookie-friendly",
-    "demographics", "sustainability", "501c3-required", "school-or-501c3", "no-501c3-required",
+    "demographics", "sustainability", "501c3-required", "school-or-501c3", "no-501c3-required", "no-school-programs",
   ];
 
   var GrantStatus = window.GrantStatus;
@@ -199,6 +201,8 @@
       if (g.require501c3 === "school-or-501c3") return "Requires a 501(c)(3) or school affiliation";
     }
 
+    if (state.schoolProgram && g.schoolProgram === "no") return "Excludes school programs / school activities";
+
     if (state.stateFilter === "__nationwide__" && g.tags.indexOf("no-geo-restrictions") === -1) {
       return "Has a location restriction";
     }
@@ -305,7 +309,9 @@
 
   function grantCard(g) {
     var p = pillClass(g);
-    var visibleTags = TAG_ORDER.filter(function (t) { return g.tags.indexOf(t) !== -1; });
+    var visibleTags = TAG_ORDER.filter(function (t) {
+      return t === "no-school-programs" ? g.schoolProgram === "no" : g.tags.indexOf(t) !== -1;
+    });
     var boosted = matchedBoosts(g);
     var badge = boosted.length
       ? el("span", { class: "great-fit-badge" }, ["Great fit — " + boosted.map(function (b) { return BOOST_LABELS[b] || b; }).join(", ")])
@@ -350,7 +356,7 @@
         g.employeeConnection === "yes" ? el("span", { class: "gc-meta" }, ["Employee/mentor tie noted"]) : null,
         el("a", { class: "gc-link", href: g.link || "#", target: "_blank", rel: "noopener" }, [g.link ? "View & apply →" : "No link yet"]),
       ]),
-      el("div", { class: "gc-verified" + (verifiedText ? "" : " gc-needs-verification") }, [verifiedText || "Needs verification"]),
+      verifiedText ? el("div", { class: "gc-verified" }, [verifiedText]) : null,
       pipelineControl(g),
     ]);
   }
@@ -384,6 +390,7 @@
     if (state.statusOpen) n++;
     if (state.savedOnly) n++;
     if (state.c3) n++;
+    if (state.schoolProgram) n++;
     if (state.stateFilter) n++;
     n += state.boosts.size;
     return n;
@@ -406,6 +413,7 @@
     state.savedOnly = false;
     state.boosts.clear();
     state.c3 = null;
+    state.schoolProgram = false;
     state.stateFilter = "";
     state.limit = PAGE_SIZE;
     document.getElementById("search-input").value = "";
@@ -419,6 +427,7 @@
     document.querySelectorAll('[data-filter="c3"]').forEach(function (b) {
       b.classList.toggle("active", state.c3 === b.getAttribute("data-value"));
     });
+    document.querySelectorAll('[data-filter="school"]').forEach(function (b) { b.classList.toggle("active", state.schoolProgram); });
     document.querySelectorAll('[data-filter="boost"]').forEach(function (b) {
       b.classList.toggle("active", state.boosts.has(b.getAttribute("data-value")));
     });
@@ -443,6 +452,9 @@
     }
     if (state.c3) {
       chips.push({ label: C3_LABELS[state.c3] || state.c3, remove: function () { state.c3 = null; } });
+    }
+    if (state.schoolProgram) {
+      chips.push({ label: "School program applicable", remove: function () { state.schoolProgram = false; } });
     }
     if (state.stateFilter) {
       var label = state.stateFilter === "__nationwide__" ? "Nationwide grants only" : state.stateFilter;
@@ -484,6 +496,7 @@
     if (state.statusOpen) params.set("status", "open");
     if (state.savedOnly) params.set("saved", "1");
     if (state.c3) params.set("c3", state.c3);
+    if (state.schoolProgram) params.set("school", "1");
     if (state.stateFilter) params.set("state", state.stateFilter);
     if (state.boosts.size) params.set("boost", Array.from(state.boosts).join(","));
     if (state.sort !== "deadline") params.set("sort", state.sort);
@@ -505,6 +518,10 @@
     if (params.has("c3")) {
       state.c3 = params.get("c3");
       document.querySelectorAll('[data-filter="c3"]').forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-value") === state.c3); });
+    }
+    if (params.get("school") === "1") {
+      state.schoolProgram = true;
+      document.querySelectorAll('[data-filter="school"]').forEach(function (b) { b.classList.add("active"); });
     }
     if (params.has("state")) {
       state.stateFilter = params.get("state");
@@ -663,6 +680,16 @@
         var val = btn.getAttribute("data-value");
         if (state.boosts.has(val)) state.boosts.delete(val);
         else state.boosts.add(val);
+        syncFilterButtons();
+        render();
+        syncUrl();
+      });
+    });
+
+    document.querySelectorAll('[data-filter="school"]').forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.schoolProgram = !state.schoolProgram;
+        state.limit = PAGE_SIZE;
         syncFilterButtons();
         render();
         syncUrl();

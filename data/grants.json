@@ -3,53 +3,56 @@
     "id": "3m-grant",
     "name": "3M Grant",
     "link": "https://usfirst.submittable.com/submit/367876/2026-2027-3m-grant-application",
-    "status": "open",
-    "openDate": "September 17, 2026",
-    "closeDate": "October 17, 2026",
+    "status": "closed",
+    "openDate": "",
+    "closeDate": "",
     "employeeConnection": "yes",
     "geoRestricted": "no",
     "require501c3": "unsure",
-    "notes": "Only teams with a 3M employee mentor may apply. US, Mexico, and Canada eligible.",
+    "notes": "Only teams with a 3M employee mentor may apply. US, Mexico, and Canada eligible. Submittable page currently lists no open calls (2026-27 window ended Oct 17, 2026).",
     "tags": [
       "corporate-employee",
-      "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "aauw",
     "name": "AAUW",
-    "link": "https://aauw.fluxx.io/user_sessions/new",
+    "link": "https://www.aauw.org/resources/programs/fellowships-grants/community-action-grant/",
     "status": "closed",
     "openDate": "August 17, 2026",
     "closeDate": "September 17, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "A focus on incorporating women and STEM encouragement",
+    "notes": "Community Action Grants: letter of interest window closed Sept 17, 2026; decisions Nov 13, 2026; full applications by invitation only. Funds nonprofits/universities for K-12 girls STEM; AAUW branches use a separate grant. Focus on women and girls in STEM.",
     "tags": [
       "501c3-required",
       "demographics",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "abell-foundation",
     "name": "Abell Foundation",
     "link": "https://abell.org/grants/",
-    "status": "unsure",
+    "status": "open",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Baltimore Area",
+    "notes": "Baltimore City nonprofits. Small grants (<=$10,000) reviewed on rolling basis, no deadline (first-time applicants attend info session); larger grants go to Board meetings, letter of inquiry first. Education/workforce focus; robotics not mentioned.",
     "tags": [
+      "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "actuonix",
@@ -66,7 +69,8 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "aiaa",
@@ -76,14 +80,15 @@
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
-    "geoRestricted": "yes",
+    "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "Must be a K-12 teacher and an AIAA member.",
+    "notes": "Classroom Grants up to $500/school year, paid to the school; applicant must be a K-12 teacher and AIAA Educator Associate member; aerospace-focused STEM. 2026 cycle closed. No geographic restriction stated.",
     "tags": [
-      "geo-restricted",
-      "no-501c3-required"
+      "no-501c3-required",
+      "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "akamai-foundation",
@@ -95,12 +100,13 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Akamai Foundation: 501(c)(3)/public charity (or foreign equivalent) for math/science/tech education K-12; portal opens early February and closes late March annually; one request per calendar year; underserved populations prioritized. Schools not addressed.",
     "tags": [
       "501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "american-honda-foundation",
@@ -116,7 +122,8 @@
     "tags": [
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "arconic-foundation",
@@ -133,25 +140,26 @@
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-10-07",
+    "schoolProgram": "unsure"
   },
   {
     "id": "argosy-new-team-grant",
     "name": "Argosy New Team Grant",
     "link": "https://cafirst.org/grants/",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "October 12, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "$3,000 for new FRC teams starting in the 2026-2027 season. California only -- apply by contacting your Regional Director.",
+    "notes": "$3,000 unrestricted for new FRC rookie teams starting 2026-27. California only. Email your Regional Director with team name, school or organization, rookie status. Deadline (extended) Oct 12, 2026; paid via Hack Club Bank.",
     "tags": [
-      "currently-open",
       "geo-restricted",
       "rookie-friendly"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "at-t",
@@ -168,57 +176,62 @@
       "corporate-employee",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "bae-grant",
     "name": "BAE Grant",
     "link": "https://www.baesystems.com/en-us/partnership/community-investment/community-investment-partners/first/first-team-grants-application",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "September 13, 2026",
+    "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "FLL/FTC grant closes July 8th. Will prioritize teams with a BAE mentor or within 70 miles of a BAE location",
+    "notes": "FIRST team grants page lists FRC, FTC and FLL application periods as closed; will prioritize teams with a BAE mentor or within 70 miles of a BAE location (per prior notes). Contact bae.firstrobotics@baesystems.com.",
     "tags": [
-      "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "bank-of-america",
     "name": "Bank of America",
     "link": "https://about.bankofamerica.com/en/making-an-impact/grant-funding-for-nonprofits-sponsorship-programs",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "",
+    "closeDate": "June 29, 2026",
     "employeeConnection": "no",
-    "geoRestricted": "unsure",
-    "require501c3": "unsure",
-    "notes": "",
+    "geoRestricted": "yes",
+    "require501c3": "required",
+    "notes": "Unsolicited applications only in posted windows (Basic Needs/Income Creation Feb 2-Mar 2, 2026; Stable Housing/Empowering Communities May 18-Jun 29, 2026); none open now. Must be 501(c)(3) (not private foundation, no fiscal agents), based in/serving eligible BofA markets. Individual K-12 schools (public/private/charter), school foundations, PTA/PTO, athletics and student trips are excluded.",
     "tags": [
-      "currently-open"
+      "501c3-required",
+      "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "bauch",
     "name": "Bausch Foundation",
     "link": "https://www.bauschfoundation.org/",
-    "status": "unsure",
+    "status": "open",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "Bausch Foundation accepts unsolicited requests on a continuing basis, reviewed quarterly; must be received two months before the Advisory Committee meeting month. Info pertains to U.S. only. Separate portals for employees and non-employees; no employee tie stated as required. No eligibility (501c3, schools) stated on the main page; no STEM/robotics focus listed (eye health, relief, community).",
     "tags": [
+      "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "benjamin-moore",
@@ -228,15 +241,16 @@
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
-    "geoRestricted": "no",
+    "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Support limited to 501(c)(3) charities in the U.S., CRA-registered charities in Canada, and HMRC-recognized UK charities; documentation of status required. Requests emailed to givingmoore@benjaminmoore.com with a 'Date Request Is Needed'. No set deadlines. Schools not mentioned.",
     "tags": [
       "501c3-required",
       "currently-open",
-      "no-geo-restrictions"
+      "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "bloomingdales",
@@ -253,7 +267,8 @@
       "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "bmw",
@@ -262,16 +277,17 @@
     "status": "open",
     "openDate": "",
     "closeDate": "",
-    "employeeConnection": "unsure",
+    "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "South Carolina Only",
+    "notes": "South Carolina only: must be a 501(c)(3) or 501(c)(6) registered in SC. Rolling review (allow up to 60 days); one request per calendar year. Employee ties not required (application asks about BMW associate volunteer involvement). Excludes pro/semi-pro/recreational sports teams, political, fraternities. Schools not mentioned.",
     "tags": [
       "501c3-required",
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "bnsf-railway-foundation",
@@ -288,42 +304,43 @@
       "501c3-required",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "boeing-first-grant",
     "name": "Boeing FIRST Grant",
-    "link": "https://usfirst.submittable.com/submit/ae2c8982-1d7f-490f-81a1-b2e4216cda65/boeing-team-grant-application-2025-2026",
-    "status": "open",
+    "link": "https://usfirst.submittable.com/submit/cbc5394e-174b-4de6-8492-081e785225d8/boeing-team-grant-application-2026-2027",
+    "status": "closed",
     "openDate": "",
     "closeDate": "October 16, 2026",
     "employeeConnection": "yes",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "Closes earlier if funds run out before the deadline.",
+    "notes": "Submittable page for the 2025-2026 form says 'no open calls'. A 2026-2027 Boeing Team Grant form exists; third-party listing shows window Aug 24-Oct 16, 2026 and that teams need a Boeing employee/retiree mentor. That 2026-2027 form reportedly lists only FLL/FTC (FRC eligibility unconfirmed). Closes earlier if funds run out.",
     "tags": [
       "corporate-employee"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "boston-scientific-frc-grant",
     "name": "Boston Scientific FRC Grant",
     "link": "https://usfirst.submittable.com/submit/a73801b4-1d46-4fbe-8f72-de268526e0cf/2026-2027-boston-scientific-frc-grant-application",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
     "closeDate": "September 30, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Within 60 miles of a Boston Scientific location in CA, IN, MA, or MN. Prioritizes schools/communities with economic need.",
+    "notes": "Official FIRST Submittable page shows no open calls; reported 2026 window Jul 28-Sep 30, 2026 (now closed). Within 60 miles of a Boston Scientific location in CA, IN, MA or MN (per prior notes; not on fetched page). Prioritizes economically disadvantaged schools/communities.",
     "tags": [
-      "currently-open",
       "demographics",
       "geo-restricted"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "brown-rudnick-center",
@@ -342,7 +359,8 @@
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "canon-usa",
@@ -354,13 +372,14 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Donation request form; only 501(c)(3) organizations considered; monetary or product donation at Canon's sole discretion. No dates or geography stated; schools not mentioned.",
     "tags": [
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "cisco",
@@ -372,13 +391,14 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "Grantor lists the open date only as \"2026\" without a specific day -- check their site for the exact window.",
+    "notes": "Applications accepted year-round via eligibility quiz, then Letter of Inquiry, then invited proposal (decisions ~1 quarter). Must be IRS 501(c)(3) public charity; program audience >65% economically underserved; sectors: crisis response, education, economic opportunity, climate resilience. Schools (public/private/charter), school foundations, booster clubs and school activities like field trips are generally ineligible. Aimed at national/multinational orgs.",
     "tags": [
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "coca-cola",
@@ -395,25 +415,26 @@
       "corporate-employee",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "con-edison",
     "name": "Con Edison",
     "link": "https://www.coned.com/en/community-affairs/strategic-partnerships/apply-for-a-grant",
-    "status": "unsure",
-    "openDate": "January 1, 2026",
-    "closeDate": "April 30, 2026",
+    "status": "closed",
+    "openDate": "",
+    "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
-    "require501c3": "school-or-501c3",
-    "notes": "NYC/Westchester Only",
+    "require501c3": "required",
+    "notes": "NYC/Westchester (Con Edison service territory) only. 501(c)(3) required (educational institutions and coalitions eligible; group applications need a 501(c)(3) fiscal agent). Program support only. 2026 cycle closed; check back early 2027.",
     "tags": [
-      "geo-restricted",
-      "school-or-501c3"
+      "501c3-required",
+      "geo-restricted"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "costco",
@@ -425,31 +446,32 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Rolling applications (fiscal year Sep-Aug) via Benevity; 501(c)(3) only; focus on children, education, health/human services; monetary requests only; request no more than 10% of program budget; review 4-6 weeks. Page does not address schools.",
     "tags": [
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "daniels-fund",
     "name": "Daniels Fund",
     "link": "https://danielsfund.org/our-work/grants/#4state",
-    "status": "open",
+    "status": "unsure",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Wyoming, Colorado, Utah, and New Mexico",
+    "notes": "Serves CO, NM, UT, WY only. Applications by invitation/eligibility quiz, rolling basis; 501(c)(3) or government-equivalent. Schools not specifically addressed.",
     "tags": [
       "501c3-required",
-      "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "digital-citizen-fund-rookie-team-grant",
@@ -468,7 +490,8 @@
       "geo-restricted",
       "rookie-friendly"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "dodstem",
@@ -486,41 +509,43 @@
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "dow",
     "name": "Dow",
     "link": "https://corporate.dow.com/en-us/about/partnerships/citizenship/tomorrows-innovators/first-robotics.html",
     "status": "closed",
-    "openDate": "",
+    "openDate": "May 26, 2026",
     "closeDate": "June 30, 2026",
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Reviewed first come, first served. Teams without a Dow mentor won’t be considered until June 23.",
+    "notes": "Dow team grant for FIRST teams with a Dow employee mentor and/or based in Dow communities (US/Canada); 2026-27 window was May 26-June 30, 2026, now closed. Dow page itself lists no application details; see FIRST team grants page.",
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "dow-international-team-grant",
     "name": "Dow International Team Grant",
-    "link": "https://usfirst.submittable.com/submit/f09630e0-7687-476e-89d7-a589acdb53a3/2025-2026-dow-frc-international-team-grant",
-    "status": "unsure",
+    "link": "https://usfirst.submittable.com/submit/9838f8f7-776f-46d6-be21-edacb879763c/2026-2027-dow-frc-international-grant",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "September 30, 2025",
-    "employeeConnection": "no",
+    "closeDate": "",
+    "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "Only for international teams",
+    "notes": "Dow FRC grant for teams outside US/Canada with a Dow mentor and/or in Dow communities worldwide. 2026-27 Submittable page says no open calls currently.",
     "tags": [
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "dr-scholl-foundation",
@@ -530,13 +555,15 @@
     "openDate": "January 1, 2027",
     "closeDate": "January 31, 2027",
     "employeeConnection": "unsure",
-    "geoRestricted": "unsure",
+    "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Letter of Inquiry window Jan 1-31, 2027 (11:59pm CT); full application due March 31, 2027 if invited. 501(c)(3) determination letter and 3 years financials required. Mostly US grants. Public schools \"rarely considered\"; no general support, event sponsorships.",
     "tags": [
-      "501c3-required"
+      "501c3-required",
+      "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "ecolab",
@@ -553,7 +580,8 @@
       "geo-restricted"
     ],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   },
   {
     "id": "emc-insurance",
@@ -567,24 +595,26 @@
     "require501c3": "unsure",
     "notes": "",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "eversource",
     "name": "Eversource",
     "link": "https://www.eversource.com/content/residential/about/community/supporting-the-community/charitable-contributions-volunteerism",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Must be in service area (New England)",
+    "notes": "2026 portal closed; expected to reopen by March 2027. Must be a 501(c)(3) based in Eversource territory (CT, MA, NH). Grants typically $1,000-$10,000, rolling review 8-12 weeks, request 90 days ahead, one gift per org per year. Page lists youth robotics teams as not funded; only limited funding for school PTOs/fundraisers.",
     "tags": [
       "501c3-required",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "fabworks",
@@ -596,13 +626,14 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "",
+    "notes": "Rolling sponsorship applications (no deadline) for FRC, FTC, Formula SAE, BattleBots and similar programs; accepted sponsorships last one year then must reapply; Fabworks may accept/reject at its discretion. Apply via account at fabworks.com/sponsorships. Page does not mention 501(c)(3), geography or schools.",
     "tags": [
       "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "fikret-y-ksel-foundation",
@@ -618,21 +649,23 @@
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "first-grant-submittables",
     "name": "FIRST Grant Submittables",
     "link": "https://usfirst.submittable.com/submit",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "Where various grant applications appear like rockwell",
+    "notes": "FIRST Submittable portal; currently states \"There are presently no open calls for submissions.\" Individual grants (e.g. Rockwell) appear here when open.",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "first-in-texas-grant",
@@ -649,25 +682,26 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "fnc-bank",
     "name": "FNC Bank",
     "link": "https://www.fnc.bank/resources/about-us/grant-program",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "",
+    "closeDate": "January 15, 2027",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "St. Croix, Polk, or Pierce counties",
+    "notes": "Deadlines each year Jan 15 (March award) and Jul 15 (Sept award); next deadline Jan 15, 2027. Tax-exempt orgs (501c3) located in St. Croix, Polk or Pierce County, Wisconsin; max $2,500/yr; priority basic needs and literacy; sponsorships excluded. Schools not addressed; contact grants@fnc.bank.",
     "tags": [
       "501c3-required",
-      "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "ford",
@@ -679,11 +713,12 @@
     "employeeConnection": "yes",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "Ford Volunteer Corps / Deed employee volunteering hub (Ford work login); not a public grant application. Applicant must be a Ford employee/volunteer; no dates, 501c3, school or geography info published.",
     "tags": [
       "corporate-employee"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "ford-foundation",
@@ -695,12 +730,13 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "NYC",
+    "notes": "NYC Good Neighbor Committee: applications currently closed, no upcoming deadline listed. Requires NYC-based org primarily serving five boroughs, 501(c)(3) or fiscal sponsor, focus Arts & Culture, Education, Human Services, annual budget $50K-$5M, not a current Ford Foundation grantee. Schools not addressed (community-based orgs).",
     "tags": [
       "501c3-required",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "frc-tees",
@@ -718,7 +754,8 @@
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "geico",
@@ -735,25 +772,27 @@
       "501c3-required"
     ],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   },
   {
     "id": "gene-haas",
     "name": "Gene Haas",
     "link": "https://webportalapp.com/sp/login/ghf_first_sae_competitions",
     "status": "open",
-    "openDate": "",
+    "openDate": "May 1, 2026",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "school-or-501c3",
-    "notes": "OPEN FOR 2027 Applications after September 1st will receive funding in January",
+    "notes": "Portal opens May 1 for the following season; applications after Sept 1 are funded in January 2027 and funding ends when annual budget is used. For 26/27 priority goes to past GHF awardees; new applicants, rookie teams and teams outside US/Canada will not be awarded. Must be a public school, private school with 501(c)(3), or competition team with 501(c)(3). FRC/FTC eligible; FLL not.",
     "tags": [
       "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "general-dynamics-nassco",
@@ -762,35 +801,36 @@
     "status": "open",
     "openDate": "",
     "closeDate": "",
-    "employeeConnection": "yes",
+    "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Will not support requests for school trips or athletic or recreational tours.",
+    "notes": "Cash contributions limited to 501(c)(3) (or 501(c)(6) for some support); copy of IRS determination required. Focus on Barrio Logan / San Diego communities served by the company. Priority for STEM education and skilled trades; employee ties give added weight but are not required. Schools are not excluded, but school trips, athletic/recreational tours and school-based sports teams are not supported. Rolling electronic form, no deadlines.",
     "tags": [
       "501c3-required",
       "corporate-employee",
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "glenn-w-bailey-foundation",
     "name": "Glenn W Bailey Foundation",
     "link": "https://www.gwbaileyfoundation.org/faqs",
-    "status": "open",
-    "openDate": "",
+    "status": "closed",
+    "openDate": "Early 2027",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Funds U.S. organizations/programs benefiting people in the U.S. (no international). Rolling monthly board review, but applications are closed for this year and expected to reopen in early 2027. One approved application per EIN per calendar year. Page does not mention FIRST Robotics or tax-status or schools explicitly; confirm with the foundation.",
     "tags": [
       "501c3-required",
-      "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "gm",
@@ -808,7 +848,8 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "hall-family-foundation",
@@ -820,12 +861,13 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Kansas City",
+    "notes": "Kansas City region only (Jackson, Clay, Platte MO; Wyandotte, Johnson KS per third-party listings). Rolling inquiry form; official overview page states no eligibility details. Third-party listings say 501(c)(3), 5+ years operating, rarely operating support; education (Growing Minds) is a focus area. Unconfirmed on official page.",
     "tags": [
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "harbor-freight",
@@ -836,14 +878,15 @@
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
-    "require501c3": "required",
-    "notes": "US only",
+    "require501c3": "school-or-501c3",
+    "notes": "U.S. only; applicant must operate locally and benefit the service area of the requesting Harbor Freight facility. Requires 501(c)(3) or (19) status held 1+ year, OR K-12 public school (NCES ID); private and post-secondary schools not eligible. One request/donation per calendar year. No published windows.",
     "tags": [
-      "501c3-required",
       "currently-open",
-      "geo-restricted"
+      "geo-restricted",
+      "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "hershey",
@@ -860,7 +903,8 @@
       "501c3-required",
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "honda",
@@ -868,16 +912,18 @@
     "link": "https://csr.honda.com/longform-content/honda-usa-foundation-funding/",
     "status": "open",
     "openDate": "October 1, 2026",
-    "closeDate": "October 31, 2026",
-    "employeeConnection": "unsure",
+    "closeDate": "",
+    "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "US Only (separate page for Canada), only available in select states",
+    "notes": "Programmatic funding for U.S. orgs serving AL, CA, CO, CT, DC, FL, GA, IN, IA, MI, NJ, NY, NC, OH, OR, SC, TX. 501(c)(3) (or fiscal sponsor) or NCES-listed schools/districts eligible; athletic teams and religious programs excluded. Official page showed application as closed while an Oct 1, 2026 news item says applications are open; no close date confirmed (earlier listed Oct 31, 2026), so confirm via CommunityImpact@na.honda.com. Event sponsorship closed; next window early 2027. Honda associates give no favoritism; no employee tie needed. Eligibility quiz required.",
     "tags": [
+      "currently-open",
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "idaho-national-labratory",
@@ -888,12 +934,14 @@
     "closeDate": "",
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
-    "require501c3": "unsure",
-    "notes": "Idaho",
+    "require501c3": "required",
+    "notes": "Community Development Grants go to eligible 501(c)(3) nonprofits; Idaho organizations get priority; individuals excluded. Annual cycle has closed in Feb in past years; current dates not found. Separate INL K-12 STEM grants (schools, Idaho) exist. Contact communityengagement@inl.gov.",
     "tags": [
+      "501c3-required",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "indiana-first-grants",
@@ -909,7 +957,8 @@
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "indiana-toyota-grant",
@@ -926,26 +975,26 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "intuitive-grant",
     "name": "Intuitive grant",
     "link": "https://www.intuitive-foundation.org/first-robotics/",
-    "status": "unsure",
-    "openDate": "",
+    "status": "closed",
+    "openDate": "June 2026",
     "closeDate": "August 14, 2026",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "",
+    "notes": "Intuitive Foundation FIRST team grants (FRC/FLL/FTC) for non-rookie teams that have competed in an official event and are registered for the current season; funds paid toward registration via FIRST Finance. Portal opens June, closed Aug 14, 2026 for 2027 season; notifications October, payment November. Worldwide (US, Canada, Mexico, UK, Australia, Israel, Turkiye). No 501(c)(3) needed for US teams; no employee tie required. Schools not mentioned.",
     "tags": [
-      "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "investors-foundation",
@@ -957,48 +1006,50 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "New Jersey, NYC, Long Island Only",
+    "notes": "Serves communities in New Jersey, NYC (5 boroughs) and Long Island (Investors Bank footprint). Applications via online portal; deadline not stated on the official page (third-party listings conflict: rolling vs Nov 1, 2026). Whether schools qualify is not stated; check Foundation Guidelines PDF.",
     "tags": [
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "jb-hunt",
     "name": "JB Hunt",
     "link": "https://www.jbhunt.com/our-company/esg/social-responsibility/company-giving",
-    "status": "open",
+    "status": "closed",
     "openDate": "December",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "school-or-501c3",
-    "notes": "Grantor lists the open date only as \"December\" without a day or year -- check their site for the exact window.",
+    "notes": "Requests accepted only in December for consideration the following calendar year (via Company Giving Form); no specific dates published. Focus: health care, veterans, education, crisis management. Eligibility page not retrievable; limited funds.",
     "tags": [
-      "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "john-deere",
     "name": "John Deere",
     "link": "https://johndeerefirst.submittable.com/submit",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "November 6, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Within 40 miles of a John Deere Inspire location (see John Deere’s site for the full list). Having a mentor helps if you don’t meet all eligibility requirements.",
+    "notes": "2026-27 FRC deadline was November 6, 2026 (review began Oct 5), though page says applications accepted while funding remains. Eligible if team is in a John Deere home community OR has a committed in-person current John Deere employee mentor/coach (retirees/dealers excluded). Covers registration, kits, field setup; not travel/event fees.",
     "tags": [
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "johnson-controls",
@@ -1006,15 +1057,17 @@
     "link": "https://www.johnsoncontrols.com/corporate-sustainability/social/philanthropy/funding-guidelines",
     "status": "open",
     "openDate": "",
-    "closeDate": "",
-    "employeeConnection": "unsure",
-    "geoRestricted": "unsure",
+    "closeDate": "December 1, 2026",
+    "employeeConnection": "no",
+    "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "Johnson Controls Foundation. Cycles: Dec 1, 2026 and Apr 1, 2027 (11:59pm CT). U.S.-based charitable orgs, STEM education focus; programming should serve Milwaukee WI, central PA, San Antonio TX, another US city with strong JCI presence, or have regional/national reach. K-12 schools NOT eligible. Pre-contact with philanthropy team expected.",
     "tags": [
-      "currently-open"
+      "currently-open",
+      "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "kars4kids",
@@ -1026,29 +1079,31 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "Rolling applications via online form; U.S. 501(c)(3) nonprofits whose primary mission is serving children, secular focus; typical grant $5,000; decision in 4-6 months up to a year. Schools not mentioned; robotics not mentioned.",
     "tags": [
       "501c3-required",
       "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "kgmiaa-kettering",
     "name": "KGMIAA (Kettering)",
     "link": "https://www.kettering.edu/robotics/kgmiaa-sponsorships",
     "status": "closed",
-    "openDate": "",
-    "closeDate": "",
+    "openDate": "October 1",
+    "closeDate": "November 6",
     "employeeConnection": "no",
     "geoRestricted": "unsure",
     "require501c3": "school-or-501c3",
-    "notes": "",
+    "notes": "KGMIAA Robotics Grant Program for High School FIRST, VEX and RECF programs. Annual window Oct 1 - Nov 6 (year not stated); 2026 awardees listed, so currently closed. Mostly Michigan awardees; no stated geographic limit. Contact eszczepanski@kettering.edu.",
     "tags": [
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "last-anvil",
@@ -1062,29 +1117,31 @@
     "require501c3": "not-required",
     "notes": "",
     "tags": [
-      "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   },
   {
     "id": "lockheed-martin",
     "name": "Lockheed Martin",
     "link": "https://www.lockheedmartin.com/en-us/who-we-are/communities/applying-for-contributions.html",
-    "status": "open",
+    "status": "unsure",
     "openDate": "",
     "closeDate": "",
-    "employeeConnection": "yes",
-    "geoRestricted": "unsure",
-    "require501c3": "unsure",
-    "notes": "",
+    "employeeConnection": "no",
+    "geoRestricted": "yes",
+    "require501c3": "required",
+    "notes": "Lockheed Martin does not accept unsolicited grant requests. Must be 501(c)(3) aligned with STEM workforce, Those Who Serve, or Community Resilience, located in/operating in a community where LM has employees or business interests. Public secondary schools qualify; private K-12 schools, athletic groups and individuals excluded. No employee-tie requirement stated.",
     "tags": [
+      "501c3-required",
       "corporate-employee",
-      "currently-open"
+      "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "m-j-murdock",
@@ -1102,110 +1159,114 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "makers-making-change",
     "name": "Makers Making Change",
     "link": "https://www.makersmakingchange.com/clubs-that-care",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Canada only",
+    "notes": "Canada only: Clubs That Care is for individuals aged 15-30 living in Canada (citizen/PR/refugee); needs 3 references. Applications currently closed; email info@makersmakingchange.com for next round.",
     "tags": [
-      "currently-open",
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "max-and-victoria-dreyfus-foundation",
     "name": "Max and Victoria Dreyfus Foundation",
     "link": "https://www.mvdreyfusfoundation.org/application-guidelines",
-    "status": "open",
-    "openDate": "",
-    "closeDate": "",
+    "status": "closed",
+    "openDate": "May 11",
+    "closeDate": "November 10",
     "employeeConnection": "no",
     "geoRestricted": "no",
-    "require501c3": "not-required",
-    "notes": "May 11th- November 10th is a new round",
+    "require501c3": "required",
+    "notes": "U.S. organizations only; must be IRS 501(c)(3) (upload determination letter, not a private foundation); will consider schools. Grants $1,000-$20,000, max 25% of 3-yr average income. Prior note says round ran May 11 - Nov 10 (dates not on guidelines page; see Timeline and Deadlines page), so presumably closed until next round.",
     "tags": [
-      "currently-open",
-      "no-501c3-required",
+      "501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "mccarthey-dressman-education-foundation",
     "name": "McCarthey Dressman Education Foundation",
     "link": "https://mccartheydressman.org/academic-enrichment-grants/",
     "status": "closed",
-    "openDate": "January 15, 2026",
-    "closeDate": "April 15, 2026",
-    "employeeConnection": "unsure",
+    "openDate": "January 15, 2027",
+    "closeDate": "April 15, 2027",
+    "employeeConnection": "no",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "Academic Enrichment Grants for individual educators employed by a school or nonprofit (community center, museum) with regular contact with PreK-12 students from low-income households. Window Jan 15-Apr 15 each year or until 200 submissions; 2026 window closed. Application filed in one individual's name.",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "meta",
     "name": "Meta",
     "link": "https://datacenters.atmeta.com/community-action-grants/",
     "status": "closed",
-    "openDate": "",
-    "closeDate": "",
+    "openDate": "September 14, 2026",
+    "closeDate": "October 19, 2026",
     "employeeConnection": "unsure",
-    "geoRestricted": "unsure",
+    "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "",
+    "notes": "Community Action Grants cover only communities with a Meta data center in Canada, Ireland, Denmark, Sweden and Singapore (NOT the US; US is served by the Future is for Everyone Fund). Public/state schools eligible; nonprofits use local equivalents of 501(c)(3). 2027 cycle ran Sep 14-Oct 19, 2026, now closed. Not usable by US FRC teams.",
     "tags": [
+      "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "michael-and-susan-dell-foundation",
     "name": "Michael and Susan Dell Foundation",
-    "link": "https://www.dell.org/how-we-fund/apply/",
+    "link": "http://www.dell.org/apply/",
     "status": "open",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
-    "geoRestricted": "no",
+    "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "",
+    "notes": "No fixed cycle or deadlines; online project submission form, foundation contacts only strong fits. Funds only focus areas and geographies (US, esp. Texas, plus India, Israel, Kenya, South Africa, Tanzania, Uganda, Zambia, Zimbabwe). Does not fund individuals, event sponsorships, or hardware/computer requests. Unlikely fit for a typical FRC team.",
     "tags": [
       "currently-open",
-      "no-501c3-required",
-      "no-geo-restrictions"
+      "geo-restricted",
+      "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "midco",
     "name": "Midco",
     "link": "https://midco.com/about/midco-foundation/grant-application-form/",
-    "status": "unsure",
-    "openDate": "January 5, 2027",
+    "status": "closed",
+    "openDate": "January 4, 2027",
     "closeDate": "",
     "employeeConnection": "no",
-    "geoRestricted": "yes",
-    "require501c3": "required",
-    "notes": "Must be in Midco Service area ( WI, MN, ND, SD, KS)",
+    "geoRestricted": "no",
+    "require501c3": "school-or-501c3",
+    "notes": "Applications closed; reopen January 4, 2027. Eligible: 501(c)(3) with 509(a)(1)/(2) status, accredited schools/universities (tax-deductible gifts), or US public agencies. Midco service area (WI, MN, ND, SD, KS) gets priority but is not stated as required.",
     "tags": [
-      "501c3-required",
-      "currently-open",
-      "geo-restricted"
+      "no-geo-restrictions",
+      "school-or-501c3"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "molex",
@@ -1219,7 +1280,8 @@
     "require501c3": "unsure",
     "notes": "",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "motorola-solutions",
@@ -1228,14 +1290,16 @@
     "status": "closed",
     "openDate": "",
     "closeDate": "January 22, 2027",
-    "employeeConnection": "yes",
+    "employeeConnection": "unsure",
     "geoRestricted": "unsure",
-    "require501c3": "unsure",
-    "notes": "2027 close date not yet officially published (estimated from the 2026 pattern); new cycle expected to open late November 2026.",
+    "require501c3": "required",
+    "notes": "2027 cycle expected to open late November 2026; close date not yet published (2026 deadline was Jan 22, 2026; estimate only). Focus: technology and engineering education and first responder programs. FAQ: employee engagement NOT required to apply but may weigh in funding; applicant must be 501(c)(3) (a secondary source says school districts also eligible); eligibility quiz first.",
     "tags": [
+      "501c3-required",
       "corporate-employee"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "msc",
@@ -1247,49 +1311,51 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "Form says 2023",
+    "notes": "Official page lists no application dates or deadlines (old \"2023\" form note unresolved). Requesters must be 501(c)(3), nonsectarian; no stated school eligibility or geography. Dates 2026 unconfirmed; contact MSC.",
     "tags": [
       "501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "msoe",
     "name": "MSOE",
     "link": "https://www.msoe.edu/about-msoe/k-12-stem-at-msoe/first-frc-ftc-amp-fll-team-sponsorship/",
-    "status": "unsure",
-    "openDate": "September 6, 2026",
-    "closeDate": "",
+    "status": "open",
+    "openDate": "September 4, 2026",
+    "closeDate": "December 1, 2026",
     "employeeConnection": "no",
-    "geoRestricted": "no",
+    "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "",
+    "notes": "2026-27 FRC/high school FTC sponsorships, $500 each. Open Sept 4; closes noon CST Dec 1, 2026; decisions Dec 4. Limited to Wisconsin and Illinois teams. Check issued to team or host organization/school. MSOE ties not required/guaranteed. FLL and middle school FTC no longer funded.",
     "tags": [
-      "no-501c3-required",
-      "no-geo-restrictions"
+      "currently-open",
+      "geo-restricted",
+      "no-501c3-required"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "nasa",
     "name": "NASA",
-    "link": "https://robotics.nasa.gov/category/nasa-grants/",
+    "link": "https://robotics.nasa.gov/2026-2027-frc-sponsorship-grants/",
     "status": "closed",
-    "openDate": "",
+    "openDate": "September 1, 2026",
     "closeDate": "September 30, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "No veteran grants at this time but rookie and Year-Two teams can apply",
+    "notes": "2027 NASA FRC grants closed Sept 30, 2026; awards posted week of Nov 9, 2026. Only Rookie / New Veteran and Year-Two (must have had 2026 NASA grant and $5,000 corporate funds) teams; no veteran grants. US-based teams only. Educational sponsor (school, 4-H, nonprofit, scouts) must submit support letter by Jan 10, 2027.",
     "tags": [
       "geo-restricted",
       "no-501c3-required",
       "rookie-friendly"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "national-fuel",
@@ -1301,28 +1367,31 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Only in regions of NY and PA that National Fuel services",
+    "notes": "Contact the Foundation representative for your state (NY, PA, OH) before applying; requests reviewed quarterly by committee, no fixed deadlines. Excludes individuals, private foundations, 509(a)(3) charities, political, amateur athletics, sectarian orgs. Schools not mentioned. Service territory NY/PA (page lists reps for NY, PA, OH).",
     "tags": [
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "nea-foundation",
     "name": "NEA Foundation",
-    "link": "https://www.neafoundation.org/educator-grants-and-fellowships/",
+    "link": "https://www.neafoundation.org/educator-grants-and-fellowships/student-success-grants/",
     "status": "closed",
-    "openDate": "",
-    "closeDate": "September 15, 2026",
-    "employeeConnection": "unsure",
-    "geoRestricted": "yes",
-    "require501c3": "unsure",
-    "notes": "Must be a NEA member",
+    "openDate": "December 1, 2026",
+    "closeDate": "",
+    "employeeConnection": "no",
+    "geoRestricted": "no",
+    "require501c3": "not-required",
+    "notes": "Student Success Grants: individual educators (teachers, ESPs, SISP) who are current NEA members in public schools or public higher ed. Fluxx registration by Nov 24; application opens Dec 1, 2026; info session Dec 15. Admins and non-members ineligible. Not available to private schools or non-school teams; applicant must be the educator.",
     "tags": [
-      "geo-restricted"
+      "no-501c3-required",
+      "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "ni",
@@ -1340,7 +1409,8 @@
       "no-geo-restrictions",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "nikon",
@@ -1352,117 +1422,122 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "US Only",
+    "notes": "US-based applicants and US programs only. Submit online at least 6 months before the program; allow 12 weeks for a response. No published open/close window. Excludes unions, political/religious causes, fundraising/raffles, individuals.",
     "tags": [
       "currently-open",
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "nordstrom",
     "name": "Nordstrom",
     "link": "https://www.nordstrom.com/browse/nordstrom-cares/corporate-philanthropy/corporate-grant",
-    "status": "open",
-    "openDate": "October 1, 2026",
-    "closeDate": "October 31, 2026",
+    "status": "closed",
+    "openDate": "January 1, 2027",
+    "closeDate": "January 31, 2027",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "North America Only",
+    "notes": "Next window Jan 1-31, 2027 (application currently closed). Funds hyper-local grassroots orgs (basic needs; economic mobility for youth/families) across the US. Excludes individual primary/secondary schools, PTOs/PTAs, athletic and religious programs, individuals.",
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "norfolk-southern-foundation",
     "name": "Norfolk Southern Foundation",
     "link": "https://www.norfolksouthern.com/en/commitments/in-your-community/community-impact/grant-programs",
-    "status": "unsure",
-    "openDate": "",
-    "closeDate": "",
+    "status": "closed",
+    "openDate": "February 1, 2027",
+    "closeDate": "August 2, 2027",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Thriving Communities grant program, for 501(c)(3)s located within 30 minutes of a Norfolk Southern main line across its 22-state network. Application dates vary by year -- check the grant programs page.",
+    "notes": "2027 Thriving Communities (sustainability, workforce development, community resiliency) and Safety First grants accept applications Feb 1-Aug 2, 2027 (5pm ET); 2026 cycle closed. In-Kind Donation grant open year-round. Covers Norfolk Southern's 22-state network. See Grant Guidelines page for 501(c)(3)/school rules.",
     "tags": [
       "501c3-required",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "northrop-grumman",
     "name": "Northrop Grumman",
     "link": "https://www.northropgrumman.com/corporate-responsibility/corporate-citizenship/corporate-contributions-guidelines",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
-    "employeeConnection": "no",
-    "geoRestricted": "yes",
+    "employeeConnection": "unsure",
+    "geoRestricted": "unsure",
     "require501c3": "required",
-    "notes": "Invitation Only (Usually means having an employee)",
+    "notes": "All charitable grants are by invitation only; unsolicited requests are not accepted or acknowledged. Requires 501(c)(3). Focus: tech workforce access, education/work barriers, healthy sustainable communities. Non-public K-12 schools excluded; most extracurriculars excluded except STEM-focused clubs, teams and projects. No deadlines or geography listed.",
     "tags": [
       "501c3-required",
-      "corporate-employee",
-      "currently-open",
-      "geo-restricted"
+      "corporate-employee"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "novelis-and-ball-first-robotics-alliance",
     "name": "Novelis and Ball FIRST Robotics Alliance",
     "link": "https://novelis.com/the-novelis-and-ball-first-robotics-alliance/first-grant/",
-    "status": "open",
+    "status": "unsure",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "Global FRC teams commit to building a sustainability-themed robot ('CanBot'), aluminum can collection, and monthly recycling promotion September through April, plus Novelis/Ball branding.",
+    "notes": "Global FRC teams may apply; selected teams build a recycling-themed 'CanBot', collect aluminum Sept-April, post monthly on social media, check in Nov 1, bring CanBot to Worlds if qualified. Page lists no deadline and does not say if still accepting.",
     "tags": [
-      "currently-open",
       "no-501c3-required",
       "no-geo-restrictions",
       "sustainability"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "online-metals",
     "name": "Online Metals",
     "link": "https://www.onlinemetals.com/en/sponsorships",
-    "status": "unsure",
-    "openDate": "September 3, 2026",
-    "closeDate": "September 15, 2026",
+    "status": "open",
+    "openDate": "",
+    "closeDate": "",
     "employeeConnection": "no",
-    "geoRestricted": "unsure",
+    "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "",
-    "tags": [],
-    "lastVerified": "",
-    "unverified": true
+    "notes": "2026-27 sponsorship applications are open. High school and college robotics teams competing in official competitions in the US and Canada (a schools page says US high school only; confirm). No published deadline.",
+    "tags": [
+      "currently-open",
+      "geo-restricted"
+    ],
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "optimum",
     "name": "Optimum",
     "link": "https://form.jotform.com/260825245242049",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "April 1, 2026",
     "closeDate": "April 24, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Be in areas that Optimum Services",
+    "notes": "Application form (Apr 1-24, 2026 window) now shows 'This form is now closed.' Be in Optimum service areas.",
     "tags": [
       "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": "",
-    "unverified": true
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "pershing-square-foundation",
@@ -1474,29 +1549,31 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Greater NYC Area",
+    "notes": "Pershing Square prizes (Sohn Cancer Prize, MIND Prize, Lotus Award) fund early-career medical researchers at US academic institutions, not FRC teams; likely not relevant. Lotus Award applications open Dec 21, 2026. Existing 'Greater NYC' note is not supported by the page.",
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "pitsco",
     "name": "Pitsco",
     "link": "https://go.pitsco.com/pitsco-team-grant",
     "status": "open",
-    "openDate": "",
-    "closeDate": "",
+    "openDate": "October 1, 2026",
+    "closeDate": "December 31, 2026",
     "employeeConnection": "no",
-    "geoRestricted": "no",
+    "geoRestricted": "yes",
     "require501c3": "not-required",
-    "notes": "Gift card once a year",
+    "notes": "Open to K-12 competitive teams (FIRST, SkillsUSA Robotics, KidWind); applications accepted each quarter (current Oct 1-Dec 31). One $450 Pitsco voucher awarded monthly, not redeemable for cash; one grant per team per 12 months. Continental US or Hawaii.",
     "tags": [
       "currently-open",
-      "no-501c3-required",
-      "no-geo-restrictions"
+      "geo-restricted",
+      "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "polymaker",
@@ -1512,7 +1589,8 @@
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "ptc",
@@ -1526,11 +1604,11 @@
     "require501c3": "not-required",
     "notes": "FRC window has closed for 2026-27; the grantor says to check back around July 2027 for the next round. FTC closed Aug 24, 2026.",
     "tags": [
-      "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-10-07",
+    "schoolProgram": "unsure"
   },
   {
     "id": "raytheon",
@@ -1542,11 +1620,12 @@
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
     "require501c3": "required",
-    "notes": "Unsolicited requests open annually June 1 - July 31; response by December.",
+    "notes": "New nonprofit partners may apply during the open grant period June 1 - July 31 (response by December); RTX describes eligible applicants as nonprofit partners. Schools not explicitly addressed.",
     "tags": [
       "501c3-required"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "regeneron",
@@ -1565,7 +1644,8 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "reiman-foundation",
@@ -1577,29 +1657,30 @@
     "employeeConnection": "no",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "Education-focused foundation (early childhood, primary/secondary education; innovation and collaborative programs) with an online application form. No published deadlines, 501(c)(3), geography, or school eligibility on the home page; contact reimanfoundation@hexagoninc.com.",
     "tags": [
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "rev-robotics",
     "name": "Rev Robotics",
     "link": "https://www.revrobotics.com/team-sponsorship/",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "",
+    "closeDate": "November 3, 2026",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "FTC available too",
+    "notes": "Team REV sponsorship (FRC and FTC). FRC applications closed November 3 (Tuesday, matching 2026); FTC closed October 13. Open to US and international teams; selected teams become Team REV brand ambassadors; criteria emphasize on-field performance and FIRST community outreach. Schools not mentioned.",
     "tags": [
-      "currently-open",
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "robonauts-everybot-sustainability-grant",
@@ -1618,25 +1699,26 @@
       "school-or-501c3",
       "sustainability"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-10-07",
+    "schoolProgram": "unsure"
   },
   {
     "id": "rockland-trust",
     "name": "Rockland Trust",
     "link": "https://www.rocklandtrust.com/about-us/explore/charitable-giving",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "",
+    "closeDate": "October 16, 2026",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "New England Area",
+    "notes": "New England area (Rockland Trust footprint). Grants go to 501(c)(3) public charities in affordable housing, children and youth (not youth sports teams), financial education, small business, workforce development. 2026 grant deadline Oct 16, 2026; later applications reviewed for 2027. Event sponsorships and community donations have separate processes. Schools not addressed on page.",
     "tags": [
       "501c3-required",
-      "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "rockwell-automation",
@@ -1653,7 +1735,8 @@
       "corporate-employee",
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "rural-technology-fund",
@@ -1670,7 +1753,8 @@
       "currently-open",
       "demographics"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "saint-gobain-corporation-foundation",
@@ -1688,7 +1772,8 @@
       "currently-open",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "samsung-solve-for-tomorrow",
@@ -1702,7 +1787,8 @@
     "require501c3": "unsure",
     "notes": "",
     "tags": [],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "samsung-south-carolina",
@@ -1714,12 +1800,13 @@
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "South Carolina only",
+    "notes": "Samsung Newberry County SC. Focus is in and around Newberry County; requests from outside South Carolina are not reviewed. Priorities: veterans, STEM education, youth. Submit via online form at least 45 days before the event. No dates, 501(c)(3) or employee requirement stated; schools not addressed.",
     "tags": [
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "sc-johnson",
@@ -1736,7 +1823,8 @@
       "501c3-required",
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "science-education-foundation-general-atomics",
@@ -1748,13 +1836,14 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "San Diego County",
+    "notes": "San Diego County (countywide or multi-district impact). Funds nonprofits (EIN required); individual schools/districts only in very rare cases; school robotics clubs are not funded and are directed to the GASSSS program. Rolling 3-page proposals emailed; windows Jan-Apr, May-Aug, Sep-Dec. Awards $1,000-$10,000.",
     "tags": [
       "501c3-required",
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "scte-foundation-grant-for-first",
@@ -1770,7 +1859,8 @@
     "tags": [
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "siemens",
@@ -1782,11 +1872,12 @@
     "employeeConnection": "yes",
     "geoRestricted": "unsure",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "$1,000 Siemens sponsorships for FIRST teams. Team needs a Siemens mentor, coach or family member; must download Siemens software (Solid Edge) and participate in the reference program. One application per team. Page says applications currently closed; no deadline listed.",
     "tags": [
       "corporate-employee"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "society-for-science",
@@ -1798,13 +1889,14 @@
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "required",
-    "notes": "",
+    "notes": "STEM Action Grants 2027 cycle: opens December 2026, deadline noon ET Feb 12, 2027; notification spring, funding May 2027. Page describes nonprofits led by social entrepreneurs; schools not explicitly addressed and 501(c)(3) not explicitly stated; confirm with grants@societyforscience.org.",
     "tags": [
       "501c3-required",
       "demographics",
       "no-geo-restrictions"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "sony",
@@ -1822,7 +1914,8 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "state-farm",
@@ -1841,7 +1934,8 @@
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "stemify-grants",
@@ -1857,7 +1951,8 @@
     "tags": [
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "swyft",
@@ -1875,7 +1970,8 @@
       "no-geo-restrictions"
     ],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   },
   {
     "id": "target",
@@ -1889,12 +1985,12 @@
     "require501c3": "school-or-501c3",
     "notes": "",
     "tags": [
-      "currently-open",
       "no-geo-restrictions",
       "school-or-501c3"
     ],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   },
   {
     "id": "td-bank",
@@ -1902,17 +1998,17 @@
     "link": "https://www.td.com/us/en/about-us/communities/ready-commitment/funding-opportunities/community-sponsorships",
     "status": "open",
     "openDate": "",
-    "closeDate": "",
+    "closeDate": "March 12, 2027",
     "employeeConnection": "no",
-    "geoRestricted": "no",
-    "require501c3": "required",
-    "notes": "",
+    "geoRestricted": "yes",
+    "require501c3": "unsure",
+    "notes": "Regional grants (TD Charitable Foundation) have deadlines Nov 13 2026 (passed), Mar 12, May 14, Jul 30 2027. Community Sponsorships open to for-profit and nonprofit orgs, apply 90+ days before need; 2026 sponsorship deadlines have all passed, 2027 not yet posted. Limited to TD footprint (East Coast/Mid-Atlantic/Southeast states). 501(c)(3) not stated on page; school eligibility not stated.",
     "tags": [
-      "501c3-required",
       "currently-open",
-      "no-geo-restrictions"
+      "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "te-connectivity",
@@ -1922,14 +2018,14 @@
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "unsure",
-    "geoRestricted": "no",
-    "require501c3": "required",
-    "notes": "",
+    "geoRestricted": "unsure",
+    "require501c3": "school-or-501c3",
+    "notes": "Applicants must be registered nonprofit, charitable org, or educational institution (501c3 letter + W-9). FIRST application link is marked closed; Community Ambassador Program closed, 'check back in December'. FIRST grants go to teams near TE employee communities; employee affiliation must be disclosed.",
     "tags": [
-      "501c3-required",
-      "no-geo-restrictions"
+      "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "team-foundation",
@@ -1941,13 +2037,14 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "Minnesota only",
+    "notes": "Minnesota only: services must reach rural Minnesotans, preference near TEAM Industries facilities. Applicant must be a 501(c)(3) nonprofit or school; K-12 education is a qualifying area. No deadline published (rolling form).",
     "tags": [
       "currently-open",
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "the-standard",
@@ -1959,13 +2056,14 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "US Only",
+    "notes": "501(c)(3) required. Priority to orgs in Atlanta, Altavista, Cincinnati, Columbus, Dallas, Jacksonville, Minneapolis/St. Paul, Portland, White Plains (others may be considered); employee board/volunteer ties get special consideration but not required. Reviewed year-round, no deadline; Foundation gifts $5k-$25k. Schools not addressed.",
     "tags": [
       "501c3-required",
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "toshiba",
@@ -1973,35 +2071,35 @@
     "link": "https://www.toshiba.com/taf/612.jsp",
     "status": "open",
     "openDate": "",
-    "closeDate": "",
+    "closeDate": "December 1, 2026",
     "employeeConnection": "no",
-    "geoRestricted": "yes",
+    "geoRestricted": "unsure",
     "require501c3": "not-required",
-    "notes": "For 6-12 teachers",
+    "notes": "Toshiba America Foundation for grades 6-12 teachers; usually funds K-12 schools. Deadlines: Mar 1, Jun 1, Sep 1, Dec 1 (under $5k); May 1, Nov 1 ($5k+). Next: Dec 1, 2026. Does NOT fund club/after-school programs, summer projects, computer hardware, salaries, textbooks; one grant per school at a time; no individuals. Geography and 501c3 not stated on page.",
     "tags": [
       "currently-open",
-      "geo-restricted",
       "no-501c3-required"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "toyota",
     "name": "Toyota",
     "link": "https://toyotaeffect.com/grant-seekers/",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "",
-    "employeeConnection": "unsure",
+    "closeDate": "May 1, 2027",
+    "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Alabama, Illinois, Indiana, Kentucky, Mississippi, Missouri, North Carolina, Tennessee, Texas, West Virginia",
+    "notes": "Windows: May 1 (spring/summer) and Oct 1 (fall/winter); Oct 1 passed, next May 1, 2027; some facilities have own deadlines/rolling; Plano TX entities invite-only. Eligible: 501(c)(3), state/municipal orgs, public schools (private schools unaddressed). No athletic teams, member-only groups, or outside US. Must be in Toyota geographic scope (PDF on site). Employee referral name is optional.",
     "tags": [
       "501c3-required",
-      "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "union-pacific-grant",
@@ -2019,7 +2117,8 @@
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "united-therapeutics",
@@ -2036,7 +2135,8 @@
       "currently-open",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "verizon",
@@ -2053,7 +2153,8 @@
       "corporate-employee",
       "currently-open"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "viasat",
@@ -2070,7 +2171,8 @@
       "currently-open",
       "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "w-k-kellog-foundation",
@@ -2088,25 +2190,27 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "walmart",
     "name": "Walmart",
     "link": "https://walmart.org/how-we-give/program-guidelines/spark-good-local-grants-guidelines",
     "status": "open",
-    "openDate": "August 1st, 2026",
+    "openDate": "August 1, 2026",
     "closeDate": "November 30, 2026",
     "employeeConnection": "no",
-    "geoRestricted": "no",
+    "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "Multiple application windows (FY27): Feb 1 - Apr 15, 2026; May 1 - Jul 15, 2026; Aug 1 - Nov 30, 2026.",
+    "notes": "Spark Good Local Grants FY27 windows: Feb 1-Apr 15, May 1-Jul 15, Aug 1-Nov 30 (page also says Dec 31 for cycle 3; confirm). Must serve the same service area as the Walmart facility requested from. Eligible: 501(c)(3), government, schools (K-12, NCES number), churches; Deed verification required. One grant per facility per org per FY.",
     "tags": [
       "currently-open",
-      "no-geo-restrictions",
+      "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": "2026-10-07"
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "weinberg-foundation",
@@ -2118,30 +2222,31 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Israel, Baltimore, Northeastern Pennsylvania, New York City, San Francisco, or Hawaiʻi",
+    "notes": "Israel, Baltimore, Northeastern Pennsylvania, NYC, San Francisco, Hawai'i (per Where We Give). 501(c)(3) or fiscal sponsor; direct services to low-income/vulnerable populations; audited financials. Education focus covers middle/high school youth programs; no colleges. No deadline stated on page; school eligibility not explicit. Unlikely fit for FRC.",
     "tags": [
       "501c3-required",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "unsure"
   },
   {
     "id": "wells-fargo",
     "name": "Wells Fargo",
-    "link": "https://www.wellsfargo.com/about/corporate-responsibility/community-giving/",
-    "status": "open",
+    "link": "https://www.wellsfargo.com/about/corporate-responsibility/community-giving/grant-process",
+    "status": "unsure",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "unsure",
-    "geoRestricted": "yes",
-    "require501c3": "unsure",
-    "notes": "Invitation Only (Usually means having an employee)",
+    "geoRestricted": "unsure",
+    "require501c3": "school-or-501c3",
+    "notes": "Invitation-only: invited nonprofits get a code for the online portal. Eligible: 501(c)(3), governmental agencies, tribal entities, public schools/school systems. Focus: financial opportunity, housing, small business. No deadlines or geography stated; invitation often comes via local Wells Fargo relationship.",
     "tags": [
       "corporate-employee",
-      "currently-open",
-      "geo-restricted"
+      "school-or-501c3"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "yes"
   },
   {
     "id": "west-coast-products",
@@ -2155,11 +2260,11 @@
     "require501c3": "not-required",
     "notes": "",
     "tags": [
-      "currently-open",
       "no-501c3-required"
     ],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   },
   {
     "id": "westinghouse",
@@ -2177,7 +2282,8 @@
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "wolfspeed-grant",
@@ -2194,25 +2300,26 @@
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": ""
+    "lastVerified": "",
+    "schoolProgram": "unsure"
   },
   {
     "id": "yawkey-foundation",
     "name": "Yawkey Foundation",
     "link": "https://yawkeyfoundation.org/giving-process/guidelines-eligibility/",
-    "status": "open",
+    "status": "unsure",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
-    "require501c3": "school-or-501c3",
-    "notes": "Eastern Massachusetts and Georgetown County South Carolina",
+    "require501c3": "required",
+    "notes": "Eastern Massachusetts (Suffolk, Norfolk, Bristol, Plymouth, Barnstable, Middlesex, Essex) and Georgetown County SC. 501(c)(3) (fiscal sponsors OK) required; new orgs generally need $500k+ budget; eligibility quiz first. Excludes public entities incl. school districts and public/charter schools, and early/elementary programs. 2026 windows: Education Mar 2-20; Youth & Amateur Athletics Jan 2-23; Human Services Jun 1-19; Arts/Health Sep 1-18; Transformational Capital rolling. Next Education window likely March 2027.",
     "tags": [
-      "currently-open",
-      "geo-restricted",
-      "school-or-501c3"
+      "501c3-required",
+      "geo-restricted"
     ],
-    "lastVerified": ""
+    "lastVerified": "2026-11-14",
+    "schoolProgram": "no"
   },
   {
     "id": "zendesk-foundation",
@@ -2227,6 +2334,7 @@
     "notes": "",
     "tags": [],
     "lastVerified": "",
-    "unverified": true
+    "unverified": true,
+    "schoolProgram": "unsure"
   }
 ]

@@ -953,7 +953,8 @@
     "tags": [
       "national"
     ],
-    "notes": "For U.S. or Canadian undergraduates in manufacturing or industrial engineering, manufacturing technology, or a related field who competed in robotics in high school. Minimum 2.0 GPA."
+    "notes": "For U.S. or Canadian citizen/resident undergraduates in manufacturing or industrial engineering, manufacturing technology, or a related field who competed in robotics in high school. Minimum 2.0 GPA.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "embry-riddle-robotics",
@@ -961,27 +962,29 @@
     "provider": "Embry-Riddle Aeronautical University",
     "link": "https://recf.org/scholarship/embry-riddle-aeronautical-university/",
     "amount": "Up to $5,000/year (up to $25,000)",
-    "deadline": "Check current cycle on the provider's site",
+    "deadline": "March 15 of senior year",
     "category": "any-robotics",
     "tags": [
       "renewable",
       "university-specific"
     ],
-    "notes": "For high school seniors active on any robotics team in the U.S. or its territories. Requires an essay on robotics involvement and admission to the university."
+    "notes": "For high school seniors active on any robotics team in the U.S. or its territories. Requires admission to the university, transcript, SAT/ACT scores, and an essay (500 words or less) on robotics involvement.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "illinois-tech-vex",
     "name": "Illinois Tech VEX Robotics Scholarship",
     "provider": "Illinois Institute of Technology",
     "link": "https://www.iit.edu/admissions-aid/tuition-and-aid/scholarships/first-year-student-scholarships/illinois-tech-vex-robotics-scholarship",
-    "amount": "$20,000/year for up to 4 years",
-    "deadline": "January 15 of senior year",
+    "amount": "$5,000/year for up to 4 years (5 for architecture)",
+    "deadline": "November 15 of senior year (Early Action/Early Decision Common App deadline)",
     "category": "any-robotics",
     "tags": [
       "renewable",
       "university-specific"
     ],
-    "notes": "For seniors with at least one full VEX season in junior or senior year. Any major. Requires a one-page essay."
+    "notes": "For seniors with at least one full VEX season in junior or senior year. Any major. List VEX team and years under Activities on the Common App. Stackable with other merit awards but not full-tuition awards.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "johnson-wales-robotics",
@@ -1024,7 +1027,8 @@
       "university-specific",
       "multiple-awards"
     ],
-    "notes": "For high school juniors on an RECF Robotics team. Requires a mentor or coach recommendation and an essay."
+    "notes": "For high school juniors on an RECF Robotics team. Requires a mentor or coach recommendation and an essay.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "syracuse-vex",
@@ -1065,7 +1069,8 @@
     "tags": [
       "multiple-awards"
     ],
-    "notes": "For women and girls in robotics and drones, from high school through PhD."
+    "notes": "For women and girls in robotics and drones, from high school through PhD.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "st-cloud-robotics",
@@ -1080,7 +1085,8 @@
       "state-restricted",
       "university-specific"
     ],
-    "notes": "For a full-time student in an SCTCC STEM program with at least two years of robotics who stays active in Minnesota's robotics community. Requires an essay and a recommendation letter."
+    "notes": "For a full-time student in an SCTCC STEM program with at least two years of robotics who stays active in Minnesota's robotics community. Requires an essay and a recommendation letter.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "florida-poly-robotics",
@@ -1102,13 +1108,14 @@
     "provider": "Worcester Polytechnic Institute",
     "link": "https://recf.org/scholarship/worcester-polytechnic-institute-wpi/",
     "amount": "$80,000 grand prize; two $40,000 runner-up awards",
-    "deadline": "Check current cycle on the provider's site",
+    "deadline": "March 3",
     "category": "any-robotics",
     "tags": [
       "renewable",
       "university-specific"
     ],
-    "notes": "For alumni of RECF robotics and drone programs."
+    "notes": "For alumni of RECF robotics and drone programs.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "bryan-college-robotics",
@@ -1116,12 +1123,13 @@
     "provider": "Bryan College",
     "link": "https://recf.org/scholarship/bryan-college/",
     "amount": "$1,000, first year",
-    "deadline": "Check current cycle on the provider's site",
+    "deadline": "July 31",
     "category": "any-robotics",
     "tags": [
       "university-specific"
     ],
-    "notes": "For students who join Bryan College's robotics team."
+    "notes": "For first-year students who join Bryan College's robotics team.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "lsu-pre-engineering-robotics",
@@ -1129,12 +1137,13 @@
     "provider": "Louisiana State University",
     "link": "https://recf.org/scholarship/louisiana-state-university/",
     "amount": "$1,000 ($500 per semester, one awarded)",
-    "deadline": "Check current cycle on the provider's site",
+    "deadline": "April 14",
     "category": "any-robotics",
     "tags": [
       "university-specific"
     ],
-    "notes": "For one outstanding freshman entering the College of Engineering."
+    "notes": "For one outstanding incoming freshman entering the College of Engineering. Spring payment requires a 3.0 GPA in the first semester.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "msu-recf-robotics",
@@ -1147,33 +1156,36 @@
     "tags": [
       "university-specific"
     ],
-    "notes": "For first-year students. List your RECF robotics participation on your MSU application."
+    "notes": "For first-year students. List your RECF robotics participation on your MSU application.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "umkc-robotics",
     "name": "UMKC Engineering Robotics Scholarships",
     "provider": "University of Missouri-Kansas City School of Science & Engineering",
     "link": "https://recf.org/scholarship/university-of-missouri-kansas-city-school-of-science-engineering/",
-    "amount": "Amount not listed",
-    "deadline": "Check current cycle on the provider's site",
+    "amount": "More than $100,000 available in total",
+    "deadline": "March 1",
     "category": "any-robotics",
     "tags": [
       "university-specific"
     ],
-    "notes": "Offered to robotics participants."
+    "notes": "Offered to robotics participants.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "vaughn-vex",
     "name": "Vaughn College VEX Scholarship",
     "provider": "Vaughn College of Aeronautics and Technology",
     "link": "https://recf.org/scholarship/vaughn-college-of-aeronautics-and-technology/",
-    "amount": "Amount not listed (three non-renewable awards)",
+    "amount": "$5,000 (three non-renewable awards)",
     "deadline": "Check current cycle on the provider's site",
     "category": "any-robotics",
     "tags": [
       "university-specific"
     ],
-    "notes": "For full-time students who competed in VEX."
+    "notes": "For full-time students who competed in VEX.",
+    "lastVerified": "2026-11-14"
   },
   {
     "id": "americanmuscle-robotics",
@@ -1184,6 +1196,7 @@
     "deadline": "One award each spring and fall semester",
     "category": "any-robotics",
     "tags": [],
-    "notes": "For students pursuing robotics, mechanical engineering, or other automotive-themed majors."
+    "notes": "For students pursuing robotics, mechanical engineering, or other automotive-themed majors.",
+    "lastVerified": "2026-11-14"
   }
 ]
