@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Uses the Vercel address. If the site moves to its own domain, update the URLs here and in robots.txt. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://frc-hub-nu.vercel.app/</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/grants.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/scholarships.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/fundraising.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/resources.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/season.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/forum.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/roadmap.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/privacy.html</loc></url>
+  <url><loc>https://frc-hub-nu.vercel.app/terms.html</loc></url>
+</urlset>

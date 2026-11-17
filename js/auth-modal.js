@@ -132,7 +132,7 @@
       '<h2 class="am-title">What team are you on?</h2><p class="am-sub" id="am-team-sub"></p>' +
       '<div class="modal-tabs" id="am-team-tabs"><button type="button" class="modal-tab" data-tab="join">Join a team</button><button type="button" class="modal-tab" data-tab="create" id="am-tab-create">Create a team</button></div>' +
       '<div class="error-msg" id="am-team-error"></div>' +
-      '<form id="am-join-form"><div class="field"><label for="am-join-code">Join code</label><input type="text" id="am-join-code" maxlength="6" placeholder="e.g. 7K2PQ1" style="text-transform:uppercase;" required></div><button type="submit" class="submit-btn">Join team</button></form>' +
+      '<form id="am-join-form"><div class="field"><label for="am-join-code">Join code</label><input type="text" id="am-join-code" maxlength="8" placeholder="e.g. 7K2PQ1" style="text-transform:uppercase;" required></div><button type="submit" class="submit-btn">Join team</button></form>' +
       '<form id="am-create-form" hidden>' +
       '<div class="field"><label for="am-team-number">Team number</label><input type="text" id="am-team-number" placeholder="e.g. 4152" required></div>' +
       '<div class="field"><label for="am-team-name">Team name (optional)</label><input type="text" id="am-team-name" placeholder="e.g. RoboCats"></div>' +

@@ -419,7 +419,8 @@ create policy "Members can view their season history"
   on public.season_history for select
   using (team_id = public.my_team_id());
 
-grant select on public.teams to authenticated;
+-- teams is granted column-by-column at the very end of this file (after
+-- every later `add column`), so students can't read join_code_mentor.
 grant select on public.team_members to authenticated;
 grant select on public.season_history to authenticated;
 grant select, insert, update on public.team_data to authenticated;
@@ -434,7 +435,9 @@ grant select, insert, update on public.team_data to authenticated;
 create or replace function public.generate_join_code()
 returns text
 language sql stable as $$
-  select upper(substr(md5(gen_random_uuid()::text), 1, 6));
+  -- 8 hex characters (~4.3 billion values). Codes minted before this
+  -- change are 6 characters and keep working until regenerated.
+  select upper(substr(md5(gen_random_uuid()::text), 1, 8));
 $$;
 
 drop function if exists public.create_team(text, text, text);
@@ -534,6 +537,12 @@ begin
     update public.team_invites set used_by = auth.uid(), used_at = now() where id = v_invite.id;
   else
     insert into public.team_members (user_id, team_id, role, is_admin) values (auth.uid(), v_team.id, v_role, v_is_admin);
+  end if;
+
+  -- The returned row goes straight back to the caller, so a student
+  -- must not get the mentor join code in it.
+  if v_role is distinct from 'mentor' then
+    v_team.join_code_mentor := null;
   end if;
 
   return v_team;
@@ -726,7 +735,8 @@ begin
   if v_team_id is null or v_target_team_id is distinct from v_team_id then
     raise exception 'That person is not on your team.';
   end if;
-  if not (public.is_mentor_of(v_team_id) or (public.is_team_captain_of(v_team_id) and v_target_role = 'student')) then
+  if not (public.is_mentor_of(v_team_id)
+      or (public.is_team_captain_of(v_team_id) and v_target_role = 'student' and p_user_id <> auth.uid())) then
     raise exception 'You do not have permission to change that.';
   end if;
 
@@ -787,13 +797,15 @@ begin
 end;
 $$;
 
--- Lets a member flip their own role between mentor and student. RLS
--- blocks editing team_members.role directly (see the comment above),
--- so this is the one sanctioned way to self-service it. Stepping down
--- from mentor reuses leave_team()'s "don't strand the team" guards,
--- since it frees the same mentor seat; stepping up to mentor reuses
--- join_team()'s admin-bootstrap rule, so a team is never left without
--- an admin just because everyone switched roles around.
+-- Lets a mentor step down to student. Stepping down reuses leave_team()'s
+-- "don't strand the team" guards, since it frees the same mentor seat.
+-- A student can NOT make themselves a mentor here -- that would let any
+-- student self-grant budget approval, sponsor editing and member removal.
+-- Becoming a mentor goes through an existing mentor (promote_to_mentor())
+-- or the mentor join code/invite. The one exception is a team that has no
+-- mentor at all (e.g. its only mentor's account was deleted): then the
+-- first student to step up becomes mentor and admin, so the team is never
+-- left permanently unownable.
 create or replace function public.switch_my_role(p_new_role text)
 returns void
 language plpgsql security definer set search_path = public as $$
@@ -831,10 +843,11 @@ begin
     end if;
     update public.team_members set role = 'student', is_admin = false where user_id = auth.uid();
   else
+    if exists (select 1 from public.team_members where team_id = v_team_id and role = 'mentor') then
+      raise exception 'Ask one of your team''s mentors to promote you to mentor.';
+    end if;
     update public.team_members
-      set role = 'mentor',
-          captain_roles = '{}',
-          is_admin = not exists (select 1 from public.team_members where team_id = v_team_id and role = 'mentor' and is_admin)
+      set role = 'mentor', captain_roles = '{}', is_admin = true
       where user_id = auth.uid();
   end if;
 end;
@@ -1249,12 +1262,8 @@ create table if not exists public.reminder_sent (
 );
 alter table public.reminder_sent enable row level security;
 
--- ---- Developer tools (testing only) ----
+-- ---- Profile pictures ----
 --
--- dev_allowlist holds the emails allowed to call dev_reset_my_account().
--- RLS is on with no policies and no grants, so it can only be edited from
--- the SQL editor, e.g.:
---   insert into public.dev_allowlist (email) values ('you@example.com');
 -- Uploaded profile pictures. The image itself lives in the public
 -- `avatars` Storage bucket under `<user id>/...`; profiles.avatar_url
 -- holds its public URL so the header and forum can show it without a
@@ -1296,28 +1305,131 @@ create policy "Users can list their own avatars"
   on storage.objects for select to authenticated
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
 
--- Remove this block (and the Developer panel in account.html) before launch.
-create table if not exists public.dev_allowlist (email text primary key);
-alter table public.dev_allowlist enable row level security;
+-- The pre-launch developer reset tool (dev_allowlist +
+-- dev_reset_my_account()) was removed. These drops clean it out of a
+-- database that was provisioned while it still existed.
+drop function if exists public.dev_reset_my_account();
+drop table if exists public.dev_allowlist;
 
--- Wipes the caller's own team membership (deleting the team if they were
--- its last member) and personal season data, so onboarding can be re-run.
-create or replace function public.dev_reset_my_account()
-returns void
-language plpgsql security definer set search_path = public as $$
-declare
-  v_team_id uuid;
-  v_email text := lower(coalesce(auth.jwt() ->> 'email', ''));
-begin
-  if auth.uid() is null or not exists (select 1 from public.dev_allowlist where lower(email) = v_email) then
-    raise exception 'Not allowed.';
-  end if;
-  select team_id into v_team_id from public.team_members where user_id = auth.uid();
-  delete from public.team_members where user_id = auth.uid();
-  if v_team_id is not null and not exists (select 1 from public.team_members where team_id = v_team_id) then
-    delete from public.teams where id = v_team_id;
-  end if;
-  delete from public.season_data where user_id = auth.uid();
-end;
+-- ---- Suggested grant criteria ----
+--
+-- Any signed-in user can suggest a criterion for a grant (grants live in
+-- data/grants.json, so grant_id is just that file's id string). Nothing is
+-- shown publicly until a site admin approves it. Admins review in the
+-- "Criteria suggestions" queue at the top of grants.html.
+create table if not exists public.grant_criteria_suggestions (
+  id uuid primary key default gen_random_uuid(),
+  grant_id text not null,
+  criteria text not null check (char_length(criteria) between 3 and 500),
+  source_url text,
+  suggested_by uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+alter table public.grant_criteria_suggestions enable row level security;
+
+drop policy if exists "Anyone can read approved criteria" on public.grant_criteria_suggestions;
+create policy "Anyone can read approved criteria"
+  on public.grant_criteria_suggestions for select
+  using (status = 'approved' or suggested_by = auth.uid() or public.is_site_admin());
+
+drop policy if exists "Users can suggest criteria" on public.grant_criteria_suggestions;
+create policy "Users can suggest criteria"
+  on public.grant_criteria_suggestions for insert to authenticated
+  with check (suggested_by = auth.uid() and status = 'pending');
+
+drop policy if exists "Site admins can review criteria" on public.grant_criteria_suggestions;
+create policy "Site admins can review criteria"
+  on public.grant_criteria_suggestions for update
+  using (public.is_site_admin());
+
+drop policy if exists "Site admins can delete criteria" on public.grant_criteria_suggestions;
+create policy "Site admins can delete criteria"
+  on public.grant_criteria_suggestions for delete
+  using (public.is_site_admin());
+
+grant select, insert, update, delete on public.grant_criteria_suggestions to authenticated;
+grant select on public.grant_criteria_suggestions to anon;
+create index if not exists grant_criteria_status_idx on public.grant_criteria_suggestions (status, created_at desc);
+
+-- ---- Forum length limits ----
+--
+-- Matches the maxlength attributes in forum.html, so the API can't be
+-- used to store a post far larger than the form allows.
+alter table public.forum_posts drop constraint if exists forum_posts_length_chk;
+alter table public.forum_posts add constraint forum_posts_length_chk
+  check (char_length(title) between 1 and 120 and char_length(body) between 1 and 10000) not valid;
+alter table public.forum_replies drop constraint if exists forum_replies_length_chk;
+alter table public.forum_replies add constraint forum_replies_length_chk
+  check (char_length(body) between 1 and 10000) not valid;
+
+-- ---- teams column access ----
+--
+-- Every team member can read their team row, but not join_code_mentor:
+-- a student who could read it could leave and rejoin as a mentor. Kept at
+-- the end of the file so it runs after every `add column` on teams above.
+-- Mentors fetch the code through get_mentor_join_code() instead.
+revoke select on public.teams from authenticated;
+grant select (id, team_number, team_name, district, join_code_student, current_season_year,
+              created_at, updated_at, fundraising_goal, calendar_feed_token)
+  on public.teams to authenticated;
+
+create or replace function public.get_mentor_join_code()
+returns text
+language sql stable security definer set search_path = public as $$
+  select t.join_code_mentor from public.teams t
+  where t.id = public.my_team_id() and public.is_mentor_of(t.id);
 $$;
-grant execute on function public.dev_reset_my_account() to authenticated;
+grant execute on function public.get_mentor_join_code() to authenticated;
+
+-- ---- Forum bans ----
+--
+-- A site admin can ban an account from posting (Moderation queue ->
+-- "Ban author" in forum.html). A banned user can still read the forum and
+-- use the rest of the site; they just can't create threads or replies.
+-- To lift a ban, delete the row here in the table editor.
+create table if not exists public.forum_bans (
+  user_id uuid primary key references public.profiles (id) on delete cascade,
+  reason text,
+  banned_by uuid default auth.uid() references auth.users (id) on delete set null,
+  banned_at timestamptz not null default now()
+);
+alter table public.forum_bans enable row level security;
+
+drop policy if exists "Site admins can view forum bans" on public.forum_bans;
+create policy "Site admins can view forum bans"
+  on public.forum_bans for select
+  using (public.is_site_admin());
+
+drop policy if exists "Site admins can ban forum users" on public.forum_bans;
+create policy "Site admins can ban forum users"
+  on public.forum_bans for insert
+  with check (public.is_site_admin());
+
+drop policy if exists "Site admins can lift forum bans" on public.forum_bans;
+create policy "Site admins can lift forum bans"
+  on public.forum_bans for delete
+  using (public.is_site_admin());
+
+grant select, insert, delete on public.forum_bans to authenticated;
+
+-- security definer so the posting policies below can check the ban list
+-- even though ordinary users can't read forum_bans themselves.
+create or replace function public.is_forum_banned()
+returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.forum_bans where user_id = auth.uid());
+$$;
+grant execute on function public.is_forum_banned() to authenticated;
+
+-- Replaces the original insert policies near the top of this file.
+drop policy if exists "Users can create their own forum posts" on public.forum_posts;
+create policy "Users can create their own forum posts"
+  on public.forum_posts for insert
+  with check (auth.uid() = author_id and not public.is_forum_banned());
+
+drop policy if exists "Users can create their own forum replies" on public.forum_replies;
+create policy "Users can create their own forum replies"
+  on public.forum_replies for insert
+  with check (auth.uid() = author_id and not public.is_forum_banned());

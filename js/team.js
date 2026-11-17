@@ -31,6 +31,10 @@
     business_captain: ["business"],
   };
 
+  // Listed explicitly because authenticated users only have column-level
+  // select on teams (see "teams column access" in supabase/schema.sql).
+  var TEAM_COLUMNS = "id, team_number, team_name, district, join_code_student, current_season_year, created_at, updated_at, fundraising_goal, calendar_feed_token";
+
   function notify() {
     var navLink = document.getElementById("nav-team-link");
     if (navLink) navLink.hidden = !state.user;
@@ -47,17 +51,27 @@
     }
     return sb
       .from("team_members")
-      .select("role, subteam, captain_roles, is_admin, teams(*)")
+      .select("role, subteam, captain_roles, is_admin, teams(" + TEAM_COLUMNS + ")")
       .eq("user_id", state.user.id)
       .maybeSingle()
       .then(function (res) {
         if (res.data) {
           state.membership = { role: res.data.role, subteam: res.data.subteam, captain_roles: res.data.captain_roles || [], is_admin: !!res.data.is_admin };
           state.team = res.data.teams;
+          // join_code_mentor isn't readable from the teams table (students
+          // must never see it) -- mentors fetch it through an RPC instead.
+          if (state.team && state.membership.role === "mentor") {
+            var team = state.team;
+            return sb.rpc("get_mentor_join_code").then(function (codeRes) {
+              if (!codeRes.error && codeRes.data) team.join_code_mentor = codeRes.data;
+            }, function () { /* leave the code unset */ });
+          }
         } else {
           state.membership = null;
           state.team = null;
         }
+      })
+      .then(function () {
         readyResolve();
         notify();
       });

@@ -165,18 +165,18 @@
     "id": "at-t",
     "name": "AT&T",
     "link": "https://giving.att.com/Account/login.aspx?ReturnUrl=%2f",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "yes",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Invitation Only (Usually means having an employee helping out)",
+    "notes": "By invitation only: AT&T's giving portal says funding requests are accepted by invitation only, so there is no open application. Teams usually get invited through an AT&T employee.",
     "tags": [
       "corporate-employee",
       "geo-restricted"
     ],
-    "lastVerified": "",
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
@@ -404,18 +404,18 @@
     "id": "coca-cola",
     "name": "Coca-Cola",
     "link": "https://coca-cola.smartsimple.com/s_Login.jsp",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Invitation Only (Usually means having an employee)",
+    "notes": "The Coca-Cola Foundation's request portal says it no longer accepts unsolicited community funding requests. Local bottlers may still handle sponsorship or product requests separately.",
     "tags": [
       "corporate-employee",
       "geo-restricted"
     ],
-    "lastVerified": "",
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
@@ -496,7 +496,7 @@
   {
     "id": "dodstem",
     "name": "DoDStem",
-    "link": "https://dodstem.us/first/",
+    "link": "https://dowstem.us/first/",
     "status": "closed",
     "openDate": "",
     "closeDate": "June 13, 2026",
@@ -953,11 +953,11 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "Only in Indiana",
+    "notes": "Only in Indiana. The FIRST Indiana Robotics Submittable page listed no open calls as of Nov 16, 2026.",
     "tags": [
       "geo-restricted"
     ],
-    "lastVerified": "",
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
@@ -1109,19 +1109,18 @@
     "id": "last-anvil",
     "name": "Last Anvil",
     "link": "https://forms.gle/tUcnU7ZJR987Qg5T6",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "August 14, 2026",
+    "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "",
+    "notes": "Team Anvil Application: the 2026-27 cohort has already been selected. The form says the application will reopen next year.",
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": "",
-    "unverified": true,
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
@@ -1147,19 +1146,18 @@
     "id": "m-j-murdock",
     "name": "M.J. Murdock",
     "link": "https://mjmurdockcharitabletrust.submittable.com/submit",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Alaska, Idaho, Montana, Oregon, and Washington",
+    "notes": "Alaska, Idaho, Montana, Oregon, and Washington. The Trust takes Letters of Inquiry from nonprofits only during set periods; its Submittable page listed no open calls as of Nov 16, 2026.",
     "tags": [
       "501c3-required",
-      "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": "",
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
@@ -1234,7 +1232,7 @@
   {
     "id": "michael-and-susan-dell-foundation",
     "name": "Michael and Susan Dell Foundation",
-    "link": "http://www.dell.org/apply/",
+    "link": "https://www.dell.org/apply/",
     "status": "open",
     "openDate": "",
     "closeDate": "",
@@ -1746,15 +1744,16 @@
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
-    "geoRestricted": "unsure",
+    "geoRestricted": "yes",
     "require501c3": "unsure",
-    "notes": "",
+    "notes": "No deadlines; applications are taken year-round. $500 to $2,500 for rural technology education projects in U.S. public schools and libraries; robotics clubs and FIRST teams are named as fundable. Private and charter schools are not funded.",
     "tags": [
       "currently-open",
-      "demographics"
+      "demographics",
+      "geo-restricted"
     ],
-    "lastVerified": "",
-    "schoolProgram": "unsure"
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "yes"
   },
   {
     "id": "saint-gobain-corporation-foundation",
@@ -1779,16 +1778,19 @@
     "id": "samsung-solve-for-tomorrow",
     "name": "Samsung Solve For Tomorrow",
     "link": "https://www.samsung.com/us/solvefortomorrow/",
-    "status": "unsure",
-    "openDate": "",
-    "closeDate": "",
+    "status": "open",
+    "openDate": "September 30, 2026",
+    "closeDate": "November 23, 2026",
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
-    "require501c3": "unsure",
-    "notes": "",
-    "tags": [],
-    "lastVerified": "",
-    "schoolProgram": "unsure"
+    "require501c3": "not-required",
+    "notes": "2026-27 competition: applications Sep 30 to Nov 23, 2026. A STEM challenge, not a grant application: public school students in grades 6-12 enter with a teacher (21+) employed by the school, and prizes go to the school. Schools must be at least 50% publicly funded.",
+    "tags": [
+      "currently-open",
+      "no-501c3-required"
+    ],
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "yes"
   },
   {
     "id": "samsung-south-carolina",
@@ -1921,21 +1923,20 @@
     "id": "state-farm",
     "name": "State Farm",
     "link": "https://www.statefarm.com/about-us/corporate-responsibility/community-grants",
-    "status": "open",
+    "status": "unsure",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "unsure",
     "geoRestricted": "yes",
     "require501c3": "school-or-501c3",
-    "notes": "Invitation Only (Usually means having an employee)",
+    "notes": "Grants are made by invitation only each year. Unsolicited requests can be sent through a questionnaire, but State Farm says it replies only if interested, and no deadline is stated. U.S. only; eligible groups include schools and 501(c)(3) nonprofits, with K-12 STEM funding mostly near major State Farm offices.",
     "tags": [
       "corporate-employee",
-      "currently-open",
       "geo-restricted",
       "school-or-501c3"
     ],
-    "lastVerified": "",
-    "schoolProgram": "unsure"
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "yes"
   },
   {
     "id": "stemify-grants",
@@ -1958,39 +1959,37 @@
     "id": "swyft",
     "name": "Swyft",
     "link": "https://docs.google.com/forms/d/e/1FAIpQLSedhF8yWVuGr7cs_WAJX5iRHuY3cKmCZF7WiCj9PEFC-vMA-g/viewform",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "",
-    "closeDate": "January 17, 2027",
+    "closeDate": "January 17, 2026",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "FTC Applications close September 13th",
+    "notes": "Team SWYFT Ambassador Program (store credit through monthly challenges, not cash). The form still shows the 2025-26 season, with FRC applications due Jan 17, 2026. No 2026-27 dates were posted as of Nov 16, 2026.",
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": "",
-    "unverified": true,
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
     "id": "target",
     "name": "Target",
     "link": "https://corporate.target.com/about/purpose-history/communities/grants-corporate-giving/community-engagement-funds",
-    "status": "unsure",
+    "status": "closed",
     "openDate": "August 3, 2026",
-    "closeDate": "September 3, 2026",
+    "closeDate": "September 4, 2026",
     "employeeConnection": "no",
     "geoRestricted": "no",
     "require501c3": "school-or-501c3",
-    "notes": "",
+    "notes": "Community Engagement Funds: $1,000 to $15,000 for local 501(c)(3) nonprofits or schools (schools need an NCES number), decided by store and distribution-center leaders. Cycle 2 (Aug 3 to Sep 4, 2026) is closed; Target says to return in April 2027 for Cycle 1.",
     "tags": [
       "no-geo-restrictions",
       "school-or-501c3"
     ],
-    "lastVerified": "",
-    "unverified": true,
-    "schoolProgram": "unsure"
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "yes"
   },
   {
     "id": "td-bank",
@@ -2105,20 +2104,19 @@
     "id": "union-pacific-grant",
     "name": "Union Pacific Grant",
     "link": "https://www.up.com/aboutup/community/foundation-backup/grant-program/criteria-eligibility/index.htm",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
     "employeeConnection": "no",
     "geoRestricted": "yes",
-    "require501c3": "school-or-501c3",
-    "notes": "Must be located in a community that is served by Union Pacific",
+    "require501c3": "required",
+    "notes": "Community Ties Giving Program for 501(c)(3) public charities in communities served by Union Pacific; typical awards $5,000 to $30,000. Elementary and secondary schools can't be funded directly, though a program run in a school by a separate 501(c)(3) may be considered. The site still shows only the 2025 cycle (Apr 1 to May 14, 2025); newer dates weren't posted as of Nov 16, 2026.",
     "tags": [
-      "currently-open",
-      "geo-restricted",
-      "school-or-501c3"
+      "501c3-required",
+      "geo-restricted"
     ],
-    "lastVerified": "",
-    "schoolProgram": "unsure"
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "no"
   },
   {
     "id": "united-therapeutics",
@@ -2142,19 +2140,19 @@
     "id": "verizon",
     "name": "Verizon",
     "link": "https://www.verizon.com/about/responsibility/giving-and-grants",
-    "status": "open",
+    "status": "closed",
     "openDate": "",
     "closeDate": "",
-    "employeeConnection": "yes",
+    "employeeConnection": "no",
     "geoRestricted": "unsure",
-    "require501c3": "unsure",
-    "notes": "Retired employees can apply",
+    "require501c3": "required",
+    "notes": "By invitation only: Verizon says new applications are by invitation and unsolicited requests are not answered. Invited applicants must be 501(c)(3) public charities or NCES-registered K-12 schools. Verizon excludes organizations with Verizon employee or family ties, so an employee connection does not help.",
     "tags": [
-      "corporate-employee",
-      "currently-open"
+      "501c3-required",
+      "corporate-employee"
     ],
-    "lastVerified": "",
-    "schoolProgram": "unsure"
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "yes"
   },
   {
     "id": "viasat",
@@ -2166,13 +2164,13 @@
     "employeeConnection": "unsure",
     "geoRestricted": "unsure",
     "require501c3": "school-or-501c3",
-    "notes": "",
+    "notes": "Corporate giving request form with no stated deadline. Viasat says it accepts donation requests from 501(c) charities and public or private schools.",
     "tags": [
       "currently-open",
       "school-or-501c3"
     ],
-    "lastVerified": "",
-    "schoolProgram": "unsure"
+    "lastVerified": "2026-11-16",
+    "schoolProgram": "yes"
   },
   {
     "id": "w-k-kellog-foundation",
@@ -2184,13 +2182,13 @@
     "employeeConnection": "no",
     "geoRestricted": "yes",
     "require501c3": "required",
-    "notes": "Michigan, Mississippi, New Mexico and New Orleans",
+    "notes": "Application process is always open (letters of inquiry through the foundation's online system). Funds work on children, families, food and career pathways across the U.S., with priority places in Michigan, Mississippi, New Mexico and New Orleans. Does not fund individuals or capital projects, so a robotics team is an unlikely fit.",
     "tags": [
       "501c3-required",
       "currently-open",
       "geo-restricted"
     ],
-    "lastVerified": "",
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {
@@ -2295,12 +2293,12 @@
     "employeeConnection": "unsure",
     "geoRestricted": "no",
     "require501c3": "not-required",
-    "notes": "No 2026-27 cycle found listed as of this audit -- check usfirst.submittable.com directly.",
+    "notes": "FIRST's Submittable page listed no open calls as of Nov 16, 2026, and does not mention a current Wolfspeed cycle. Check usfirst.submittable.com directly.",
     "tags": [
       "no-501c3-required",
       "no-geo-restrictions"
     ],
-    "lastVerified": "",
+    "lastVerified": "2026-11-16",
     "schoolProgram": "unsure"
   },
   {

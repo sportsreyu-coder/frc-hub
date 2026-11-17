@@ -8,7 +8,7 @@ project:
 
 ```bash
 supabase functions deploy calendar-feed --no-verify-jwt
-supabase functions deploy send-reminders
+supabase functions deploy send-reminders --no-verify-jwt
 ```
 
 `calendar-feed` needs `--no-verify-jwt` because calendar apps send a plain
@@ -24,9 +24,15 @@ Functions -> Secrets, or `supabase secrets set`):
   `reminders@frchub.app` will not send until you do. Swap the `sendEmail()`
   function in `send-reminders/index.ts` for a different provider if you'd
   rather not use Resend.
-- `REMINDER_CRON_SECRET` -- any random string. Whatever calls this
-  function must send it back as `Authorization: Bearer <value>`, so a
-  stranger who finds the function's URL can't trigger a mass email run.
+- `REMINDER_CRON_SECRET` -- any random string, **required**: the function
+  refuses to run (503) until it is set. Whatever calls this function must
+  send it back as `Authorization: Bearer <value>`, so a stranger who finds
+  the function's URL can't trigger a mass email run. Because that header
+  carries this secret rather than a Supabase JWT, deploy `send-reminders`
+  with `--no-verify-jwt` too.
+- `APP_URL` (optional) -- the site's origin with no trailing slash, e.g.
+  `https://example.org`. Used for the links in invite and reminder emails;
+  defaults to the Vercel URL. Set it if the site moves to its own domain.
 
 Then schedule `send-reminders` to run once a day -- either:
 

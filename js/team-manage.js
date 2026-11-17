@@ -130,6 +130,14 @@
     }).catch(function (err) { showMsg(errEl, err.message); });
   });
 
+  // Escapes text placed into an innerHTML string -- display names and team
+  // info are typed by other people on the team.
+  function escHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
   // ---- Header ----
 
   function renderHeader() {
@@ -141,10 +149,10 @@
       .join("");
     header.innerHTML =
       '<div class="team-header-row"><span class="team-header-name">' +
-      (team.team_name ? team.team_name + " — Team " + team.team_number : "Team " + team.team_number) +
+      escHtml(team.team_name ? team.team_name + " — Team " + team.team_number : "Team " + team.team_number) +
       '</span><span class="role-badge' + (Team.isMentor() ? " role-mentor" : "") + '">' + roleLabel +
       (Team.isAdmin() ? " · Admin" : "") + "</span>" + badges + "</div>" +
-      (team.district ? '<div class="team-header-sub">' + team.district + "</div>" : "");
+      (team.district ? '<div class="team-header-sub">' + escHtml(team.district) + "</div>" : "");
   }
 
   // ---- People tab: join codes + roster (mentor/captain editing) ----
@@ -181,7 +189,7 @@
     var grid = document.createElement("div");
     grid.className = "team-codes-grid";
     grid.appendChild(codeBox("Student join code", team.join_code_student, "student"));
-    grid.appendChild(codeBox("Mentor (co-mentor) join code", team.join_code_mentor, "mentor"));
+    if (team.join_code_mentor) grid.appendChild(codeBox("Mentor (co-mentor) join code", team.join_code_mentor, "mentor"));
     host.appendChild(grid);
   }
 
@@ -330,7 +338,7 @@
           top.className = "roster-row-top";
           var left = document.createElement("div");
           left.innerHTML =
-            '<span class="roster-row-name">' + name + (isSelf ? " (you)" : "") + "</span> " +
+            '<span class="roster-row-name">' + escHtml(name) + (isSelf ? " (you)" : "") + "</span> " +
             '<span class="role-badge' + (r.role === "mentor" ? " role-mentor" : "") + '">' + (r.role === "mentor" ? "Mentor" : "Student") + "</span>" +
             (r.role === "mentor" && r.is_admin ? ' <span class="captain-badge">Admin</span>' : "") +
             (r.subteam && r.subteam !== "cross-team" ? ' <span class="role-badge">' + (SUBTEAM_LABELS[r.subteam] || r.subteam) + "</span>" : "") +

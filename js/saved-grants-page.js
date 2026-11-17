@@ -33,6 +33,9 @@
     var bits = [];
     if (openD) bits.push("Opens " + GrantStatus.formatDeadline(openD));
     if (closeD) bits.push("Closes " + GrantStatus.formatDeadline(closeD));
+    // Flagged in data/grants.json as having no official source for its
+    // dates -- say so here too, so the line agrees with the badge.
+    if (g.unverified) return "Reported, not confirmed: " + bits.join(" · ");
     return bits.join(" · ");
   }
 

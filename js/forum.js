@@ -157,6 +157,15 @@
     });
   }
 
+  // A banned account's insert is refused by row-level security (see
+  // is_forum_banned() in schema.sql); say that plainly instead of showing
+  // the raw database message.
+  function postErrorText(error) {
+    var msg = (error && error.message) || "";
+    if (/row-level security/i.test(msg)) return "your account isn't allowed to post in the forum. Use the Contact link in the footer if you think that's a mistake.";
+    return msg;
+  }
+
   // ---- Moderation queue (E4): visible only to a signed-in site admin
   // (see is_site_admin() in schema.sql -- a hand-managed email allowlist,
   // not a self-serve role). Lists unresolved reports with enough context
@@ -202,7 +211,21 @@
               sb.from("forum_reports").update({ resolved: true }).eq("id", r.id).then(function () { renderModQueue(); });
             });
           });
-          row.appendChild(el("div", { class: "post-actions" }, [resolveBtn, deleteBtn]));
+          // Stops the author posting again (forum_bans in schema.sql). Their
+          // existing content stays unless it's deleted separately.
+          var banBtn = el("button", { type: "button", class: "ms-expand-toggle" }, ["Ban author"]);
+          banBtn.addEventListener("click", function () {
+            sb.from(targetTable).select("author_id").eq("id", targetId).maybeSingle().then(function (found) {
+              if (found.error || !found.data) { alert("Couldn't find that " + (r.post_id ? "post" : "reply") + " — it may already be deleted."); return; }
+              if (!confirm("Ban this author from posting in the forum? They can still read it. You can lift the ban later by deleting their row in the forum_bans table.")) return;
+              sb.from("forum_bans").upsert({ user_id: found.data.author_id, reason: r.reason }, { onConflict: "user_id", ignoreDuplicates: true }).then(function (banRes) {
+                if (banRes.error) { alert("Couldn't ban: " + banRes.error.message); return; }
+                banBtn.textContent = "Author banned";
+                banBtn.disabled = true;
+              });
+            });
+          });
+          row.appendChild(el("div", { class: "post-actions" }, [resolveBtn, deleteBtn, banBtn]));
           list.appendChild(row);
         });
       });
@@ -289,7 +312,7 @@
       .select()
       .single()
       .then(function (res) {
-        if (res.error) { alert("Couldn't post: " + res.error.message); return; }
+        if (res.error) { alert("Couldn't post: " + postErrorText(res.error)); return; }
         location.href = "forum.html?board=" + encodeURIComponent(boardSlug) + "&thread=" + res.data.id;
       });
   });
@@ -387,7 +410,7 @@
     var body = bodyInput.value.trim();
     if (!body) return;
     sb.from("forum_replies").insert({ post_id: threadId, author_id: currentUser.id, body: body }).then(function (res) {
-      if (res.error) { alert("Couldn't post reply: " + res.error.message); return; }
+      if (res.error) { alert("Couldn't post reply: " + postErrorText(res.error)); return; }
       bodyInput.value = "";
       loadReplies(threadId);
     });

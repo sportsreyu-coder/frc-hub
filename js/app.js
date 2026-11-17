@@ -262,6 +262,9 @@
     var bits = [];
     if (openD) bits.push("Opens " + GrantStatus.formatDeadline(openD));
     if (closeD) bits.push("Closes " + GrantStatus.formatDeadline(closeD));
+    // Flagged in data/grants.json as having no official source for its
+    // dates -- say so here too, so the line agrees with the badge.
+    if (g.unverified) return "Reported, not confirmed: " + bits.join(" · ");
     return bits.join(" · ");
   }
 
@@ -305,6 +308,22 @@
     });
 
     return el("div", { class: "gc-pipeline" }, [stageSelect, ownerBtn]);
+  }
+
+  // Admin-approved community criteria for this grant (see js/criteria.js).
+  function approvedCriteria(g) {
+    var list = window.GrantCriteria ? window.GrantCriteria.approvedFor(g.id) : [];
+    if (!list.length) return null;
+    return el("div", { class: "gc-criteria" }, [
+      el("div", { class: "gc-criteria-label" }, ["Community-suggested criteria"]),
+      el("ul", {}, list.map(function (c) { return el("li", {}, [c.criteria]); })),
+    ]);
+  }
+
+  function suggestBtn(g) {
+    var b = el("button", { type: "button", class: "suggest-criteria-btn" }, ["Suggest criteria"]);
+    b.addEventListener("click", function () { window.GrantCriteria && window.GrantCriteria.openSuggest(g); });
+    return el("div", { class: "gc-suggest-row" }, [b]);
   }
 
   function grantCard(g) {
@@ -357,7 +376,9 @@
         el("a", { class: "gc-link", href: g.link || "#", target: "_blank", rel: "noopener" }, [g.link ? "View & apply →" : "No link yet"]),
       ]),
       verifiedText ? el("div", { class: "gc-verified" }, [verifiedText]) : null,
+      approvedCriteria(g),
       pipelineControl(g),
+      suggestBtn(g),
     ]);
   }
 
@@ -733,6 +754,12 @@
     });
   }
 
+  function refreshCriteriaQueue() {
+    var byId = {};
+    grants.forEach(function (g) { byId[g.id] = g; });
+    window.GrantCriteria.renderQueue(document.getElementById("criteria-queue"), byId);
+  }
+
   fetchJSON("data/grants.json")
     .then(function (g) {
       grants = g;
@@ -742,6 +769,11 @@
       applyUrlToState();
       render();
       if (window.SavedGrants) window.SavedGrants.onChange(render);
+      if (window.GrantCriteria) {
+        window.GrantCriteria.onChange(render);
+        window.GrantCriteria.ready.then(refreshCriteriaQueue);
+        if (window.FRCTeam) window.FRCTeam.onChange(function () { window.GrantCriteria.refresh().then(refreshCriteriaQueue); });
+      }
     })
     .catch(function (err) {
       console.error(err);

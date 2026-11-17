@@ -9,6 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FRC Hub">
+<meta property="og:title" content="Sign In — FRC Hub">
+<meta property="og:description" content="Sign in or create an FRC Hub account with Google or your email.">
+<meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -100,10 +106,6 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
               <span>Privacy &amp; data</span>
             </button>
-            <button type="button" class="settings-nav-btn" data-panel="developer" id="developer-nav-btn" aria-pressed="false" hidden>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-              <span>Developer</span>
-            </button>
           </nav>
 
           <button type="button" class="settings-signout" id="signout-btn">
@@ -185,7 +187,7 @@
                 <div class="info-msg" id="team-action-info"></div>
                 <div class="error-msg" id="team-action-error"></div>
                 <div id="team-header"></div>
-                <button type="button" class="link-btn" id="switch-role-btn" style="display:block; margin:-2px 0 14px;"></button>
+                <button type="button" class="link-btn" id="switch-role-btn" style="margin:-2px 0 14px;" hidden></button>
                 <a href="team.html" class="manage-team-link" id="manage-team-link">Open Team →</a>
                 <div class="team-reset-banner" id="team-reset-banner" hidden></div>
                 <div id="calendar-feed-section" hidden>
@@ -241,17 +243,6 @@
                 <div class="error-msg" id="delete-account-error"></div>
                 <button type="button" class="danger-btn" id="delete-account-btn">Delete my account data</button>
               </div>
-            </div>
-          </section>
-
-          <section class="settings-panel" data-panel="developer" id="settings-panel-developer" hidden>
-            <div class="settings-panel-card">
-              <div class="settings-panel-head">
-                <h1>Developer</h1>
-                <p class="small">Testing only. Leaves/deletes your team and clears your season data so you can redo onboarding. Your sign-in and profile stay.</p>
-              </div>
-              <div class="error-msg" id="dev-reset-error"></div>
-              <button type="button" class="danger-btn" id="dev-reset-btn">Reset my account</button>
             </div>
           </section>
 
@@ -329,7 +320,7 @@
               <form id="join-team-form">
                 <div class="field">
                   <label for="join-team-code">Join code</label>
-                  <input type="text" id="join-team-code" placeholder="e.g. 7K2PQ1" maxlength="6" required style="text-transform:uppercase;">
+                  <input type="text" id="join-team-code" placeholder="e.g. 7K2PQ1" maxlength="8" required style="text-transform:uppercase;">
                 </div>
                 <button type="submit" class="submit-btn">Join team</button>
               </form>
@@ -349,13 +340,14 @@
     <nav class="footer-links">
       <a href="https://github.com/sportsreyu-coder/frc-hub/issues/new?title=Incorrect%20info%20on%20FRC%20Hub">Report incorrect info</a>
       <a href="mailto:sportsreyu@gmail.com?subject=Contact%20from%20FRC%20Hub">Contact</a>
+      <a href="roadmap.html">Roadmap</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </nav>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/profile-colors.js"></script>
 <script src="js/auth-header.js"></script>

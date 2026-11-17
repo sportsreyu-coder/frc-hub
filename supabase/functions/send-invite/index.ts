@@ -6,7 +6,8 @@
 // INVITE_FROM_EMAIL); see ../README.md.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const APP_URL = "https://frc-hub-nu.vercel.app";
+// Set the APP_URL secret (no trailing slash) if the site moves to another domain.
+const APP_URL = (Deno.env.get("APP_URL") || "https://frc-hub-nu.vercel.app").replace(/\/+$/, "");
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",

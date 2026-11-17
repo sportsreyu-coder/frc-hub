@@ -105,7 +105,7 @@
     // Flagged during the 2026-10-07 audit as having no verifiable official
     // source for its dates -- show that plainly instead of a firm-looking
     // deadline we can't actually stand behind.
-    if (grant.unverified) return { key: "unverified", cls: "pill-unknown", label: "No date listed" };
+    if (grant.unverified) return { key: "unverified", cls: "pill-unknown", label: "Dates unconfirmed" };
 
     var key = getGrantStatus(grant, today);
     var openD = parseDate(grant.openDate);

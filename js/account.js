@@ -80,6 +80,14 @@
     location.href = "index.html";
   });
 
+  // Escapes text placed into an innerHTML string -- display names and team
+  // info are typed by other people on the team.
+  function escHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
   var selectedAvatarColor = "";
   var swatchRow = document.getElementById("color-swatch-row");
 
@@ -405,34 +413,6 @@
     updateSettingsIdentity();
   }
 
-  // ---- Developer panel (testing only). Hidden until the avatar is
-  // clicked 7 times within 4 seconds; the reset itself is enforced
-  // server-side by dev_reset_my_account() against dev_allowlist, so
-  // unhiding this for anyone else does nothing. ----
-  (function () {
-    var avatar = document.getElementById("settings-avatar");
-    var navBtn = document.getElementById("developer-nav-btn");
-    var resetBtn = document.getElementById("dev-reset-btn");
-    var errEl = document.getElementById("dev-reset-error");
-    if (!avatar || !navBtn || !resetBtn) return;
-    var clicks = [];
-    avatar.addEventListener("click", function () {
-      var now = Date.now();
-      clicks = clicks.filter(function (t) { return now - t < 4000; });
-      clicks.push(now);
-      if (clicks.length >= 7) navBtn.hidden = false;
-    });
-    resetBtn.addEventListener("click", function () {
-      if (prompt('This resets your team membership and season data. Type RESET to continue.') !== "RESET") return;
-      errEl.style.display = "none";
-      sb.rpc("dev_reset_my_account").then(function (res) {
-        if (res.error) { errEl.textContent = res.error.message; errEl.style.display = "block"; return; }
-        try { localStorage.removeItem(roleStorageKey()); } catch (e) { /* ignore */ }
-        window.location.reload();
-      });
-    });
-  })();
-
   // ---- Settings sidebar: switch between Profile / Team / Notifications /
   // Privacy & data panels ----
   var settingsNav = document.getElementById("settings-nav");
@@ -490,12 +470,14 @@
     document.getElementById("dashboard-section").hidden = false;
     document.getElementById("app").classList.add("is-dashboard");
     document.getElementById("signed-in-email").textContent = currentUser.email || "";
+    document.title = "Account — FRC Hub";
     loadProfile();
   }
 
   function showSignedOut() {
     document.getElementById("auth-section").hidden = false;
     document.getElementById("dashboard-section").hidden = true;
+    document.title = "Sign In — FRC Hub";
     document.getElementById("app").classList.remove("is-dashboard");
     if (window.FRCAuth && !window.__acctAutoOpened) { window.__acctAutoOpened = true; window.FRCAuth.open({ mode: "signin" }); }
   }
@@ -644,19 +626,15 @@
       Team.leaveTeam().then(function () { renderTeamSection(); }).catch(function (err) { showTeamError(err.message); });
     });
 
-    // Self-service role switch -- same mentor/student choice as onboarding,
-    // but after the fact. Warned heavily rather than blocked outright:
-    // the only hard stop is the server-side "don't strand the team"
-    // guard in switch_my_role() (surfaced here as a plain error) for a
-    // sole mentor/admin stepping down.
+    // A mentor can step down to student here. The reverse isn't
+    // self-service: a student becomes a mentor only when an existing
+    // mentor promotes them (Team -> People) or via the mentor join code,
+    // enforced in switch_my_role(). The button is hidden for students.
     document.getElementById("switch-role-btn").addEventListener("click", function () {
-      var toMentor = !Team.isMentor();
-      var msg = toMentor
-        ? "Switch to a mentor role? This immediately grants full team-management permissions: editing the roster, team settings, and grants. Only do this if you're actually an adult mentor for this team -- this isn't meant to be toggled back and forth."
-        : "Switch to a student role? You'll immediately lose mentor permissions, including team management. Only do this if your role on the team has genuinely changed -- this isn't meant to be toggled back and forth.";
-      if (!confirm(msg)) return;
+      if (!Team.isMentor()) return;
+      if (!confirm("Switch to a student role? You'll immediately lose mentor permissions, including team management, and another mentor will have to promote you to get them back.")) return;
       showTeamError("");
-      Team.switchRole(toMentor ? "mentor" : "student")
+      Team.switchRole("student")
         .then(function () { renderTeamSection(); })
         .catch(function (err) { showTeamError(err.message); });
     });
@@ -714,7 +692,7 @@
             card.className = "roster-row-card";
             card.innerHTML =
               '<div class="roster-row-top"><div>' +
-              '<span class="roster-row-name">' + name + (isSelf ? " (you)" : "") + "</span> " +
+              '<span class="roster-row-name">' + escHtml(name) + (isSelf ? " (you)" : "") + "</span> " +
               '<span class="role-badge' + (r.role === "mentor" ? " role-mentor" : "") + '">' + (r.role === "mentor" ? "Mentor" : "Student") + "</span>" +
               (r.role === "mentor" && r.is_admin ? ' <span class="captain-badge">Admin</span>' : "") +
               (r.subteam && r.subteam !== "cross-team" ? ' <span class="role-badge">' + (SUBTEAM_LABELS[r.subteam] || r.subteam) + "</span>" : "") +
@@ -740,14 +718,30 @@
       autoSyncProfileFromTeam();
 
       var header = document.getElementById("team-header");
-      header.innerHTML =
-        '<div class="team-header-row"><span class="team-header-name">' +
-        (team.team_name ? team.team_name + " — Team " + team.team_number : "Team " + team.team_number) +
-        '</span><span class="role-badge' + (Team.isMentor() ? " role-mentor" : "") + '">' + (Team.isMentor() ? "Mentor" : "Student") +
-        (Team.isAdmin() ? " · Admin" : "") + "</span></div>" +
-        (team.district ? '<div class="team-header-sub">' + team.district + "</div>" : "");
+      // Built with textContent, not innerHTML: team name/number/district
+      // are typed by a team admin and shown to every teammate.
+      header.textContent = "";
+      var headerRow = document.createElement("div");
+      headerRow.className = "team-header-row";
+      var headerName = document.createElement("span");
+      headerName.className = "team-header-name";
+      headerName.textContent = team.team_name ? team.team_name + " — Team " + team.team_number : "Team " + team.team_number;
+      var roleBadge = document.createElement("span");
+      roleBadge.className = "role-badge" + (Team.isMentor() ? " role-mentor" : "");
+      roleBadge.textContent = (Team.isMentor() ? "Mentor" : "Student") + (Team.isAdmin() ? " · Admin" : "");
+      headerRow.appendChild(headerName);
+      headerRow.appendChild(roleBadge);
+      header.appendChild(headerRow);
+      if (team.district) {
+        var headerSub = document.createElement("div");
+        headerSub.className = "team-header-sub";
+        headerSub.textContent = team.district;
+        header.appendChild(headerSub);
+      }
 
-      document.getElementById("switch-role-btn").textContent = Team.isMentor() ? "Switch to student role" : "Switch to mentor role";
+      var switchRoleBtn = document.getElementById("switch-role-btn");
+      switchRoleBtn.hidden = !Team.isMentor();
+      switchRoleBtn.textContent = "Switch to student role";
 
       renderResetBanner();
       renderCalendarFeed();

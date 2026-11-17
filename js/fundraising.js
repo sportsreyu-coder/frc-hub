@@ -92,7 +92,9 @@
     shown.forEach(function (item) {
       var children = [
         el("span", { class: "badge" }, [item.type || "Fundraiser"]),
-        el("a", { class: "title-link", href: item.link || "#", target: "_blank", rel: "noopener" }, [item.name]),
+        item.link
+          ? el("a", { class: "title-link", href: item.link, target: "_blank", rel: "noopener" }, [item.name])
+          : el("span", { class: "title-link" }, [item.name]),
         item.payout ? el("div", { class: "gc-amount" }, [item.payout + "% back"]) : null,
         item.notes ? el("p", {}, [item.notes]) : null,
       ];

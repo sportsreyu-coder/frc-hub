@@ -12,7 +12,8 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const DAYS_BEFORE = [14, 7, 1];
-const APP_URL = "https://frc-hub-nu.vercel.app/season.html";
+// Set the APP_URL secret (no trailing slash) if the site moves to another domain.
+const APP_URL = (Deno.env.get("APP_URL") || "https://frc-hub-nu.vercel.app").replace(/\/+$/, "") + "/season.html";
 
 async function sendEmail(to: string, subject: string, text: string): Promise<boolean> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
@@ -47,8 +48,13 @@ function todayPlus(days: number): string {
 }
 
 Deno.serve(async (req) => {
+  // Fails closed: with no secret configured nothing can trigger a send,
+  // rather than anyone who finds the URL being able to.
   const cronSecret = Deno.env.get("REMINDER_CRON_SECRET");
-  if (cronSecret && req.headers.get("Authorization") !== "Bearer " + cronSecret) {
+  if (!cronSecret) {
+    return new Response("REMINDER_CRON_SECRET is not set.", { status: 503 });
+  }
+  if (req.headers.get("Authorization") !== "Bearer " + cronSecret) {
     return new Response("Unauthorized.", { status: 401 });
   }
 
@@ -64,7 +70,7 @@ Deno.serve(async (req) => {
     const targetDate = todayPlus(daysBefore);
     const { data: deadlines, error } = await supabase
       .from("team_deadlines")
-      .select("item_key, title, kind, assignee_user_ids")
+      .select("team_id, item_key, title, kind, assignee_user_ids")
       .eq("due_date", targetDate);
 
     if (error) {
@@ -73,7 +79,16 @@ Deno.serve(async (req) => {
     }
 
     for (const d of deadlines || []) {
+      // Any team member can write team_deadlines, including the assignee
+      // list, so only ever email people who are actually on that team.
+      const { data: members } = await supabase
+        .from("team_members")
+        .select("user_id")
+        .eq("team_id", d.team_id);
+      const memberIds = new Set((members || []).map((m: { user_id: string }) => m.user_id));
+
       for (const userId of d.assignee_user_ids || []) {
+        if (!memberIds.has(userId)) { skipped++; continue; }
         const { data: already } = await supabase
           .from("reminder_sent")
           .select("user_id")
