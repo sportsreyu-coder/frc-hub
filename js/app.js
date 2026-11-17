@@ -125,33 +125,6 @@
     var openWithDates = grants
       .filter(function (g) { return GrantStatus.isCurrentlyOpen(g) && g.closeDate; })
       .sort(function (a, b) { return closeTimestamp(a) - closeTimestamp(b); });
-    var feat = openWithDates[0] || grants[0];
-    var card = document.getElementById("featured-card");
-    card.innerHTML = "";
-    if (!feat) return;
-
-    var reqLabel = feat.tags.indexOf("no-501c3-required") !== -1 ? "No 501(c)(3) required"
-      : feat.tags.indexOf("501c3-required") !== -1 ? "501(c)(3) required"
-      : "Check eligibility on the grantor's site";
-
-    card.appendChild(el("div", { class: "eyebrow" }, ["Priority — closing soonest"]));
-    var top = el("div", { class: "featured-top" }, [
-      el("div", {}, [
-        el("div", { class: "fname" }, [feat.name]),
-        el("p", {}, [feat.notes || "Open for applications — check the grantor's site for full criteria."]),
-      ]),
-      el("div", { class: "featured-deadline" }, [
-        el("div", { class: "fdate" }, [feat.closeDate || "TBD"]),
-        el("div", { class: "flabel" }, ["deadline"]),
-      ]),
-    ]);
-    card.appendChild(top);
-    card.appendChild(el("div", { class: "featured-rule" }));
-    card.appendChild(el("div", { class: "featured-bottom" }, [
-      el("span", {}, [reqLabel]),
-      el("a", { class: "featured-link", href: feat.link || "#", target: "_blank", rel: "noopener" }, ["View & apply →"]),
-    ]));
-
     var datesTable = document.getElementById("dates-table");
     datesTable.innerHTML = "";
     if (openWithDates.length === 0) {
@@ -160,7 +133,7 @@
       ]));
       return;
     }
-    openWithDates.slice(0, 3).forEach(function (g) {
+    openWithDates.slice(0, 4).forEach(function (g) {
       var p = pillClass(g);
       var sub = g.notes || (g.tags.indexOf("no-geo-restrictions") !== -1 ? "No location restrictions" : "See grantor site for criteria");
       datesTable.appendChild(el("div", { class: "dates-row" }, [
@@ -227,6 +200,15 @@
     return out;
   }
 
+  // Uses describe() so the tier matches the card's badge (e.g. "TBD" dates
+  // show "Check site", not rolling).
+  function deadlineTier(g) {
+    var key = GrantStatus.describe(g).key;
+    if (key === "open" || key === "closing-soon") return 0;
+    if (key === "rolling") return 1;
+    return 2;
+  }
+
   function sortGrants(list) {
     var copy = list.slice();
     var cmp;
@@ -237,6 +219,9 @@
         var aClosed = isPastDeadline(a) || GrantStatus.getGrantStatus(a) === "closed";
         var bClosed = isPastDeadline(b) || GrantStatus.getGrantStatus(b) === "closed";
         if (aClosed !== bClosed) return aClosed ? 1 : -1;
+        // Open grants by date, then rolling, then anything not open yet.
+        var ta = deadlineTier(a), tb = deadlineTier(b);
+        if (ta !== tb) return ta - tb;
         return closeTimestamp(a) - closeTimestamp(b) || a.name.localeCompare(b.name);
       };
     } else {
@@ -320,10 +305,51 @@
     ]);
   }
 
-  function suggestBtn(g) {
-    var b = el("button", { type: "button", class: "suggest-criteria-btn" }, ["Suggest criteria"]);
-    b.addEventListener("click", function () { window.GrantCriteria && window.GrantCriteria.openSuggest(g); });
-    return el("div", { class: "gc-suggest-row" }, [b]);
+  // "⋯" menu beside the star: Suggest criteria / Report a bug.
+  var openMenu = null;
+  function closeMenu() {
+    if (!openMenu) return;
+    openMenu.menu.hidden = true;
+    openMenu.btn.setAttribute("aria-expanded", "false");
+    openMenu = null;
+  }
+  document.addEventListener("click", function (e) {
+    if (openMenu && !openMenu.wrap.contains(e.target)) closeMenu();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && openMenu) { var b = openMenu.btn; closeMenu(); b.focus(); }
+  });
+
+  function moreMenu(g) {
+    var btn = el("button", {
+      type: "button", class: "gc-more-btn", "aria-haspopup": "menu", "aria-expanded": "false",
+      "aria-label": "More options for " + g.name, title: "More options",
+    });
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+    var suggest = el("button", { type: "button", role: "menuitem", class: "gc-menu-item" }, ["Suggest criteria"]);
+    var report = el("a", {
+      role: "menuitem", class: "gc-menu-item", target: "_blank", rel: "noopener noreferrer",
+      href: "https://github.com/sportsreyu-coder/frc-hub/issues/new?title=" + encodeURIComponent("Bug: " + g.name + " (" + g.id + ")"),
+    }, ["Report a bug"]);
+    var menu = el("div", { class: "gc-menu", role: "menu" }, [suggest, report]);
+    menu.hidden = true;
+    var wrap = el("div", { class: "gc-more" }, [btn, menu]);
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var wasOpen = openMenu && openMenu.btn === btn;
+      closeMenu();
+      if (wasOpen) return;
+      menu.hidden = false;
+      btn.setAttribute("aria-expanded", "true");
+      openMenu = { btn: btn, menu: menu, wrap: wrap };
+    });
+    suggest.addEventListener("click", function () {
+      closeMenu();
+      window.GrantCriteria && window.GrantCriteria.openSuggest(g);
+    });
+    report.addEventListener("click", closeMenu);
+    return wrap;
   }
 
   function grantCard(g) {
@@ -360,6 +386,7 @@
     return el("article", { class: "grant-card" + (boosted.length ? " is-boosted" : "") }, [
       badge,
       saveBtn,
+      moreMenu(g),
       el("div", { class: "gc-top" }, [
         el("h2", { class: "gc-name" }, [g.name]),
         el("span", { class: "pill " + p.cls }, [p.label]),
@@ -378,7 +405,6 @@
       verifiedText ? el("div", { class: "gc-verified" }, [verifiedText]) : null,
       approvedCriteria(g),
       pipelineControl(g),
-      suggestBtn(g),
     ]);
   }
 

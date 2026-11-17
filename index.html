@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <script>(function(){try{if(localStorage.getItem('frcgrants_theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<script>(function(){try{for(var i=0;i<localStorage.length;i++){if(/^sb-.*-auth-token$/.test(localStorage.key(i))){document.documentElement.setAttribute('data-auth','in');break;}}}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — FRC Hub</title>
+<title>FRC Hub — Your FRC team's home base</title>
 <meta name="description" content="Your FRC team's home base: season pace, grants closing soon, and everything else in one place.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FRC Hub">
-<meta property="og:title" content="Dashboard — FRC Hub">
+<meta property="og:title" content="FRC Hub — Your FRC team's home base">
 <meta property="og:description" content="Your FRC team's home base: season pace, grants closing soon, and everything else in one place.">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="css/styles.css">
@@ -56,7 +57,155 @@
   </div>
 </header>
 
-<main class="site-main">
+<!-- Signed-out landing page. Hidden for signed-in users (see the
+     data-auth script in <head> and js/landing.js). -->
+<div class="lp" id="landing">
+  <section class="lp-hero wrap">
+    <div class="lp-hero-copy">
+      <p class="lp-eyebrow">For FIRST Robotics Competition teams</p>
+      <h1>Run your season, not a dozen spreadsheets.</h1>
+      <p class="lp-lead">FRC Hub keeps grant deadlines, build-season pace, budget, and team assignments in one place, so mentors and students spend less time hunting and more time building.</p>
+      <div class="lp-cta-row">
+        <button type="button" class="lp-btn lp-btn-primary" data-auth-open="signup">Get started free <span aria-hidden="true">→</span></button>
+        <a href="grants.html" class="lp-btn lp-btn-ghost">Browse grants</a>
+      </div>
+      <ul class="lp-hero-stats">
+        <li><strong id="lp-stat-grants">125+</strong><span>grants tracked</span></li>
+        <li><strong id="lp-stat-scholarships">80+</strong><span>scholarships</span></li>
+        <li><strong id="lp-stat-kickoff">—</strong><span id="lp-stat-kickoff-label">days to Kickoff</span></li>
+      </ul>
+    </div>
+
+    <div class="lp-stack" aria-hidden="true">
+      <div class="lp-card lp-card-back">
+        <div class="lp-card-head"><span class="eyebrow">Budget</span><span class="dash-arrow">→</span></div>
+        <div class="dash-headline">$8,400</div>
+        <p class="dash-sub">of $12,000 raised</p>
+        <div class="lp-bar"><span style="width:70%"></span></div>
+      </div>
+      <div class="lp-card lp-card-mid">
+        <div class="lp-card-head"><span class="eyebrow">Season Tracker</span><span class="dash-arrow">→</span></div>
+        <div class="dash-headline">3 days ahead</div>
+        <p class="dash-sub">9 of 24 milestones done</p>
+      </div>
+      <div class="lp-card lp-card-front">
+        <div class="lp-card-head"><span class="eyebrow">Grants closing soon</span><span class="dash-arrow">→</span></div>
+        <div class="dash-mini-list lp-mini-list" id="lp-grants-preview">
+          <div class="dash-mini-row"><span class="dash-mini-label">Loading live deadlines…</span></div>
+        </div>
+      </div>
+      <span class="lp-stack-caption">Live from the grant finder</span>
+    </div>
+  </section>
+
+  <section class="lp-section wrap lp-split">
+    <div>
+      <p class="lp-eyebrow">Built by FRC people</p>
+      <h2>Tools for the way FRC teams actually work</h2>
+      <p class="lp-body">Every team reinvents the same things each fall: a grant spreadsheet, a build calendar, a budget nobody updates. FRC Hub is a community-maintained toolkit that does those jobs once, well, and for free.</p>
+    </div>
+    <ol class="lp-features">
+      <li><span class="lp-num">01</span><div><strong>Grant &amp; scholarship finder</strong><p>Filter by deadline, 501(c)(3) needs, and school programs. Save the ones that fit.</p></div></li>
+      <li><span class="lp-num">02</span><div><strong>Season tracker</strong><p>A sample plan from Kickoff to week 1 that tells you if you're ahead or behind.</p></div></li>
+      <li><span class="lp-num">03</span><div><strong>Budget &amp; fundraising</strong><p>Track what you've raised against what the robot, travel, and registration cost.</p></div></li>
+      <li><span class="lp-num">04</span><div><strong>Team workspace</strong><p>Invite mentors and students, hand out assignments, and keep a build log.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="lp-section lp-soft">
+    <div class="wrap">
+      <div class="lp-center">
+        <p class="lp-eyebrow">How it works</p>
+        <h2>From kickoff to competition</h2>
+        <p class="lp-body">Set up once in the off-season and it carries you through build.</p>
+      </div>
+      <ol class="lp-steps">
+        <li class="lp-step"><span class="lp-step-num">1</span><h3>Make an account</h3><p>Sign in with Google or email. Free, no credit card, no trial.</p></li>
+        <li class="lp-step"><span class="lp-step-num">2</span><h3>Bring your team</h3><p>Add your team number and invite mentors and students by email.</p></li>
+        <li class="lp-step"><span class="lp-step-num">3</span><h3>Run the season</h3><p>Check off milestones, chase grants before they close, and log every build day.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="lp-section wrap">
+    <div class="lp-center">
+      <p class="lp-eyebrow">Team workspace</p>
+      <h2>A dashboard the whole team will actually open</h2>
+      <p class="lp-body">Mentors see the big picture. Students see what's theirs today. Everyone sees the same deadlines.</p>
+      <div class="lp-cta-row lp-cta-center">
+        <button type="button" class="lp-btn lp-btn-primary" data-auth-open="signup">Create your team</button>
+        <a href="season.html" class="lp-btn lp-btn-ghost">Try the season tracker</a>
+      </div>
+    </div>
+    <div class="lp-benefits">
+      <a href="assignments.html" class="lp-benefit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+        <h3>Assignments by subteam</h3>
+        <p>Daily tasks for build, programming, or outreach, and a check-off for each person.</p>
+      </a>
+      <a href="season.html" class="lp-benefit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <h3>A build log that sticks</h3>
+        <p>Record what got done each meeting. Your future self and your awards submission will thank you.</p>
+      </a>
+      <a href="budget.html" class="lp-benefit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <h3>One shared budget</h3>
+        <p>See the gap between costs and funding, with matching grants suggested right beside it.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="lp-section lp-funders">
+    <div class="wrap lp-center">
+      <p class="lp-eyebrow">Funders we track</p>
+      <h2>Find the money before the deadline finds you</h2>
+      <p class="lp-body">Every grant is checked by hand and dated, so you know how fresh it is.</p>
+    </div>
+    <div class="lp-marquee" aria-hidden="true">
+      <div class="lp-marquee-track" id="lp-marquee-track"></div>
+    </div>
+    <p class="lp-marquee-more wrap" id="lp-marquee-more">…and many more grants and scholarships.</p>
+  </section>
+
+  <section class="lp-section wrap lp-faq-wrap">
+    <div>
+      <p class="lp-eyebrow">FAQ</p>
+      <h2>Questions teams ask first</h2>
+    </div>
+    <div class="lp-faq">
+      <details>
+        <summary>Is it really free?</summary>
+        <p>Yes. FRC Hub is a community project with no paid tier. You can browse grants and scholarships without an account; signing in adds saving, sync, and team features.</p>
+      </details>
+      <details>
+        <summary>Is this run by FIRST?</summary>
+        <p>No. FRC Hub is community-maintained and not affiliated with FIRST®. Always confirm details on the funder's own site before you apply.</p>
+      </details>
+      <details>
+        <summary>How current is the grant data?</summary>
+        <p>Each grant shows when it was last verified. If something's wrong, the "Report incorrect info" link in the footer goes straight to the maintainers.</p>
+      </details>
+      <details>
+        <summary>Do students need their own accounts?</summary>
+        <p>Only if they want assignments and the shared team view. A mentor can create the team and invite students by email.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="lp-closing wrap">
+    <div class="lp-closing-inner">
+      <h2 id="lp-closing-title">Build season is coming. Get ahead of it.</h2>
+      <p>Set up your team in a few minutes and walk into Kickoff with a plan.</p>
+      <div class="lp-cta-row lp-cta-center">
+        <button type="button" class="lp-btn lp-btn-light" data-auth-open="signup">Get started free</button>
+        <a href="grants.html" class="lp-btn lp-btn-outline-light">Browse grants</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<main class="site-main" id="dashboard-view">
   <section class="hero" id="hero-signed-out">
     <div class="hero-grid">
       <h1>Everything your<br>season needs, in one place.</h1>
@@ -152,5 +301,6 @@
 <script src="js/saved-grants.js"></script>
 <script src="js/forum-data.js"></script>
 <script src="js/dashboard.js"></script>
+<script src="js/landing.js"></script>
 </body>
 </html>

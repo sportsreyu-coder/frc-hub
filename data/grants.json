@@ -2065,24 +2065,6 @@
     "schoolProgram": "unsure"
   },
   {
-    "id": "toshiba",
-    "name": "Toshiba",
-    "link": "https://www.toshiba.com/taf/612.jsp",
-    "status": "open",
-    "openDate": "",
-    "closeDate": "December 1, 2026",
-    "employeeConnection": "no",
-    "geoRestricted": "unsure",
-    "require501c3": "not-required",
-    "notes": "Toshiba America Foundation for grades 6-12 teachers; usually funds K-12 schools. Deadlines: Mar 1, Jun 1, Sep 1, Dec 1 (under $5k); May 1, Nov 1 ($5k+). Next: Dec 1, 2026. Does NOT fund club/after-school programs, summer projects, computer hardware, salaries, textbooks; one grant per school at a time; no individuals. Geography and 501c3 not stated on page.",
-    "tags": [
-      "currently-open",
-      "no-501c3-required"
-    ],
-    "lastVerified": "2026-11-14",
-    "schoolProgram": "yes"
-  },
-  {
     "id": "toyota",
     "name": "Toyota",
     "link": "https://toyotaeffect.com/grant-seekers/",

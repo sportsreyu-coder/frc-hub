@@ -52,7 +52,7 @@
   function openSuggest(grant) {
     currentUser().then(function (user) {
       var overlay = el("div", { class: "cal-modal-overlay", role: "dialog", "aria-modal": "true" });
-      var modal = el("div", { class: "cal-modal" });
+      var modal = el("div", { class: "cal-modal sc-modal" });
       var close = el("button", { type: "button", class: "cal-modal-close", "aria-label": "Close" }, ["×"]);
       function dismiss() { overlay.remove(); document.removeEventListener("keydown", onKey); }
       function onKey(e) { if (e.key === "Escape") dismiss(); }
@@ -66,7 +66,7 @@
       if (!user) {
         modal.appendChild(el("p", { class: "finder-hint" }, ["Please sign in first to suggest criteria."]));
         var a = el("a", { class: "sc-submit", href: "account.html" }, ["Sign in"]);
-        modal.appendChild(a);
+        modal.appendChild(el("div", { class: "sc-actions" }, [a]));
       } else {
         var ta = el("textarea", { class: "sc-textarea", rows: "4", maxlength: "500", placeholder: "e.g. Teams must be registered for the current season", "aria-label": "Criteria" });
         var src = el("input", { class: "sc-input", type: "url", placeholder: "Source link (optional)", "aria-label": "Source link" });
@@ -86,7 +86,7 @@
               modal.appendChild(el("p", { class: "finder-hint" }, ["Your suggestion was sent for review. It will appear on the grant once approved."]));
             });
         });
-        [ta, src, msg, submit].forEach(function (n) { modal.appendChild(n); });
+        [ta, src, msg, el("div", { class: "sc-actions" }, [submit])].forEach(function (n) { modal.appendChild(n); });
         setTimeout(function () { ta.focus(); }, 0);
       }
       overlay.appendChild(modal);
