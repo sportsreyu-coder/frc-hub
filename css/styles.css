@@ -126,15 +126,17 @@ input::placeholder { color: var(--text-faint2); }
   flex-shrink: 0;
 }
 
-.brand-name {
-  font-family: var(--font-serif);
-  font-size: 21px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
+.brand { gap: 10px; }
 
-.brand-name .brand-accent {
-  color: var(--accent);
+.brand-mark { width: 30px; height: 30px; display: block; flex-shrink: 0; }
+.brand-mark-bg { fill: var(--accent); }
+.brand:hover .brand-mark-bg { fill: var(--accent-hover); }
+
+.brand-name {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .main-nav {
@@ -3654,7 +3656,7 @@ body.am-open { overflow: hidden; }
 .am-shape-a { width: 220px; height: 220px; left: -70px; bottom: -80px; background: rgba(255, 255, 255, 0.12); }
 .am-shape-b { width: 90px; height: 90px; right: -30px; top: 28%; }
 .am-shape-c { width: 46px; height: 46px; right: 40px; bottom: 22%; border-radius: 12px; transform: rotate(35deg); }
-.am-brand { position: relative; font-family: var(--font-serif); font-size: 1.15rem; font-weight: 500; }
+.am-brand { position: relative; font-family: var(--font-sans); font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
 .am-brand span { opacity: 0.75; }
 .am-side-body { position: relative; margin: auto 0; text-align: center; padding-bottom: 20px; }
 .am-side-body h2 { font-family: var(--font-serif); font-weight: 500; font-size: 1.9rem; line-height: 1.15; margin: 0 0 12px; }
@@ -3810,15 +3812,6 @@ html:not([data-auth="in"]) #dashboard-view { display: none; }
 
 .lp h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.005em; }
 
-.lp-eyebrow {
-  margin: 0 0 14px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
 
 .lp-body { margin: 16px 0 0; color: var(--text-dim); font-size: 16px; max-width: 56ch; }
 .lp-center { text-align: center; }

@@ -99,7 +99,7 @@
     overlay.innerHTML =
       '<div class="am-card" role="dialog" aria-modal="true" aria-labelledby="am-title">' +
       '<aside class="am-side"><span class="am-shape am-shape-a"></span><span class="am-shape am-shape-b"></span><span class="am-shape am-shape-c"></span>' +
-      '<div class="am-brand">FRC<span>Hub</span></div>' +
+      '<div class="am-brand">FRC Hub</div>' +
       '<div class="am-side-body"><h2 id="am-side-h"></h2><p id="am-side-p"></p><button type="button" class="am-ghost" id="am-side-btn"></button></div></aside>' +
       '<section class="am-main"><button type="button" class="am-close" id="am-close" aria-label="Close">&times;</button>' +
       '<div class="am-dots" id="am-dots" hidden></div>' +
